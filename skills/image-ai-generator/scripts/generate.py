@@ -60,7 +60,7 @@ def load_api_key():
 
 def generate_image(prompt, output_path, mode, api_key, reference_image=None):
     """Generate a single image and save to output_path."""
-    model = MODELS.get(mode, MODELS["test"])
+    model = MODELS.get(mode, MODELS["production"])
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
