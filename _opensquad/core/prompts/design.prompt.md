@@ -40,6 +40,7 @@ Based on the squad's purpose and the domains identified in Discovery, select whi
 - Read `instagram-feed.md` (for platform-specific knowledge)
 - Read `review.md` (for the reviewer agent)
 - Read `image-design.md` (for the designer agent)
+- Read `instagram-carousel-art-director-brief.md` (for the designer agent when the squad produces carousel art direction with Innovation Latam branding: Montserrat, 1080×1350, odd/even slide rules, `_memory/guia_diretor_arte.md` + `_memory/doc_posicao_logo_logo_conta.md`)
 
 Do NOT read all files — only those relevant to this specific squad. The catalog exists to save tokens by avoiding unnecessary reads.
 

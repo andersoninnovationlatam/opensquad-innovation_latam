@@ -24,6 +24,11 @@ catalog:
     whenToUse: "Creating agents that design graphics, carousel slides, social media visuals, or HTML/CSS templates for rendering."
     file: image-design.md
 
+  - id: instagram-carousel-art-director-brief
+    name: "Instagram Carousel — Art Director Brief (Innovation Latam)"
+    whenToUse: "Creating agents that write per-slide visual briefs for Instagram carousels with alternating photo/solid slides, Montserrat typography, branded footer, and technical photo direction (camera, light, lens)."
+    file: instagram-carousel-art-director-brief.md
+
   - id: social-networks-publishing
     name: "Social Networks Publishing"
     whenToUse: "Creating agents that publish content to Instagram, LinkedIn, X/Twitter, YouTube, or other social platforms."
