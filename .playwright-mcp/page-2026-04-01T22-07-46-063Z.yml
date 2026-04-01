@@ -1,0 +1,158 @@
+- generic [ref=e4]:
+  - generic [ref=e9]:
+    - generic [ref=e12]:
+      - link "Instagram" [ref=e17] [cursor=pointer]:
+        - /url: /
+        - img "Instagram" [ref=e22]
+      - generic [ref=e25]:
+        - link "Página inicial" [ref=e30] [cursor=pointer]:
+          - /url: /
+          - img "Página inicial" [ref=e35]
+        - link "Reels" [ref=e40] [cursor=pointer]:
+          - /url: /reels/
+          - img "Reels" [ref=e45]
+        - link "Mensagens" [ref=e52] [cursor=pointer]:
+          - /url: /direct/inbox/
+          - img "Mensagens" [ref=e57]
+        - link "Pesquisa" [ref=e63] [cursor=pointer]:
+          - /url: /explore/
+          - img "Pesquisa" [ref=e68]
+        - link "Notificações" [ref=e75] [cursor=pointer]:
+          - /url: "#"
+          - img "Notificações" [ref=e80]
+        - link "Novo post" [ref=e86] [cursor=pointer]:
+          - /url: "#"
+          - img "Novo post" [ref=e91]
+        - link "Painel profissional" [ref=e96] [cursor=pointer]:
+          - /url: "#"
+          - img "Painel profissional" [ref=e101]
+        - link "Foto do perfil de andersonteste007" [ref=e108] [cursor=pointer]:
+          - /url: /andersonteste007/
+          - link "Foto do perfil de andersonteste007" [ref=e113]:
+            - img "Foto do perfil de andersonteste007" [ref=e114]
+      - generic [ref=e115]:
+        - link "Configurações" [ref=e118] [cursor=pointer]:
+          - /url: "#"
+          - img "Configurações" [ref=e123]
+        - link "Também da Meta" [ref=e126] [cursor=pointer]:
+          - /url: "#"
+          - img "Também da Meta" [ref=e131]
+    - generic [ref=e134]:
+      - main [ref=e135]:
+        - generic [ref=e137]:
+          - generic [ref=e139]:
+            - img [ref=e141]
+            - heading "Salvar suas informações de login?" [level=1] [ref=e144]:
+              - heading "Salvar suas informações de login?" [level=1] [ref=e145]
+            - generic [ref=e147]: Podemos salvar suas informações de login neste navegador para que você não precise inseri-las de novo.
+            - button "Salvar informações" [ref=e148] [cursor=pointer]
+          - button "Agora não" [ref=e150] [cursor=pointer]
+      - contentinfo [ref=e151]:
+        - generic [ref=e152]:
+          - generic [ref=e154]:
+            - link "Meta" [ref=e156] [cursor=pointer]:
+              - /url: https://about.meta.com/
+              - generic [ref=e157]: Meta
+            - link "Sobre" [ref=e159] [cursor=pointer]:
+              - /url: https://about.instagram.com/
+              - generic [ref=e160]: Sobre
+            - link "Blog" [ref=e162] [cursor=pointer]:
+              - /url: https://about.instagram.com/blog/
+              - generic [ref=e163]: Blog
+            - link "Carreiras" [ref=e165] [cursor=pointer]:
+              - /url: https://about.instagram.com/about-us/careers
+              - generic [ref=e166]: Carreiras
+            - link "Ajuda" [ref=e168] [cursor=pointer]:
+              - /url: https://help.instagram.com/
+              - generic [ref=e169]: Ajuda
+            - link "API" [ref=e171] [cursor=pointer]:
+              - /url: https://developers.facebook.com/docs/instagram
+              - generic [ref=e172]: API
+            - link "Privacidade" [ref=e174] [cursor=pointer]:
+              - /url: /legal/privacy/
+              - generic [ref=e175]: Privacidade
+            - link "Termos" [ref=e177] [cursor=pointer]:
+              - /url: /legal/terms/
+              - generic [ref=e178]: Termos
+            - link "Localizações" [ref=e180] [cursor=pointer]:
+              - /url: /explore/locations/
+              - generic [ref=e181]: Localizações
+            - link "Instagram Lite" [ref=e183] [cursor=pointer]:
+              - /url: /web/lite/
+              - generic [ref=e184]: Instagram Lite
+            - link "Meta AI" [ref=e186] [cursor=pointer]:
+              - /url: https://www.meta.ai/?utm_source=foa_web_footer
+              - generic [ref=e187]: Meta AI
+            - link "Threads" [ref=e189] [cursor=pointer]:
+              - /url: https://www.threads.com/
+              - generic [ref=e190]: Threads
+            - link "Upload de contatos e não usuários" [ref=e192] [cursor=pointer]:
+              - /url: https://www.facebook.com/help/instagram/261704639352628
+              - generic [ref=e193]: Upload de contatos e não usuários
+            - link "Meta Verified" [ref=e195] [cursor=pointer]:
+              - /url: /accounts/meta_verified/?entrypoint=web_footer
+              - generic [ref=e196]: Meta Verified
+          - generic [ref=e197]:
+            - generic [ref=e198] [cursor=pointer]:
+              - generic [ref=e199]:
+                - generic [ref=e200]: Português (Brasil)
+                - img "Ícone de seta para baixo" [ref=e203]
+              - combobox "Trocar idioma de exibição" [ref=e205]:
+                - option "Afrikaans"
+                - option "العربية"
+                - option "Čeština"
+                - option "Dansk"
+                - option "Deutsch"
+                - option "Ελληνικά"
+                - option "English"
+                - option "English (UK)"
+                - option "Español (España)"
+                - option "Español"
+                - option "فارسی"
+                - option "Suomi"
+                - option "Français"
+                - option "עברית"
+                - option "Bahasa Indonesia"
+                - option "Italiano"
+                - option "日本語"
+                - option "한국어"
+                - option "Bahasa Melayu"
+                - option "Norsk"
+                - option "Nederlands"
+                - option "Polski"
+                - option "Português (Brasil)" [selected]
+                - option "Português (Portugal)"
+                - option "Русский"
+                - option "Svenska"
+                - option "ภาษาไทย"
+                - option "Filipino"
+                - option "Türkçe"
+                - option "中文(简体)"
+                - option "中文(台灣)"
+                - option "বাংলা"
+                - option "ગુજરાતી"
+                - option "हिन्दी"
+                - option "Hrvatski"
+                - option "Magyar"
+                - option "ಕನ್ನಡ"
+                - option "മലയാളം"
+                - option "मराठी"
+                - option "नेपाली"
+                - option "ਪੰਜਾਬੀ"
+                - option "සිංහල"
+                - option "Slovenčina"
+                - option "தமிழ்"
+                - option "తెలుగు"
+                - option "اردو"
+                - option "Tiếng Việt"
+                - option "中文(香港)"
+                - option "Български"
+                - option "Français (Canada)"
+                - option "Română"
+                - option "Српски"
+                - option "Українська"
+            - generic [ref=e207]: © 2026 Instagram from Meta
+  - button "Mensagens Mensagens" [ref=e209] [cursor=pointer]:
+    - generic [ref=e211]:
+      - img "Mensagens" [ref=e213]
+      - generic [ref=e216]: Mensagens

@@ -1,0 +1,386 @@
+- generic [ref=e1]:
+  - generic:
+    - generic:
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e21]:
+            - link [ref=e425] [cursor=pointer]:
+              - /url: /
+              - img [ref=e426]
+            - generic [ref=e34]:
+              - link [ref=e427] [cursor=pointer]:
+                - /url: /
+                - img [ref=e428]
+              - link [ref=e429] [cursor=pointer]:
+                - /url: /reels/
+                - img [ref=e430]
+              - link [ref=e431] [cursor=pointer]:
+                - /url: /direct/inbox/
+                - img [ref=e432]
+              - link [ref=e433] [cursor=pointer]:
+                - /url: /explore/
+                - img [ref=e434]
+              - link [ref=e435] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e436]
+              - link [ref=e437] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e438]
+              - link [ref=e439] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e440]
+              - link [ref=e441] [cursor=pointer]:
+                - /url: /andersonteste007/
+                - link [ref=e442]:
+                  - img [ref=e443]
+            - generic [ref=e126]:
+              - link [ref=e444] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e445]
+              - link [ref=e446] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e447]
+          - generic [ref=e145]:
+            - main [ref=e146]:
+              - generic [ref=e148]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]:
+                    - link [ref=e448] [cursor=pointer]:
+                      - /url: /therundownai/
+                      - img [ref=e449]
+                    - generic [ref=e158]:
+                      - generic [ref=e159]:
+                        - generic [ref=e160]:
+                          - generic [ref=e161]:
+                            - link [ref=e450] [cursor=pointer]:
+                              - /url: "#"
+                              - heading [level=2] [ref=e451]:
+                                - generic [ref=e164]: therundownai
+                            - img [ref=e452]
+                          - button [ref=e453] [cursor=pointer]:
+                            - img [ref=e454]
+                        - generic [ref=e176]: The Rundown AI
+                        - generic [ref=e177]:
+                          - generic [ref=e179]:
+                            - generic [ref=e180]: "2.034"
+                            - text: posts
+                          - link [ref=e455] [cursor=pointer]:
+                            - /url: /therundownai/followers/
+                            - generic [ref=e183]:
+                              - generic [ref=e456]: 385 mil
+                              - text: seguidores
+                          - link [ref=e457] [cursor=pointer]:
+                            - /url: /therundownai/following/
+                            - generic [ref=e187]:
+                              - generic [ref=e188]: "1"
+                              - text: seguindo
+                      - generic [ref=e190]:
+                        - generic [ref=e192]: Empresa de mídia/notícias
+                        - button [ref=e458] [cursor=pointer]:
+                          - generic [ref=e195]:
+                            - text: Get the latest in AI in 5 minutes a day. Read by 2,000,000+ early adopters. By
+                            - link [ref=e459]:
+                              - /url: /rowancheung/
+                              - text: "@rowancheung"
+                        - generic [ref=e197]:
+                          - generic [ref=e198]:
+                            - img [ref=e460]
+                            - link [ref=e461] [cursor=pointer]:
+                              - /url: https://l.instagram.com/?u=http%3A%2F%2Frundown.ai%2F%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnVbz3hHuksaFt_Z7IC8myU6Yec7rnNZBZ8JVldJs2MqCDxGaHwKFvZjRVyJ8_aem_DGYE8zV2QkDSELj8KojF9w&e=AT5i5zfupMF_KUGs_92VNAJzqSDMWiv2CxCjMpOfxrU9s-xH7I8AehV7FU201u3xjUqae0Q9_3IjXAeyoZB4gaAFd3FZMYcxsp3RPLr6yhWOzXnKcIU1R3bPiQ
+                              - generic [ref=e205]: rundown.ai
+                          - link [ref=e462] [cursor=pointer]:
+                            - /url: https://www.threads.com/@therundownai?xmt=AQF0rrC9QKuMlnMGBt1F4iu-l4oE-bzXWsbU00ILVgA5-Y4
+                            - img [ref=e463]
+                            - generic [ref=e212]: therundownai
+                  - generic [ref=e217]:
+                    - button [ref=e464] [cursor=pointer]:
+                      - generic [ref=e220]:
+                        - generic [ref=e221]: Seguindo
+                        - img [ref=e465]
+                    - button [ref=e466] [cursor=pointer]: Enviar mensagem
+                    - button [ref=e467] [cursor=pointer]:
+                      - img [ref=e468]
+                - tablist [ref=e235]:
+                  - link [ref=e469] [cursor=pointer]:
+                    - /url: /therundownai/
+                    - img [ref=e470]
+                  - link [ref=e471] [cursor=pointer]:
+                    - /url: /therundownai/reels/
+                    - img [ref=e472]
+                  - link [ref=e473] [cursor=pointer]:
+                    - /url: /therundownai/tagged/
+                    - img [ref=e474]
+                - generic [ref=e264]:
+                  - generic [ref=e265]:
+                    - link [ref=e475] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmr5mGjMoi/
+                      - img [ref=e476]
+                    - link [ref=e477] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmkp_dDF0n/
+                      - img [ref=e478]
+                    - link [ref=e479] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmbgBCDAfr/
+                      - img [ref=e480]
+                  - generic [ref=e284]:
+                    - link [ref=e481] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmOX68Eulw/
+                      - img [ref=e482]
+                    - link [ref=e483] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmGsoYjKhH/
+                      - img [ref=e484]
+                    - link [ref=e485] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmDnyDjIG8/
+                      - img [ref=e486]
+                  - generic [ref=e303]:
+                    - link [ref=e487] [cursor=pointer]:
+                      - /url: /therundownai/p/DWl4FWejD-N/
+                      - img [ref=e488]
+                    - link [ref=e489] [cursor=pointer]:
+                      - /url: /therundownai/p/DWkGiNEkx5j/
+                      - img [ref=e490]
+                    - link [ref=e491] [cursor=pointer]:
+                      - /url: /therundownai/p/DWj-3OZDIaJ/
+                      - img [ref=e492]
+                  - generic [ref=e322]:
+                    - link [ref=e493] [cursor=pointer]:
+                      - /url: /therundownai/p/DWj71SPkvjB/
+                      - img [ref=e494]
+                      - generic:
+                        - generic:
+                          - img
+                    - link [ref=e495] [cursor=pointer]:
+                      - /url: /therundownai/p/DWj1O4_DGr4/
+                      - img [ref=e496]
+                      - generic:
+                        - generic:
+                          - img
+                    - link [ref=e497] [cursor=pointer]:
+                      - /url: /therundownai/p/DWjokMHjPwy/
+                      - img [ref=e498]
+            - contentinfo [ref=e341]:
+              - generic [ref=e342]:
+                - generic [ref=e344]:
+                  - link [ref=e499] [cursor=pointer]:
+                    - /url: https://about.meta.com/
+                    - generic [ref=e347]: Meta
+                  - link [ref=e500] [cursor=pointer]:
+                    - /url: https://about.instagram.com/
+                    - generic [ref=e350]: Sobre
+                  - link [ref=e501] [cursor=pointer]:
+                    - /url: https://about.instagram.com/blog/
+                    - generic [ref=e353]: Blog
+                  - link [ref=e502] [cursor=pointer]:
+                    - /url: https://about.instagram.com/about-us/careers
+                    - generic [ref=e356]: Carreiras
+                  - link [ref=e503] [cursor=pointer]:
+                    - /url: https://help.instagram.com/
+                    - generic [ref=e359]: Ajuda
+                  - link [ref=e504] [cursor=pointer]:
+                    - /url: https://developers.facebook.com/docs/instagram
+                    - generic [ref=e362]: API
+                  - link [ref=e505] [cursor=pointer]:
+                    - /url: /legal/privacy/
+                    - generic [ref=e365]: Privacidade
+                  - link [ref=e506] [cursor=pointer]:
+                    - /url: /legal/terms/
+                    - generic [ref=e368]: Termos
+                  - link [ref=e507] [cursor=pointer]:
+                    - /url: /explore/locations/
+                    - generic [ref=e371]: Localizações
+                  - link [ref=e508] [cursor=pointer]:
+                    - /url: /web/lite/
+                    - generic [ref=e374]: Instagram Lite
+                  - link [ref=e509] [cursor=pointer]:
+                    - /url: https://www.meta.ai/?utm_source=foa_web_footer
+                    - generic [ref=e377]: Meta AI
+                  - link [ref=e510] [cursor=pointer]:
+                    - /url: https://www.threads.com/
+                    - generic [ref=e380]: Threads
+                  - link [ref=e511] [cursor=pointer]:
+                    - /url: https://www.facebook.com/help/instagram/261704639352628
+                    - generic [ref=e383]: Upload de contatos e não usuários
+                  - link [ref=e512] [cursor=pointer]:
+                    - /url: /accounts/meta_verified/?entrypoint=web_footer
+                    - generic [ref=e386]: Meta Verified
+                - generic [ref=e387]:
+                  - generic [ref=e388] [cursor=pointer]:
+                    - generic [ref=e389]:
+                      - generic [ref=e390]: Português (Brasil)
+                      - img [ref=e513]
+                    - combobox [ref=e514]
+                  - generic [ref=e397]: © 2026 Instagram from Meta
+        - button "Mensagens" [ref=e400] [cursor=pointer]:
+          - generic "Mensagens" [ref=e401]:
+            - generic [ref=e402]:
+              - img "Mensagens" [ref=e405]
+              - generic [ref=e408]: Mensagens
+            - generic [ref=e409]:
+              - button "Avatar do usuário Carol e Paulo Vasques" [ref=e411]:
+                - img "Avatar do usuário" [ref=e414]
+              - button "Avatar do usuário Atendus" [ref=e416]:
+                - img "Avatar do usuário" [ref=e419]
+              - button "Avatar do usuário Anderson Pinto" [ref=e421]:
+                - img "Avatar do usuário" [ref=e424]
+  - generic [ref=e517]:
+    - button "Fechar" [ref=e520] [cursor=pointer]:
+      - img "Fechar" [ref=e522]
+    - generic [ref=e526]:
+      - generic:
+        - dialog:
+          - generic:
+            - button "Avançar" [ref=e528] [cursor=pointer]:
+              - img "Avançar" [ref=e531]
+            - generic:
+              - generic:
+                - article:
+                  - generic:
+                    - button "Photo by The Rundown AI on April 01, 2026. May be an image of poster and text that says 'BR ALFORG00D H FOR GOOD AI just learned to detect multiple brain related diseases from a single blood test'." [ref=e535]:
+                      - img "Photo by The Rundown AI on April 01, 2026. May be an image of poster and text that says 'BR ALFORG00D H FOR GOOD AI just learned to detect multiple brain related diseases from a single blood test'." [ref=e539]
+                    - generic [ref=e541]:
+                      - generic [ref=e543]:
+                        - banner [ref=e544]:
+                          - button "Foto do perfil de therundownai" [disabled] [ref=e549]:
+                            - link "Foto do perfil de therundownai" [disabled] [ref=e551] [cursor=pointer]:
+                              - /url: /therundownai/
+                              - img "Foto do perfil de therundownai" [ref=e552]
+                          - generic [ref=e557]:
+                            - link "therundownai" [ref=e563] [cursor=pointer]:
+                              - /url: /therundownai/
+                              - generic [ref=e565]: therundownai
+                            - img "Verificado" [ref=e567]
+                        - button "Mais opções" [ref=e572] [cursor=pointer]:
+                          - img "Mais opções" [ref=e575]
+                      - generic [ref=e579]:
+                        - generic [ref=e580]:
+                          - button "Curtir" [ref=e583] [cursor=pointer]:
+                            - img "Curtir" [ref=e586]
+                          - button "Comentar" [ref=e589] [cursor=pointer]:
+                            - img "Comentar" [ref=e591]
+                          - button "Compartilhar post" [ref=e594] [cursor=pointer]:
+                            - img "Compartilhar post" [ref=e596]
+                          - button "Salvar" [ref=e601] [cursor=pointer]:
+                            - button "Salvar" [ref=e602]:
+                              - img "Salvar" [ref=e604]
+                        - button "51 curtidas" [ref=e610] [cursor=pointer]
+                        - list [ref=e612]:
+                          - button [ref=e613]:
+                            - listitem [ref=e614]:
+                              - generic [ref=e616]:
+                                - button "Foto do perfil de therundownai" [disabled] [ref=e620]:
+                                  - link "Foto do perfil de therundownai" [disabled] [ref=e622] [cursor=pointer]:
+                                    - /url: /therundownai/
+                                    - img "Foto do perfil de therundownai" [ref=e623]
+                                - generic [ref=e624]:
+                                  - heading "therundownai Verificado" [active] [level=2] [ref=e625]:
+                                    - link "therundownai" [ref=e630] [cursor=pointer]:
+                                      - /url: /therundownai/
+                                    - img "Verificado" [ref=e632]
+                                  - heading [level=1] [ref=e635]:
+                                    - text: Researchers at Lund University have developed an AI model that can identify patterns linked to multiple neurodegenerative diseases using a single blood sample.
+                                    - text: The system was trained on protein data from over 17,000 individuals in the GNPC, an international research collaboration that has built one of the world’s largest proteomics databases for brain diseases
+                                    - text: It looks at protein patterns in blood linked to brain diseases, helping the AI tell similar conditions apart—even when symptoms overlap or a person may have more than one disease. It can detect signals associated with conditions like Alzheimer’s, Parkinson’s, ALS, and frontotemporal dementia.
+                                    - text: However, researchers say the model is not yet ready for standalone clinical use and requires further validation.
+                                    - text: Follow us (
+                                    - link "@therundownAI" [ref=e636] [cursor=pointer]:
+                                      - /url: /therundownAI/
+                                    - text: ) to keep up with the latest news in tech and AI.
+                                    - text: "DOI: 10.1038/s41591-026-04303-y"
+                                    - text: "Source: Lund University News | Nature Medicine"
+                                  - generic [ref=e638]:
+                                    - time [ref=e639]: 28 min
+                                    - button "Ver tradução" [ref=e642] [cursor=pointer]:
+                                      - generic [ref=e643]: Ver tradução
+                          - generic [ref=e646]:
+                            - list [ref=e648]:
+                              - button "Foto do perfil de bycarlacosta bycarlacosta Now instead of googling symptoms late at night that always ends up with “c*ancer” or “h*v”, now AI can scare you even further 😭 12 min Responder Curtir" [ref=e649]:
+                                - listitem [ref=e650]:
+                                  - generic [ref=e651]:
+                                    - generic [ref=e652]:
+                                      - button "Foto do perfil de bycarlacosta" [disabled] [ref=e656]:
+                                        - link "Foto do perfil de bycarlacosta" [disabled] [ref=e658] [cursor=pointer]:
+                                          - /url: /bycarlacosta/
+                                          - img "Foto do perfil de bycarlacosta" [ref=e659]
+                                      - generic [ref=e660]:
+                                        - heading "bycarlacosta" [level=3] [ref=e661]:
+                                          - link "bycarlacosta" [ref=e666] [cursor=pointer]:
+                                            - /url: /bycarlacosta/
+                                        - generic [ref=e667]: Now instead of googling symptoms late at night that always ends up with “c*ancer” or “h*v”, now AI can scare you even further 😭
+                                        - generic [ref=e669]:
+                                          - link "12 min" [ref=e670] [cursor=pointer]:
+                                            - /url: /p/DWmr5mGjMoi/c/18212202982320611/
+                                            - time [ref=e671]: 12 min
+                                          - button "Responder" [ref=e672] [cursor=pointer]
+                                    - button "Curtir" [ref=e675] [cursor=pointer]:
+                                      - img "Curtir" [ref=e678]
+                            - list [ref=e681]:
+                              - button "Foto do perfil de klajdi.budlla klajdi.budlla 16 min Responder Curtir" [ref=e682]:
+                                - listitem [ref=e683]:
+                                  - generic [ref=e684]:
+                                    - generic [ref=e685]:
+                                      - button "Foto do perfil de klajdi.budlla" [disabled] [ref=e689]:
+                                        - link "Foto do perfil de klajdi.budlla" [disabled] [ref=e691] [cursor=pointer]:
+                                          - /url: /klajdi.budlla/
+                                          - img "Foto do perfil de klajdi.budlla" [ref=e692]
+                                      - generic [ref=e693]:
+                                        - heading "klajdi.budlla" [level=3] [ref=e694]:
+                                          - link "klajdi.budlla" [ref=e699] [cursor=pointer]:
+                                            - /url: /klajdi.budlla/
+                                        - img [ref=e701]
+                                        - generic [ref=e703]:
+                                          - link "16 min" [ref=e704] [cursor=pointer]:
+                                            - /url: /p/DWmr5mGjMoi/c/17881494141520713/
+                                            - time [ref=e705]: 16 min
+                                          - button "Responder" [ref=e706] [cursor=pointer]
+                                    - button "Curtir" [ref=e709] [cursor=pointer]:
+                                      - img "Curtir" [ref=e712]
+                            - list [ref=e715]:
+                              - button "Foto do perfil de mainctrevor mainctrevor We’ve seen this playbook before I’m not sure where 21 min Responder Curtir" [ref=e716]:
+                                - listitem [ref=e717]:
+                                  - generic [ref=e718]:
+                                    - generic [ref=e719]:
+                                      - button "Foto do perfil de mainctrevor" [disabled] [ref=e723]:
+                                        - link "Foto do perfil de mainctrevor" [disabled] [ref=e725] [cursor=pointer]:
+                                          - /url: /mainctrevor/
+                                          - img "Foto do perfil de mainctrevor" [ref=e726]
+                                      - generic [ref=e727]:
+                                        - heading "mainctrevor" [level=3] [ref=e728]:
+                                          - link "mainctrevor" [ref=e733] [cursor=pointer]:
+                                            - /url: /mainctrevor/
+                                        - generic [ref=e734]: We’ve seen this playbook before I’m not sure where
+                                        - generic [ref=e736]:
+                                          - link "21 min" [ref=e737] [cursor=pointer]:
+                                            - /url: /p/DWmr5mGjMoi/c/17965072764048432/
+                                            - time [ref=e738]: 21 min
+                                          - button "Responder" [ref=e739] [cursor=pointer]
+                                    - button "Curtir" [ref=e742] [cursor=pointer]:
+                                      - img "Curtir" [ref=e745]
+                            - list [ref=e748]:
+                              - button "Foto do perfil de tommyjusa_ tommyjusa_ 22 min Responder Curtir" [ref=e749]:
+                                - listitem [ref=e750]:
+                                  - generic [ref=e751]:
+                                    - generic [ref=e752]:
+                                      - button "Foto do perfil de tommyjusa_" [disabled] [ref=e756]:
+                                        - link "Foto do perfil de tommyjusa_" [disabled] [ref=e758] [cursor=pointer]:
+                                          - /url: /tommyjusa_/
+                                          - img "Foto do perfil de tommyjusa_" [ref=e759]
+                                      - generic [ref=e760]:
+                                        - heading "tommyjusa_" [level=3] [ref=e761]:
+                                          - link "tommyjusa_" [ref=e766] [cursor=pointer]:
+                                            - /url: /tommyjusa_/
+                                        - img [ref=e768]
+                                        - generic [ref=e770]:
+                                          - link "22 min" [ref=e771] [cursor=pointer]:
+                                            - /url: /p/DWmr5mGjMoi/c/18116867056653095/
+                                            - time [ref=e772]: 22 min
+                                          - button "Responder" [ref=e773] [cursor=pointer]
+                                    - button "Curtir" [ref=e776] [cursor=pointer]:
+                                      - img "Curtir" [ref=e779]
+                        - link "há 28 minutos" [ref=e784] [cursor=pointer]:
+                          - /url: /therundownai/p/DWmr5mGjMoi/
+                          - time [ref=e786]: há 28 minutos
+                        - generic [ref=e790]:
+                          - button "Emoji" [ref=e792] [cursor=pointer]:
+                            - img "Emoji" [ref=e794]
+                          - textbox "Adicione um comentário..." [ref=e796]
+                          - generic [ref=e797]:
+                            - button "Postar" [disabled]

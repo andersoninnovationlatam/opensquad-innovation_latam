@@ -1,0 +1,304 @@
+- generic [ref=e1]:
+  - generic:
+    - generic:
+      - generic:
+        - generic [ref=e6]:
+          - generic [ref=e9]:
+            - link [ref=e14] [cursor=pointer]:
+              - /url: /
+              - img [ref=e19]
+            - generic [ref=e22]:
+              - link [ref=e27] [cursor=pointer]:
+                - /url: /
+                - img [ref=e32]
+              - link [ref=e37] [cursor=pointer]:
+                - /url: /reels/
+                - img [ref=e42]
+              - link [ref=e49] [cursor=pointer]:
+                - /url: /direct/inbox/
+                - img [ref=e54]
+              - link [ref=e60] [cursor=pointer]:
+                - /url: /explore/
+                - img [ref=e65]
+              - link [ref=e72] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e77]
+              - link [ref=e83] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e88]
+              - link [ref=e93] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e98]
+              - link [ref=e105] [cursor=pointer]:
+                - /url: /andersonteste007/
+                - link [ref=e110]:
+                  - img [ref=e111]
+            - generic [ref=e112]:
+              - link [ref=e115] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e120]
+              - link [ref=e123] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e128]
+          - generic [ref=e131]:
+            - main [ref=e132]:
+              - generic [ref=e133]:
+                - generic [ref=e135]:
+                  - list [ref=e142]:
+                    - listitem [ref=e143]
+                    - listitem [ref=e144]:
+                      - button [ref=e145] [cursor=pointer]:
+                        - link [ref=e150]:
+                          - img [ref=e151]
+                        - generic [ref=e154]: ratosdeia
+                    - listitem [ref=e155]:
+                      - button [ref=e156] [cursor=pointer]:
+                        - link [ref=e161]:
+                          - img [ref=e162]
+                        - generic [ref=e165]: renatoasse
+                    - listitem [ref=e166]:
+                      - button [ref=e167] [cursor=pointer]:
+                        - link [ref=e172]:
+                          - img [ref=e173]
+                        - generic [ref=e176]: alinecofferri
+                    - listitem [ref=e177]:
+                      - button [ref=e178] [cursor=pointer]:
+                        - link [ref=e183]:
+                          - img [ref=e184]
+                        - generic [ref=e187]: investidor10br
+                    - listitem [ref=e188]:
+                      - button [ref=e189] [cursor=pointer]:
+                        - link [ref=e194]:
+                          - img [ref=e195]
+                        - generic [ref=e198]: oraulsena
+                    - listitem [ref=e199]:
+                      - button [ref=e200] [cursor=pointer]:
+                        - link [ref=e205]:
+                          - img [ref=e206]
+                        - generic [ref=e209]: ia.todo.dia
+                  - generic [ref=e211]:
+                    - generic [ref=e213]:
+                      - generic [ref=e215]:
+                        - status [ref=e216]
+                        - generic [ref=e217]:
+                          - status [ref=e218]
+                          - status [ref=e219]
+                      - status [ref=e220]
+                    - generic [ref=e222]:
+                      - generic [ref=e224]:
+                        - status [ref=e225]
+                        - generic [ref=e226]:
+                          - status [ref=e227]
+                          - status [ref=e228]
+                      - status [ref=e229]
+                - generic [ref=e231]:
+                  - generic [ref=e237]:
+                    - button [disabled] [ref=e240]:
+                      - link [disabled] [ref=e242] [cursor=pointer]:
+                        - /url: /andersonteste007/
+                        - img [ref=e243]
+                    - generic [ref=e246]:
+                      - link [ref=e248] [cursor=pointer]:
+                        - /url: /andersonteste007/
+                        - text: andersonteste007
+                      - generic [ref=e252]: Anderson
+                    - button [ref=e255] [cursor=pointer]: Mudar
+                  - generic [ref=e258]:
+                    - generic [ref=e259]:
+                      - generic [ref=e261]: Sugestões para você
+                      - link [ref=e262] [cursor=pointer]:
+                        - /url: /explore/people/
+                        - generic [ref=e263]: Ver tudo
+                    - generic [ref=e267]:
+                      - generic [ref=e271]:
+                        - link [ref=e278] [cursor=pointer]:
+                          - /url: /carros_eletricosbr/
+                          - img [ref=e279]
+                        - generic [ref=e282]:
+                          - link [ref=e287] [cursor=pointer]:
+                            - /url: /carros_eletricosbr/
+                            - generic [ref=e290]: Carros Elétricos
+                          - generic [ref=e293]:
+                            - button [ref=e295] [cursor=pointer]:
+                              - link [ref=e296]
+                            - generic [ref=e297]: Seguido(a) por andersonaugusto.pinto
+                        - button [ref=e300] [cursor=pointer]:
+                          - generic [ref=e302]: Seguir
+                      - generic [ref=e306]:
+                        - link [ref=e313] [cursor=pointer]:
+                          - /url: /angelcorcine/
+                          - img [ref=e314]
+                        - generic [ref=e317]:
+                          - link [ref=e322] [cursor=pointer]:
+                            - /url: /angelcorcine/
+                            - generic [ref=e325]: Ângela Frühauf Co...
+                          - generic [ref=e328]:
+                            - button [ref=e330] [cursor=pointer]:
+                              - link [ref=e331]
+                            - generic [ref=e332]: Seguido(a) por andersonaugusto.pinto
+                        - button [ref=e335] [cursor=pointer]:
+                          - generic [ref=e337]: Seguir
+                      - generic [ref=e341]:
+                        - link [ref=e348] [cursor=pointer]:
+                          - /url: /joaoleandroluz/
+                          - img [ref=e349]
+                        - generic [ref=e352]:
+                          - link [ref=e357] [cursor=pointer]:
+                            - /url: /joaoleandroluz/
+                            - generic [ref=e360]: João Leandro da Luz
+                          - generic [ref=e363]:
+                            - button [ref=e365] [cursor=pointer]:
+                              - link [ref=e366]
+                            - generic [ref=e367]: Seguido(a) por andersonaugusto.pinto
+                        - button [ref=e370] [cursor=pointer]:
+                          - generic [ref=e372]: Seguir
+                      - generic [ref=e376]:
+                        - link [ref=e383] [cursor=pointer]:
+                          - /url: /alicebastosneves/
+                          - img [ref=e384]
+                        - generic [ref=e387]:
+                          - link [ref=e392] [cursor=pointer]:
+                            - /url: /alicebastosneves/
+                            - generic [ref=e394]:
+                              - generic [ref=e395]: Alice Bastos Neves
+                              - img [ref=e397]
+                          - generic [ref=e401]:
+                            - button [ref=e403] [cursor=pointer]:
+                              - link [ref=e404]
+                            - generic [ref=e405]: Seguido(a) por andersonaugusto.pinto
+                        - button [ref=e408] [cursor=pointer]:
+                          - generic [ref=e410]: Seguir
+                      - generic [ref=e414]:
+                        - link [ref=e421] [cursor=pointer]:
+                          - /url: /juracisilvasalvatti/
+                          - img [ref=e422]
+                        - generic [ref=e425]:
+                          - link [ref=e430] [cursor=pointer]:
+                            - /url: /juracisilvasalvatti/
+                            - generic [ref=e433]: Juraci Silva Salv...
+                          - generic [ref=e436]:
+                            - generic [ref=e437]:
+                              - button [ref=e438] [cursor=pointer]:
+                                - link [ref=e439]
+                              - button [ref=e440] [cursor=pointer]:
+                                - link [ref=e441]
+                            - generic [ref=e442]: Seguido(a) por andersonaugusto.pinto e mais 1 pessoas
+                        - button [ref=e445] [cursor=pointer]:
+                          - generic [ref=e447]: Seguir
+                  - generic [ref=e449]:
+                    - navigation [ref=e450]:
+                      - list [ref=e451]:
+                        - listitem [ref=e452]:
+                          - link [ref=e453] [cursor=pointer]:
+                            - /url: https://about.instagram.com/
+                            - generic [ref=e454]: Sobre
+                          - text: ·
+                        - listitem [ref=e455]:
+                          - link [ref=e456] [cursor=pointer]:
+                            - /url: https://help.instagram.com/
+                            - generic [ref=e457]: Ajuda
+                          - text: ·
+                        - listitem [ref=e458]:
+                          - link [ref=e459] [cursor=pointer]:
+                            - /url: https://about.instagram.com/blog/
+                            - generic [ref=e460]: Imprensa
+                          - text: ·
+                        - listitem [ref=e461]:
+                          - link [ref=e462] [cursor=pointer]:
+                            - /url: https://developers.facebook.com/docs/instagram
+                            - generic [ref=e463]: API
+                          - text: ·
+                        - listitem [ref=e464]:
+                          - link [ref=e465] [cursor=pointer]:
+                            - /url: https://about.instagram.com/about-us/careers
+                            - generic [ref=e466]: Carreiras
+                          - text: ·
+                        - listitem [ref=e467]:
+                          - link [ref=e468] [cursor=pointer]:
+                            - /url: /legal/privacy/
+                            - generic [ref=e469]: Privacidade
+                          - text: ·
+                        - listitem [ref=e470]:
+                          - link [ref=e471] [cursor=pointer]:
+                            - /url: /legal/terms/
+                            - generic [ref=e472]: Termos
+                          - text: ·
+                        - listitem [ref=e473]:
+                          - link [ref=e474] [cursor=pointer]:
+                            - /url: /explore/locations/
+                            - generic [ref=e475]: Localizações
+                          - text: ·
+                        - listitem [ref=e476]:
+                          - link [ref=e477] [cursor=pointer]:
+                            - /url: /language/preferences/
+                            - generic [ref=e478]: Idioma
+                          - text: ·
+                        - listitem [ref=e479]:
+                          - link [ref=e480] [cursor=pointer]:
+                            - /url: /accounts/meta_verified/?entrypoint=web_footer
+                            - generic [ref=e481]: Meta Verified
+                    - generic [ref=e483]: © 2026 Instagram from Meta
+            - contentinfo [ref=e484]:
+              - generic [ref=e485]:
+                - generic [ref=e487]:
+                  - link [ref=e489] [cursor=pointer]:
+                    - /url: https://about.meta.com/
+                    - generic [ref=e490]: Meta
+                  - link [ref=e492] [cursor=pointer]:
+                    - /url: https://about.instagram.com/
+                    - generic [ref=e493]: Sobre
+                  - link [ref=e495] [cursor=pointer]:
+                    - /url: https://about.instagram.com/blog/
+                    - generic [ref=e496]: Blog
+                  - link [ref=e498] [cursor=pointer]:
+                    - /url: https://about.instagram.com/about-us/careers
+                    - generic [ref=e499]: Carreiras
+                  - link [ref=e501] [cursor=pointer]:
+                    - /url: https://help.instagram.com/
+                    - generic [ref=e502]: Ajuda
+                  - link [ref=e504] [cursor=pointer]:
+                    - /url: https://developers.facebook.com/docs/instagram
+                    - generic [ref=e505]: API
+                  - link [ref=e507] [cursor=pointer]:
+                    - /url: /legal/privacy/
+                    - generic [ref=e508]: Privacidade
+                  - link [ref=e510] [cursor=pointer]:
+                    - /url: /legal/terms/
+                    - generic [ref=e511]: Termos
+                  - link [ref=e513] [cursor=pointer]:
+                    - /url: /explore/locations/
+                    - generic [ref=e514]: Localizações
+                  - link [ref=e516] [cursor=pointer]:
+                    - /url: /web/lite/
+                    - generic [ref=e517]: Instagram Lite
+                  - link [ref=e519] [cursor=pointer]:
+                    - /url: https://www.meta.ai/?utm_source=foa_web_footer
+                    - generic [ref=e520]: Meta AI
+                  - link [ref=e522] [cursor=pointer]:
+                    - /url: https://www.threads.com/
+                    - generic [ref=e523]: Threads
+                  - link [ref=e525] [cursor=pointer]:
+                    - /url: https://www.facebook.com/help/instagram/261704639352628
+                    - generic [ref=e526]: Upload de contatos e não usuários
+                  - link [ref=e528] [cursor=pointer]:
+                    - /url: /accounts/meta_verified/?entrypoint=web_footer
+                    - generic [ref=e529]: Meta Verified
+                - generic [ref=e530]:
+                  - generic [ref=e531] [cursor=pointer]:
+                    - generic [ref=e532]:
+                      - generic [ref=e533]: Português (Brasil)
+                      - img [ref=e536]
+                    - combobox [ref=e538]
+                  - generic [ref=e540]: © 2026 Instagram from Meta
+        - button "Mensagens Mensagens" [ref=e542] [cursor=pointer]:
+          - generic [ref=e544]:
+            - img "Mensagens" [ref=e546]
+            - generic [ref=e549]: Mensagens
+  - dialog [ref=e556]:
+    - generic [ref=e560]:
+      - generic [ref=e564]:
+        - heading "Ativar notificações" [active] [level=2] [ref=e565]
+        - generic [ref=e566]: Saiba na hora quando alguém seguir você ou curtir e comentar as suas fotos.
+      - generic [ref=e567]:
+        - button "Ativar" [ref=e568] [cursor=pointer]
+        - button "Agora não" [ref=e569] [cursor=pointer]

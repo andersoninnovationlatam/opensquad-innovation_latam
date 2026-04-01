@@ -1,0 +1,304 @@
+- generic [ref=e1]:
+  - generic:
+    - generic:
+      - generic:
+        - generic [ref=e18]:
+          - generic [ref=e21]:
+            - link [ref=e425] [cursor=pointer]:
+              - /url: /
+              - img [ref=e426]
+            - generic [ref=e34]:
+              - link [ref=e427] [cursor=pointer]:
+                - /url: /
+                - img [ref=e428]
+              - link [ref=e429] [cursor=pointer]:
+                - /url: /reels/
+                - img [ref=e430]
+              - link [ref=e431] [cursor=pointer]:
+                - /url: /direct/inbox/
+                - img [ref=e432]
+              - link [ref=e433] [cursor=pointer]:
+                - /url: /explore/
+                - img [ref=e434]
+              - link [ref=e435] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e436]
+              - link [ref=e437] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e438]
+              - link [ref=e439] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e440]
+              - link [ref=e441] [cursor=pointer]:
+                - /url: /andersonteste007/
+                - link [ref=e442]:
+                  - img [ref=e443]
+            - generic [ref=e126]:
+              - link [ref=e444] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e445]
+              - link [ref=e446] [cursor=pointer]:
+                - /url: "#"
+                - img [ref=e447]
+          - generic [ref=e145]:
+            - main [ref=e146]:
+              - generic [ref=e148]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]:
+                    - link [ref=e448] [cursor=pointer]:
+                      - /url: /therundownai/
+                      - img [ref=e449]
+                    - generic [ref=e158]:
+                      - generic [ref=e159]:
+                        - generic [ref=e160]:
+                          - generic [ref=e161]:
+                            - link [ref=e450] [cursor=pointer]:
+                              - /url: "#"
+                              - heading [level=2] [ref=e451]:
+                                - generic [ref=e164]: therundownai
+                            - img [ref=e452]
+                          - button [ref=e453] [cursor=pointer]:
+                            - img [ref=e454]
+                        - generic [ref=e176]: The Rundown AI
+                        - generic [ref=e177]:
+                          - generic [ref=e179]:
+                            - generic [ref=e180]: "2.034"
+                            - text: posts
+                          - link [ref=e455] [cursor=pointer]:
+                            - /url: /therundownai/followers/
+                            - generic [ref=e183]:
+                              - generic [ref=e456]: 385 mil
+                              - text: seguidores
+                          - link [ref=e457] [cursor=pointer]:
+                            - /url: /therundownai/following/
+                            - generic [ref=e187]:
+                              - generic [ref=e188]: "1"
+                              - text: seguindo
+                      - generic [ref=e190]:
+                        - generic [ref=e192]: Empresa de mídia/notícias
+                        - button [ref=e458] [cursor=pointer]:
+                          - generic [ref=e195]:
+                            - text: Get the latest in AI in 5 minutes a day. Read by 2,000,000+ early adopters. By
+                            - link [ref=e459]:
+                              - /url: /rowancheung/
+                              - text: "@rowancheung"
+                        - generic [ref=e197]:
+                          - generic [ref=e198]:
+                            - img [ref=e460]
+                            - link [ref=e461] [cursor=pointer]:
+                              - /url: https://l.instagram.com/?u=http%3A%2F%2Frundown.ai%2F%3Futm_source%3Dig%26utm_medium%3Dsocial%26utm_content%3Dlink_in_bio%26fbclid%3DPAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnVbz3hHuksaFt_Z7IC8myU6Yec7rnNZBZ8JVldJs2MqCDxGaHwKFvZjRVyJ8_aem_DGYE8zV2QkDSELj8KojF9w&e=AT5i5zfupMF_KUGs_92VNAJzqSDMWiv2CxCjMpOfxrU9s-xH7I8AehV7FU201u3xjUqae0Q9_3IjXAeyoZB4gaAFd3FZMYcxsp3RPLr6yhWOzXnKcIU1R3bPiQ
+                              - generic [ref=e205]: rundown.ai
+                          - link [ref=e462] [cursor=pointer]:
+                            - /url: https://www.threads.com/@therundownai?xmt=AQF0rrC9QKuMlnMGBt1F4iu-l4oE-bzXWsbU00ILVgA5-Y4
+                            - img [ref=e463]
+                            - generic [ref=e212]: therundownai
+                  - generic [ref=e217]:
+                    - button [ref=e464] [cursor=pointer]:
+                      - generic [ref=e220]:
+                        - generic [ref=e221]: Seguindo
+                        - img [ref=e465]
+                    - button [ref=e466] [cursor=pointer]: Enviar mensagem
+                    - button [ref=e467] [cursor=pointer]:
+                      - img [ref=e468]
+                - tablist [ref=e235]:
+                  - link [ref=e469] [cursor=pointer]:
+                    - /url: /therundownai/
+                    - img [ref=e470]
+                  - link [ref=e471] [cursor=pointer]:
+                    - /url: /therundownai/reels/
+                    - img [ref=e472]
+                  - link [ref=e473] [cursor=pointer]:
+                    - /url: /therundownai/tagged/
+                    - img [ref=e474]
+                - generic [ref=e264]:
+                  - generic [ref=e265]:
+                    - link [ref=e475] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmr5mGjMoi/
+                      - img [ref=e476]
+                    - link [ref=e477] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmkp_dDF0n/
+                      - img [ref=e478]
+                    - link [ref=e479] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmbgBCDAfr/
+                      - img [ref=e480]
+                  - generic [ref=e284]:
+                    - link [ref=e481] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmOX68Eulw/
+                      - img [ref=e482]
+                    - link [ref=e483] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmGsoYjKhH/
+                      - img [ref=e484]
+                    - link [ref=e485] [cursor=pointer]:
+                      - /url: /therundownai/p/DWmDnyDjIG8/
+                      - img [ref=e486]
+                  - generic [ref=e303]:
+                    - link [ref=e487] [cursor=pointer]:
+                      - /url: /therundownai/p/DWl4FWejD-N/
+                      - img [ref=e488]
+                    - link [ref=e489] [cursor=pointer]:
+                      - /url: /therundownai/p/DWkGiNEkx5j/
+                      - img [ref=e490]
+                    - link [ref=e491] [cursor=pointer]:
+                      - /url: /therundownai/p/DWj-3OZDIaJ/
+                      - img [ref=e492]
+                  - generic [ref=e322]:
+                    - link [ref=e493] [cursor=pointer]:
+                      - /url: /therundownai/p/DWj71SPkvjB/
+                      - img [ref=e494]
+                      - generic:
+                        - generic:
+                          - img
+                    - link [ref=e495] [cursor=pointer]:
+                      - /url: /therundownai/p/DWj1O4_DGr4/
+                      - img [ref=e496]
+                      - generic:
+                        - generic:
+                          - img
+                    - link [ref=e497] [cursor=pointer]:
+                      - /url: /therundownai/p/DWjokMHjPwy/
+                      - img [ref=e498]
+            - contentinfo [ref=e341]:
+              - generic [ref=e342]:
+                - generic [ref=e344]:
+                  - link [ref=e499] [cursor=pointer]:
+                    - /url: https://about.meta.com/
+                    - generic [ref=e347]: Meta
+                  - link [ref=e500] [cursor=pointer]:
+                    - /url: https://about.instagram.com/
+                    - generic [ref=e350]: Sobre
+                  - link [ref=e501] [cursor=pointer]:
+                    - /url: https://about.instagram.com/blog/
+                    - generic [ref=e353]: Blog
+                  - link [ref=e502] [cursor=pointer]:
+                    - /url: https://about.instagram.com/about-us/careers
+                    - generic [ref=e356]: Carreiras
+                  - link [ref=e503] [cursor=pointer]:
+                    - /url: https://help.instagram.com/
+                    - generic [ref=e359]: Ajuda
+                  - link [ref=e504] [cursor=pointer]:
+                    - /url: https://developers.facebook.com/docs/instagram
+                    - generic [ref=e362]: API
+                  - link [ref=e505] [cursor=pointer]:
+                    - /url: /legal/privacy/
+                    - generic [ref=e365]: Privacidade
+                  - link [ref=e506] [cursor=pointer]:
+                    - /url: /legal/terms/
+                    - generic [ref=e368]: Termos
+                  - link [ref=e507] [cursor=pointer]:
+                    - /url: /explore/locations/
+                    - generic [ref=e371]: Localizações
+                  - link [ref=e508] [cursor=pointer]:
+                    - /url: /web/lite/
+                    - generic [ref=e374]: Instagram Lite
+                  - link [ref=e509] [cursor=pointer]:
+                    - /url: https://www.meta.ai/?utm_source=foa_web_footer
+                    - generic [ref=e377]: Meta AI
+                  - link [ref=e510] [cursor=pointer]:
+                    - /url: https://www.threads.com/
+                    - generic [ref=e380]: Threads
+                  - link [ref=e511] [cursor=pointer]:
+                    - /url: https://www.facebook.com/help/instagram/261704639352628
+                    - generic [ref=e383]: Upload de contatos e não usuários
+                  - link [ref=e512] [cursor=pointer]:
+                    - /url: /accounts/meta_verified/?entrypoint=web_footer
+                    - generic [ref=e386]: Meta Verified
+                - generic [ref=e387]:
+                  - generic [ref=e388] [cursor=pointer]:
+                    - generic [ref=e389]:
+                      - generic [ref=e390]: Português (Brasil)
+                      - img [ref=e513]
+                    - combobox [ref=e514]
+                  - generic [ref=e397]: © 2026 Instagram from Meta
+        - button "Mensagens" [ref=e400] [cursor=pointer]:
+          - generic "Mensagens" [ref=e401]:
+            - generic [ref=e402]:
+              - img "Mensagens" [ref=e405]
+              - generic [ref=e408]: Mensagens
+            - generic [ref=e409]:
+              - button "Avatar do usuário Carol e Paulo Vasques" [ref=e411]:
+                - img "Avatar do usuário" [ref=e414]
+              - button "Avatar do usuário Atendus" [ref=e416]:
+                - img "Avatar do usuário" [ref=e419]
+              - button "Avatar do usuário Anderson Pinto" [ref=e421]:
+                - img "Avatar do usuário" [ref=e424]
+  - generic [ref=e517]:
+    - button "Fechar" [ref=e520] [cursor=pointer]:
+      - img "Fechar" [ref=e522]
+    - generic [ref=e526]:
+      - generic:
+        - dialog:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "Voltar" [ref=e799] [cursor=pointer]:
+                    - img "Voltar" [ref=e802]
+                  - button "Avançar" [active] [ref=e528] [cursor=pointer]:
+                    - img "Avançar" [ref=e531]
+            - generic:
+              - generic:
+                - article:
+                  - generic:
+                    - button "Photo by The Rundown AI on April 01, 2026. May be an image of book and text that says 'R lngo Siegner Der kleine Drache Der kleine Drache Kokosnuss Kokosnuss im Weltraum auf dem Mars Ein galaktisches Abenteuer für kleine Entdecker AI INEUS NE UUS Penguin publishing house is suing OpenAl over a German children's book series'." [ref=e806]:
+                      - img "Photo by The Rundown AI on April 01, 2026. May be an image of book and text that says 'R lngo Siegner Der kleine Drache Der kleine Drache Kokosnuss Kokosnuss im Weltraum auf dem Mars Ein galaktisches Abenteuer für kleine Entdecker AI INEUS NE UUS Penguin publishing house is suing OpenAl over a German children's book series'." [ref=e810]
+                    - generic [ref=e812]:
+                      - generic [ref=e814]:
+                        - banner [ref=e815]:
+                          - button "Foto do perfil de therundownai" [disabled] [ref=e820]:
+                            - link "Foto do perfil de therundownai" [disabled] [ref=e822] [cursor=pointer]:
+                              - /url: /therundownai/
+                              - img "Foto do perfil de therundownai" [ref=e823]
+                          - generic [ref=e828]:
+                            - link "therundownai" [ref=e834] [cursor=pointer]:
+                              - /url: /therundownai/
+                              - generic [ref=e836]: therundownai
+                            - img "Verificado" [ref=e838]
+                        - button "Mais opções" [ref=e843] [cursor=pointer]:
+                          - img "Mais opções" [ref=e846]
+                      - generic [ref=e850]:
+                        - generic [ref=e851]:
+                          - button "Curtir" [ref=e854] [cursor=pointer]:
+                            - img "Curtir" [ref=e857]
+                          - button "Comentar" [ref=e860] [cursor=pointer]:
+                            - img "Comentar" [ref=e862]
+                          - button "Compartilhar post" [ref=e865] [cursor=pointer]:
+                            - img "Compartilhar post" [ref=e867]
+                          - button "Salvar" [ref=e872] [cursor=pointer]:
+                            - button "Salvar" [ref=e873]:
+                              - img "Salvar" [ref=e875]
+                        - button "25 curtidas" [ref=e881] [cursor=pointer]
+                        - list [ref=e883]:
+                          - 'button "Foto do perfil de therundownai therundownai Verificado Penguin Random House has filed a lawsuit against OpenAI in a Munich court, claiming ChatGPT reproduced content similar to Ingo Siegner’s “Coconut the Little Dragon” book series. The publisher says the AI generated a story, cover, and text that were very close to the original works, raising doubts about copyright and how AI models are trained. OpenAI said it is reviewing the allegations and working with publishers. The case could set an important example for future AI copyright disputes. Follow us (@therundownAI) to keep up with the latest news in tech and AI. Source: The Guardian 1 h Ver tradução" [ref=e884]':
+                            - listitem [ref=e885]:
+                              - generic [ref=e887]:
+                                - button "Foto do perfil de therundownai" [disabled] [ref=e891]:
+                                  - link "Foto do perfil de therundownai" [disabled] [ref=e893] [cursor=pointer]:
+                                    - /url: /therundownai/
+                                    - img "Foto do perfil de therundownai" [ref=e894]
+                                - generic [ref=e895]:
+                                  - heading "therundownai Verificado" [level=2] [ref=e896]:
+                                    - link "therundownai" [ref=e901] [cursor=pointer]:
+                                      - /url: /therundownai/
+                                    - img "Verificado" [ref=e903]
+                                  - 'heading "Penguin Random House has filed a lawsuit against OpenAI in a Munich court, claiming ChatGPT reproduced content similar to Ingo Siegner’s “Coconut the Little Dragon” book series. The publisher says the AI generated a story, cover, and text that were very close to the original works, raising doubts about copyright and how AI models are trained. OpenAI said it is reviewing the allegations and working with publishers. The case could set an important example for future AI copyright disputes. Follow us (@therundownAI) to keep up with the latest news in tech and AI. Source: The Guardian" [level=1] [ref=e906]':
+                                    - text: Penguin Random House has filed a lawsuit against OpenAI in a Munich court, claiming ChatGPT reproduced content similar to Ingo Siegner’s “Coconut the Little Dragon” book series.
+                                    - text: The publisher says the AI generated a story, cover, and text that were very close to the original works, raising doubts about copyright and how AI models are trained.
+                                    - text: OpenAI said it is reviewing the allegations and working with publishers. The case could set an important example for future AI copyright disputes.
+                                    - text: Follow us (
+                                    - link "@therundownAI" [ref=e907] [cursor=pointer]:
+                                      - /url: /therundownAI/
+                                    - text: ) to keep up with the latest news in tech and AI.
+                                    - text: "Source: The Guardian"
+                                  - generic [ref=e909]:
+                                    - time [ref=e910]: 1 h
+                                    - button "Ver tradução" [ref=e913] [cursor=pointer]:
+                                      - generic [ref=e914]: Ver tradução
+                        - link "há 1 hora" [ref=e918] [cursor=pointer]:
+                          - /url: /therundownai/p/DWmkp_dDF0n/
+                          - time [ref=e920]: há 1 hora
+                        - generic [ref=e924]:
+                          - button "Emoji" [ref=e926] [cursor=pointer]:
+                            - img "Emoji" [ref=e928]
+                          - textbox "Adicione um comentário..." [ref=e930]
+                          - generic [ref=e931]:
+                            - button "Postar" [disabled]

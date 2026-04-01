@@ -4,7 +4,18 @@
       "Read(//c/Users/renat/.claude/plugins//**)",
       "Read(//c/Users/renat/.claude/plugins/**)",
       "Read(//c/Users/renat/.claude/**)",
-      "Edit(/.claude/skills/opensquad-dev/**)"
+      "Edit(/.claude/skills/opensquad-dev/**)",
+      "WebFetch(domain:fonts.googleapis.com)",
+      "WebFetch(domain:fonts.google.com)",
+      "WebSearch",
+      "Bash(node squads/tech-instagram-carousel/scripts/build-carousel-slides.mjs squads/tech-instagram-carousel/output/2026-04-01-153824)",
+      "Bash(python3 -m http.server 8765)",
+      "mcp__playwright__browser_resize",
+      "Bash(node -e \"console.log\\('node ok'\\)\")",
+      "Bash(npx playwright:*)",
+      "Bash(node -e ':*)",
+      "Bash(kill 185985)",
+      "Bash(echo \"PID=$!\")"
     ]
   },
   "outputStyle": "default"

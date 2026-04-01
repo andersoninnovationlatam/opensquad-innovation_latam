@@ -15,6 +15,8 @@ Quando o slide usar o fundo roxo institucional, o branding inferior direito deve
 
 - **Roxo institucional:** `#993CB1` (referência; alinhar com identidade atualizada da marca se divergir).
 
-## Atualização
+## Arquivo do logo
 
-Se o time de marca fornecer arquivo oficial do logo (SVG/PNG) ou medidas exatas em px, referencie o caminho em `squads/{code}/assets/` e reproduza fielmente nesta posição.
+- **Logo oficial (branco, para uso em slides):** `innovation-latam-logo-white.png`
+- Caminho nos squads: `squads/{code}/assets/innovation-latam-logo-white.png`
+- Se o arquivo não existir no squad, copiar de um squad existente que já o possua.
