@@ -15,7 +15,10 @@
       "Bash(npx playwright:*)",
       "Bash(node -e ':*)",
       "Bash(kill 185985)",
-      "Bash(echo \"PID=$!\")"
+      "Bash(echo \"PID=$!\")",
+      "Bash(python3 -m http.server 8771)",
+      "Bash(echo \"Servidor iniciado PID: $!\")",
+      "mcp__playwright__browser_navigate"
     ]
   },
   "outputStyle": "default"
