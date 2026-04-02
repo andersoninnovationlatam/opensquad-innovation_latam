@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - heading "O que o TurboQuant muda de verdade para empresas" [level=2] [ref=e5]
+    - paragraph [ref=e6]:
+      - text: Modelos que antes exigiam cluster em nuvem passam a rodar em hardware local.
+      - text: Isso não é detalhe de infraestrutura. É barreira de entrada caindo.
+      - text: Empresas menores chegam à IA de ponta sem o custo que só os gigantes suportavam.
+      - text: (MarkTechPost / ICLR 2026)
+  - generic [ref=e7]:
+    - generic [ref=e8]: "@innovationlatam"
+    - generic [ref=e9]: ARRASTE →

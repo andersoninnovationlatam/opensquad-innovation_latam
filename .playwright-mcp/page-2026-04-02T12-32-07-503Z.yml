@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e5]:
+    - heading "O Google lançou um algoritmo que reduz memória de IA em 6x." [level=1] [ref=e6]:
+      - text: O Google lançou um algoritmo
+      - text: que reduz memória de IA em 6x.
+    - paragraph [ref=e7]:
+      - text: O mercado destruiu ~00 bi
+      - text: em valor de chips em dias.
+    - paragraph [ref=e8]: Os analistas dizem que o pânico foi o erro.
+  - generic [ref=e9]:
+    - generic [ref=e10]: "@innovationlatam"
+    - generic [ref=e11]: ARRASTE →

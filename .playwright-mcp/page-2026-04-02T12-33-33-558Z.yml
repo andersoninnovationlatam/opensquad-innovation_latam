@@ -1,0 +1,6 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - paragraph [ref=e5]: reflexão
+    - paragraph [ref=e6]: "A pergunta que separa quem investe em inovação de quem só acompanha o mercado:"
+    - paragraph [ref=e7]: Quando o mercado entra em pânico com uma inovação de eficiência, a sua empresa lê isso como risco — ou como sinal de que a barreira de entrada da IA acabou de cair para você também?

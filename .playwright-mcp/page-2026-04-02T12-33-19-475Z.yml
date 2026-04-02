@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - heading "O sinal que líderes de inovação precisam ler" [level=2] [ref=e5]
+    - paragraph [ref=e7]: Amazon, Microsoft, Google e Meta investiram USD 200 bilhões em CapEx de IA só em 2024 — alta de 62%.
+    - paragraph [ref=e8]:
+      - text: Mercado financeiro vende no medo de curto prazo.
+      - text: Líderes de inovação compram no sinal de longo prazo.
+      - text: Eles sabem que eficiência acelera adoção — não cancela demanda.
+      - text: (Pew Research Center, 2025)
+  - generic [ref=e9]:
+    - generic [ref=e10]: "@innovationlatam"
+    - generic [ref=e11]: ARRASTE →

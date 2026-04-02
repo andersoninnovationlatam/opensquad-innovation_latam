@@ -1,0 +1,14 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e5]:
+    - heading "Eficiência em tecnologia não mata demanda." [level=2] [ref=e6]
+    - paragraph [ref=e7]:
+      - text: Ela amplifica adoção.
+      - text: Em 2025, foram investidos USD 580 bilhões em infraestrutura de IA globalmente.
+      - text: Quanto mais barato rodar IA, mais empresas adotam.
+      - text: Mais adoção = mais inferências = mesma — ou maior — demanda por chips.
+      - text: A internet não morreu quando ficou mais rápida.
+      - text: (IEA / Pew Research Center, 2025)
+  - generic [ref=e8]:
+    - generic [ref=e9]: "@innovationlatam"
+    - generic [ref=e10]: ARRASTE →

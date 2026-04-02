@@ -1,0 +1,24 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]:
+    - generic [ref=e5]: +3%
+    - generic [ref=e6]: +2%
+    - generic [ref=e7]: +1%
+    - generic [ref=e8]: 0%
+    - generic [ref=e9]: "-2%"
+    - generic [ref=e10]: "-4%"
+    - generic [ref=e11]: "-6%"
+    - generic [ref=e12]: "-8%"
+    - generic [ref=e23]: ⚡ TurboQuant — Mar 2026
+    - generic [ref=e54]: MEMORY CHIP SECTOR INDEX
+    - generic [ref=e55]: 09 MAR 2026 — INTRADAY
+    - generic [ref=e56]: ▼ -6.23% MAX
+  - img "Innovation Latam" [ref=e61]
+  - generic [ref=e62]:
+    - heading "Por que o mercado entrou em pânico?" [level=2] [ref=e63]
+    - paragraph [ref=e64]:
+      - text: "O Google publicou o TurboQuant: um algoritmo que comprime o \"KV cache\" — a parte que mais consome memória dos LLMs — em 6 vezes. Com 8x de aceleração e zero perda de precisão."
+      - text: Menos memória por modelo = menos chips vendidos. Esse raciocínio ignora um padrão histórico que a tecnologia repete há 50 anos.
+      - text: (Google Research Blog, 2026 / Parameter.io, 2026)
+  - generic [ref=e65]:
+    - generic [ref=e66]: "@innovationlatam"
+    - generic [ref=e67]: ARRASTE →

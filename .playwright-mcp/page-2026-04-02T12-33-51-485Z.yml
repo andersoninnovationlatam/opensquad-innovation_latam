@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - heading "Salva esse carrossel." [level=2] [ref=e5]
+    - paragraph [ref=e6]:
+      - text: Da próxima vez que alguém na sua empresa disser
+      - emphasis [ref=e7]: "\"vamos esperar a tecnologia estabilizar antes de investir em IA\""
+      - text: — você vai ter os dados certos.
+    - generic [ref=e8]:
+      - generic [ref=e9]: 📌
+      - generic [ref=e10]: Salva antes de qualquer reunião de estratégia de IA
+    - paragraph [ref=e11]: "💬 Comenta: sua empresa leu o TurboQuant como risco ou como oportunidade?"

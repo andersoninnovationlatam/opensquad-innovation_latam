@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - heading "O que mudou — e o que não mudou" [level=2] [ref=e5]
+    - paragraph [ref=e7]: Em 2026, chips HBM consumirão 20% de toda a capacidade global de wafers de DRAM. Preços de DRAM convencional subiram 180%.
+    - paragraph [ref=e8]:
+      - text: O TurboQuant otimiza inferência. Não elimina a demanda por HBM em treinamento.
+      - text: (TrendForce, 2025 / Winbuzzer/Gartner, 2026)
+  - generic [ref=e9]:
+    - generic [ref=e10]: "@innovationlatam"
+    - generic [ref=e11]: ARRASTE →
