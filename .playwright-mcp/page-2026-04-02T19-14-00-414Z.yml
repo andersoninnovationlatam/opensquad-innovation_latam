@@ -1,0 +1,15 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - img "Innovation Latam" [ref=e19]
+  - generic [ref=e20]:
+    - heading "A tese que foi ao chão junto com os chips" [level=2] [ref=e21]
+    - paragraph [ref=e23]:
+      - text: "Micron: US$ 25 bi perdidos (-14%)"
+      - text: "SK Hynix: -12% na bolsa de Seul"
+      - text: "Samsung: -7%, arrastando o KOSPI -3%"
+    - paragraph [ref=e24]:
+      - text: Bancos Tier-1 rebaixaram de "Overweight" para "Neutral". O Wells Fargo declarou que o TurboQuant "ataca diretamente a curva de custos de memória em sistemas de IA".
+      - text: (FinancialContent, 2026)
+  - generic [ref=e25]:
+    - generic [ref=e26]: "@innovationlatam"
+    - generic [ref=e27]: ARRASTE →

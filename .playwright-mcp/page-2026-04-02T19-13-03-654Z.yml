@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e4]
+  - generic [ref=e5]:
+    - heading "US$ 100 bilhões evaporaram do mercado em 48 horas." [level=1] [ref=e6]:
+      - text: US$ 100 bilhões evaporaram
+      - text: do mercado em 48 horas.
+    - paragraph [ref=e7]:
+      - text: O Google provou que IA não precisa
+      - text: de mais memória.
+  - generic [ref=e8]:
+    - generic [ref=e9]: "@innovationlatam"
+    - generic [ref=e10]: ARRASTE →

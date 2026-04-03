@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - img "Innovation Latam" [ref=e29]
+  - generic [ref=e30]:
+    - heading "Como o TurboQuant faz 6x mais com menos memória" [level=2] [ref=e31]
+    - paragraph [ref=e32]:
+      - text: Ele otimiza o KV cache, onde os modelos armazenam computações anteriores, comprimindo cada coordenada para apenas 3 bits sem retreinar nenhuma arquitetura.
+      - text: Isso entrega 8x mais velocidade em GPUs H100, funcionando em qualquer modelo transformer existente.
+      - text: (Google Research, ICLR 2026)
+  - generic [ref=e33]:
+    - generic [ref=e34]: "@innovationlatam"
+    - generic [ref=e35]: ARRASTE →

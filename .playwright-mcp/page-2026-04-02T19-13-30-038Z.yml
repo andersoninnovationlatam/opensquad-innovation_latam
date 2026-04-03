@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - img "Innovation Latam" [ref=e14]
+  - generic [ref=e15]:
+    - heading "O que aconteceu em 30 de março de 2026?" [level=2] [ref=e16]
+    - paragraph [ref=e17]:
+      - text: O Google anunciou o TurboQuant, algoritmo que comprime a memória de IA em até 6x sem retreinamento e sem perda de precisão, entregando 8x mais velocidade em GPUs H100.
+      - text: "Fabricantes de chips despencaram: Micron -14%, SK Hynix -12%, Samsung -7%."
+      - text: Mais de US$ 100 bilhões em valor de mercado evaporaram em 48 horas. O mercado havia apostado bilhões na premissa de que mais IA exigia mais memória. O TurboQuant inverteu essa equação.
+      - text: (FinancialContent / Google Research, 2026)
+  - generic [ref=e18]:
+    - generic [ref=e19]: "@innovationlatam"
+    - generic [ref=e20]: ARRASTE →

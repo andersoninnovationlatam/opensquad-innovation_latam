@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - img "Innovation Latam" [ref=e20]
+  - generic [ref=e21]:
+    - heading "Menos custo não significa menos demanda por IA" [level=2] [ref=e22]
+    - paragraph [ref=e23]:
+      - text: "O Goldman Sachs manteve posição construtiva: infraestrutura mais barata acelera a adoção, o que aumenta a demanda total por toda a cadeia de componentes."
+      - text: É o paradoxo Jevons aplicado à tecnologia, o mesmo padrão observado com cloud, mobile e internet.
+      - text: (Meyka, 2026)
+  - generic [ref=e24]:
+    - generic [ref=e25]: "@innovationlatam"
+    - generic [ref=e26]: ARRASTE →

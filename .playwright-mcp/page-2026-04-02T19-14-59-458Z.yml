@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - img "Innovation Latam" [ref=e14]
+  - generic [ref=e15]:
+    - paragraph [ref=e16]: reflexão
+    - paragraph [ref=e17]:
+      - text: A tese mudou.
+      - text: A estratégia da
+      - text: sua empresa também?
+    - paragraph [ref=e18]:
+      - text: Quando o custo de uma tecnologia cai de forma estrutural, ela deixa de ser "projeto experimental" e vira vantagem competitiva real.
+      - text: A pergunta que importa agora não é se sua empresa deve implementar IA. É quanto custa cada trimestre de espera.

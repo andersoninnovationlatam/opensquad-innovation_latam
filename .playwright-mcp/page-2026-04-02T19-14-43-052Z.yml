@@ -1,0 +1,14 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - img "Innovation Latam" [ref=e15]
+  - generic [ref=e16]:
+    - heading "O que o TurboQuant muda para empresas avaliando IA" [level=2] [ref=e17]
+    - paragraph [ref=e19]:
+      - text: Modelos avançados que exigiam clusters
+      - text: de cloud poderão rodar em hardware local.
+    - paragraph [ref=e20]:
+      - text: A barreira de custo para LLMs em escala encolheu 6x. Quem estava esperando o momento certo para implementar IA tem agora um argumento concreto para começar.
+      - text: (Google Research Blog, 2026)
+  - generic [ref=e21]:
+    - generic [ref=e22]: "@innovationlatam"
+    - generic [ref=e23]: ARRASTE →
