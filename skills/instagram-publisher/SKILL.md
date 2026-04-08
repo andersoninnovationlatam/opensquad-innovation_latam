@@ -2,17 +2,17 @@
 name: instagram-publisher
 description: >
   Publishes Instagram carousel posts from local images.
-  Uploads images to imgBB (requires API key) for public hosting, creates Instagram
+  Uploads images to a public host (default Catbox; optional imgBB or Imgur), creates Instagram
   media containers via the Graph API, and publishes the carousel.
   Supports 2-10 images per post and retrieves the real post permalink.
 description_pt-BR: >
   Publica carrosséis do Instagram a partir de imagens locais.
-  Faz upload das imagens para o imgBB (requer chave de API) como hospedagem pública,
+  Faz upload para hospedagem pública (padrão Catbox; opcional imgBB ou Imgur),
   cria containers de mídia via Graph API e publica o carrossel.
   Suporta de 2 a 10 imagens por post e obtém o permalink real.
 description_es: >
   Publica carruseles de Instagram a partir de imágenes locales.
-  Sube las imágenes a imgBB (requiere clave de API) como hosting público, crea
+  Sube a hosting público (Catbox por defecto; opcional imgBB o Imgur), crea
   contenedores de medios vía Graph API y publica el carrusel.
   Soporta de 2 a 10 imágenes por post y obtiene el permalink real.
 type: script
@@ -24,7 +24,9 @@ script:
 env:
   - INSTAGRAM_ACCESS_TOKEN
   - INSTAGRAM_USER_ID
+  - INSTAGRAM_IMAGE_HOST
   - IMGBB_API_KEY
+  - IMGUR_CLIENT_ID
 categories: [social-media, publishing, instagram]
 ---
 
@@ -32,7 +34,7 @@ categories: [social-media, publishing, instagram]
 
 ## When to use
 
-Use the Instagram Publisher when you need to publish carousel posts directly to an Instagram Business account. This skill handles the full workflow: uploading images to imgBB (requires your own API key from https://api.imgbb.com/), creating Instagram media containers via the Graph API, and publishing the carousel. It supports 2-10 JPEG images per post.
+Use the Instagram Publisher when you need to publish carousel posts directly to an Instagram Business account. This skill uploads images to a public host (default **Catbox**, no key), or **imgBB** / **Imgur** (`INSTAGRAM_IMAGE_HOST`), then creates Instagram media containers via the Graph API and publishes the carousel. It supports 2-10 JPEG images per post.
 
 
 ## Instructions
