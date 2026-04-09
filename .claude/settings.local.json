@@ -67,7 +67,13 @@
       "WebFetch(domain:www.itpro.com)",
       "Bash(node squads/tech-instagram-carousel/scripts/build-carousel-slides.mjs \"squads/agent-social-media-v2/output/2026-04-03-120000\")",
       "Bash(sed -i 's|\\\\.footer { position:absolute;bottom:200px;left:100px;right:100px;z-index:10;display:flex;justify-content:space-between;font-size:24px;font-weight:600;color:rgba\\(255,255,255,0.55\\); }||' /home/anderson/Documentos/InnovationLatam/INSTAGRAM/squad-instagram/opensquad-innovation_latam/squads/agent-social-media-v2/output/2026-04-03-130000/slides/v1/slide-01.html)",
-      "Bash(sed -i 's|<div class=\"footer\"><span>@innovationlatam</span><span>ARRASTE →</span></div>||' /home/anderson/Documentos/InnovationLatam/INSTAGRAM/squad-instagram/opensquad-innovation_latam/squads/agent-social-media-v2/output/2026-04-03-130000/slides/v1/slide-01.html)"
+      "Bash(sed -i 's|<div class=\"footer\"><span>@innovationlatam</span><span>ARRASTE →</span></div>||' /home/anderson/Documentos/InnovationLatam/INSTAGRAM/squad-instagram/opensquad-innovation_latam/squads/agent-social-media-v2/output/2026-04-03-130000/slides/v1/slide-01.html)",
+      "Bash(node --env-file=.env squads/agent-social-v3/scripts/upload-to-drive.mjs 2026-04-09-175920)",
+      "Bash(node -e \"require\\('dotenv'\\).config\\({path:'.env'}\\)\")",
+      "Bash(sed -i '/<div style=\"font-size:26px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba\\(192,254,253,0.80\\); margin-bottom:18px;\">Modelo 1 de 3<\\\\/div>/d' squads/agent-social-v3/output/2026-04-09-175920/slides/v1/slide-03.html)",
+      "Bash(sed -i '/<div style=\"font-size:26px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba\\(192,254,253,0.80\\); margin-bottom:18px;\">Modelos 2 e 3 de 3<\\\\/div>/d' squads/agent-social-v3/output/2026-04-09-175920/slides/v1/slide-04.html)",
+      "Bash(node squads/agent-social-v3/scripts/inject-bg-and-render.mjs 03 squads/agent-social-v3/output/2026-04-09-175920/slides)",
+      "Bash(node squads/agent-social-v3/scripts/inject-bg-and-render.mjs 04 squads/agent-social-v3/output/2026-04-09-175920/slides)"
     ]
   },
   "outputStyle": "default"
