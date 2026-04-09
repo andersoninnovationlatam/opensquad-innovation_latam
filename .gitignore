@@ -8,3 +8,7 @@ _opensquad/_browser_profile/
 docs/
 .superpowers/
 temp/
+
+# Secrets / credentials (never commit)
+secrets/
+secrets/*.json
