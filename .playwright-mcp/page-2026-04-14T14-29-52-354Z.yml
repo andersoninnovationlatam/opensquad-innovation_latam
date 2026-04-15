@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - heading "O relatório que vai mudar como você pensa sobre IA" [level=2] [ref=e5]
+    - paragraph [ref=e6]: O Instituto de IA de Stanford acaba de publicar o AI Index 2026. É um dos documentos mais completos já feitos sobre inteligência artificial. E o que ele revela não é sobre o futuro. É sobre agora.
+  - generic [ref=e7]: "@innovationlatam"
+  - generic [ref=e8]: ARRASTE ›

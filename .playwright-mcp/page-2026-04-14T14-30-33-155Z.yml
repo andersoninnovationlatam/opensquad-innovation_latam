@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - 'heading "Quem adotou já colhe: até 72% de ganho de produtividade" [level=2] [ref=e5]'
+    - paragraph [ref=e6]:
+      - text: Suporte ao cliente e desenvolvimento de software registraram ganhos de
+      - strong [ref=e7]: 14% a 26%
+      - text: . Em equipes de marketing, os resultados chegaram a
+      - strong [ref=e8]: 72%
+      - text: . São de empresas reais, medidos pelo relatório de Stanford.
+  - generic [ref=e9]: "@innovationlatam"
+  - generic [ref=e10]: ARRASTE ›

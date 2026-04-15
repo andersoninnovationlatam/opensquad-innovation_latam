@@ -23,11 +23,41 @@ import time
 import urllib.request
 import urllib.error
 
-# Model configuration per mode
-MODELS = {
+# Model configuration per mode (defaults — override via .env)
+# OPENROUTER_MODELS_IMAGE      → overrides production model
+# OPENROUTER_MODELS_IMAGE_TEST → overrides test model
+_DEFAULT_MODELS = {
     "test": "sourceful/riverflow-v2-fast",
     "production": "google/gemini-3.1-flash-image-preview",
 }
+
+def _parse_dotenv(dotenv_path):
+    result = {}
+    try:
+        with open(os.path.abspath(dotenv_path)) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, _, v = line.partition("=")
+                    result[k.strip()] = v.strip().strip('"').strip("'")
+    except FileNotFoundError:
+        pass
+    return result
+
+def _load_env_models():
+    models = dict(_DEFAULT_MODELS)
+    for src in [
+        os.environ,
+        _parse_dotenv(os.path.join(os.getcwd(), ".env")),
+        _parse_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".env")),
+    ]:
+        if src.get("OPENROUTER_MODELS_IMAGE"):
+            models["production"] = src["OPENROUTER_MODELS_IMAGE"]
+        if src.get("OPENROUTER_MODELS_IMAGE_TEST"):
+            models["test"] = src["OPENROUTER_MODELS_IMAGE_TEST"]
+    return models
+
+MODELS = _load_env_models()
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 

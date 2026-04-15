@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - heading "Nenhuma tecnologia chegou tão rápido a tanta gente" [level=1] [ref=e5]
+    - paragraph [ref=e6]: Computadores pessoais levaram décadas para atingir metade da população. A internet também. A IA generativa chegou a 53% do mundo em apenas 3 anos. Isso não é evolução. É ruptura.
+  - generic [ref=e7]:
+    - img "Innovation Latam" [ref=e8]
+    - generic [ref=e9]: "@innovationlatam"

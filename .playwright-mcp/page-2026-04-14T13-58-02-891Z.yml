@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - heading "A IA passou do humano em ciência, matemática e raciocínio" [level=2] [ref=e3]
+    - paragraph [ref=e4]: Em 2025, modelos de IA passaram a igualar ou superar humanos em questões científicas de doutorado e matemática de competição. Em engenharia de software autônoma, o desempenho saltou de 60% para quase 100% em um ano.
+  - generic [ref=e5]:
+    - img "Innovation Latam" [ref=e6]
+    - generic [ref=e7]: "@innovationlatam"

@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - heading "Em 3 anos, a IA chegou a 53% da população. Mais rápido que a internet." [level=1] [ref=e5]
+    - paragraph [ref=e6]: Stanford mediu. Os dados são inegáveis.
+  - generic [ref=e7]:
+    - img "Innovation Latam" [ref=e8]
+    - generic [ref=e9]: "@innovationlatam"

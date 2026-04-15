@@ -1,0 +1,7 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - 'heading "Quem adotou já colhe: até 72% de ganho de produtividade" [level=2] [ref=e3]'
+    - paragraph [ref=e4]: Suporte ao cliente e desenvolvimento de software registraram ganhos de 14% a 26%. Em equipes de marketing, os resultados chegaram a 72%. Esses não são números de estudo piloto. São de empresas reais, medidos pelo relatório de Stanford.
+  - generic [ref=e5]:
+    - img "Innovation Latam" [ref=e6]
+    - generic [ref=e7]: "@innovationlatam"

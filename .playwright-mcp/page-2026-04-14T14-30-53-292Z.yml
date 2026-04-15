@@ -1,0 +1,8 @@
+- generic [active] [ref=e1]:
+  - img "Innovation Latam" [ref=e3]
+  - generic [ref=e4]:
+    - heading "Você vai observar essa transformação ou vai fazer parte dela?" [level=2] [ref=e5]
+    - paragraph [ref=e6]:
+      - text: Salve esse carrossel e compartilhe com seu time.
+      - text: "Comenta aqui: sua empresa já está usando IA de forma estratégica?"
+  - generic [ref=e7]: "@innovationlatam"
