@@ -15,18 +15,29 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerHTML = '<span>Processando...</span><div class="btn-glow"></div>';
 
         try {
-            // Simulate API call
+            // Real API call to the Worker
             console.log('Enviando dados:', { news, angle });
-            
-            // Here you would normally fetch your backend
-            // await fetch('/api/generate', { method: 'POST', body: JSON.stringify({ news, angle }) });
-            
-            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ news, angle })
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor');
+            }
+
+            const result = await response.json();
+            console.log('Resultado:', result);
 
             // Success state
             showStatus('Conteúdo enviado com sucesso! A IA está trabalhando no seu post.', 'success');
             newsForm.reset();
         } catch (error) {
+            console.error('Erro:', error);
             showStatus('Ocorreu um erro ao processar sua solicitação. Tente novamente.', 'error');
         } finally {
             submitBtn.disabled = false;
