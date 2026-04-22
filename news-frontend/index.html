@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Generator | AI Content Angle</title>
+    <meta name="description" content="Adicione notícias e escolha o ângulo perfeito para seus posts com IA.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="background-glow"></div>
+    
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1>News<span>Angle</span></h1>
+            </div>
+            <p class="subtitle">Transforme notícias brutas em posts magnéticos</p>
+        </header>
+
+        <section class="card-glass">
+            <form id="newsForm" class="form">
+                <div class="input-group">
+                    <label for="newsInput">Notícia</label>
+                    <textarea 
+                        id="newsInput" 
+                        placeholder="Cole aqui o link ou o texto da notícia..." 
+                        required
+                    ></textarea>
+                    <span class="input-focus-line"></span>
+                </div>
+
+                <div class="input-group">
+                    <label for="angleSelect">Ângulo de Perspectiva</label>
+                    <div class="custom-select-wrapper">
+                        <select id="angleSelect" required>
+                            <option value="" disabled selected>Selecione um ângulo...</option>
+                            <option value="educacional">🎓 Educacional (Ensino e Valor)</option>
+                            <option value="medo">⚠️ Medo (Urgência e Alerta)</option>
+                            <option value="entusiasmo">🚀 Entusiasmo (Oportunidade e Futuro)</option>
+                            <option value="curiosidade">🤔 Curiosidade (Mistério e Descoberta)</option>
+                            <option value="polemica">🔥 Polêmica (Debate e Opinião)</option>
+                            <option value="empatia">❤️ Empatia (Conexão Humana)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-primary">
+                    <span>Gerar Conteúdo</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </form>
+        </section>
+
+        <div id="statusMessage" class="status-message hidden"></div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
