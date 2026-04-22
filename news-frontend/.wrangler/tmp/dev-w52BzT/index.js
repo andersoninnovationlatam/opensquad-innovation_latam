@@ -50,20 +50,21 @@ var src_default = {
       try {
         const body = await request.json();
         const { news, angle } = body;
-        return new Response(JSON.stringify({
-          success: true,
-          message: `Conte\xFAdo gerado para o \xE2ngulo ${angle}`,
-          data: {
-            original_news: news,
-            angle,
-            generated_post: `[SIMULA\xC7\xC3O] Post gerado com \xE2ngulo ${angle} para a not\xEDcia: ${news.substring(0, 50)}...`
-          }
-        }), {
+        const response = await fetch("http://localhost:3001/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ news, angle })
+        });
+        if (!response.ok) {
+          throw new Error("Failed to trigger squad");
+        }
+        const result = await response.json();
+        return new Response(JSON.stringify(result), {
           headers: { "Content-Type": "application/json" }
         });
       } catch (error) {
-        return new Response(JSON.stringify({ error: "Erro ao processar requisi\xE7\xE3o" }), {
-          status: 400,
+        return new Response(JSON.stringify({ error: error.message || "Erro ao processar requisi\xE7\xE3o" }), {
+          status: 500,
           headers: { "Content-Type": "application/json" }
         });
       }

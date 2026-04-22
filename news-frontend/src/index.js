@@ -8,23 +8,25 @@ export default {
                 const body = await request.json();
                 const { news, angle } = body;
 
-                // Aqui você integraria com o OpenSquad ou outra IA
-                // Por enquanto, retornamos um sucesso simulado
+                // Call the backend bridge
+                const response = await fetch('http://localhost:3001/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ news, angle })
+                });
 
-                return new Response(JSON.stringify({
-                    success: true,
-                    message: `Conteúdo gerado para o ângulo ${angle}`,
-                    data: {
-                        original_news: news,
-                        angle: angle,
-                        generated_post: `[SIMULAÇÃO] Post gerado com ângulo ${angle} para a notícia: ${news.substring(0, 50)}...`
-                    }
-                }), {
+                if (!response.ok) {
+                    throw new Error('Failed to trigger squad');
+                }
+
+                const result = await response.json();
+
+                return new Response(JSON.stringify(result), {
                     headers: { 'Content-Type': 'application/json' }
                 });
             } catch (error) {
-                return new Response(JSON.stringify({ error: 'Erro ao processar requisição' }), {
-                    status: 400,
+                return new Response(JSON.stringify({ error: error.message || 'Erro ao processar requisição' }), {
+                    status: 500,
                     headers: { 'Content-Type': 'application/json' }
                 });
             }
