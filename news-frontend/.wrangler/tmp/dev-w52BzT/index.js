@@ -69,6 +69,23 @@ var src_default = {
         });
       }
     }
+    if (url.pathname.startsWith("/api/status/") && request.method === "GET") {
+      try {
+        const response = await fetch(`http://localhost:3001${url.pathname}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch status");
+        }
+        const result = await response.json();
+        return new Response(JSON.stringify(result), {
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { "Content-Type": "application/json" }
+        });
+      }
+    }
     return env.ASSETS.fetch(request);
   }
 };

@@ -33,8 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             console.log('Resultado:', result);
 
-            // Success state
-            showStatus('Conteúdo enviado com sucesso! A IA está trabalhando no seu post.', 'success');
+            if (result.success && result.runId) {
+                showStatus('Iniciando geração do conteúdo... Acompanhe o progresso.', 'info');
+                pollStatus(result.runId);
+            } else {
+                showStatus('Conteúdo enviado com sucesso!', 'success');
+            }
+
             newsForm.reset();
         } catch (error) {
             console.error('Erro:', error);
@@ -45,14 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function showStatus(message, type) {
+    async function pollStatus(runId) {
+        const pollInterval = setInterval(async () => {
+            try {
+                const response = await fetch(`/api/status/carousel-noticias/${runId}`);
+                if (!response.ok) return;
+
+                const state = await response.json();
+                console.log('Status do Squad:', state);
+
+                if (state.status === 'completed') {
+                    clearInterval(pollInterval);
+                    showStatus('✨ Imagens geradas e enviadas para o Google Drive com sucesso!', 'success', true);
+                } else if (state.status === 'failed') {
+                    clearInterval(pollInterval);
+                    showStatus('❌ Ocorreu um erro na geração das imagens.', 'error');
+                } else {
+                    showStatus(`Processando: ${state.step.label || 'Iniciando...'} (${state.step.current}/${state.step.total})`, 'info');
+                }
+            } catch (error) {
+                console.error('Erro ao buscar status:', error);
+            }
+        }, 3000);
+    }
+
+    function showStatus(message, type, persistent = false) {
         statusMessage.textContent = message;
         statusMessage.className = `status-message ${type}`;
         statusMessage.classList.remove('hidden');
 
-        // Hide after 5 seconds
-        setTimeout(() => {
-            statusMessage.classList.add('hidden');
-        }, 5000);
+        if (!persistent) {
+            if (window.statusTimeout) clearTimeout(window.statusTimeout);
+            window.statusTimeout = setTimeout(() => {
+                statusMessage.classList.add('hidden');
+            }, 5000);
+        }
     }
+
 });

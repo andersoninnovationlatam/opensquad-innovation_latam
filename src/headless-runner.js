@@ -62,6 +62,25 @@ async function run() {
     await fs.writeFile(statePath, JSON.stringify(state, null, 2));
 
     console.log('\n✅ Pipeline complete!');
+
+    // Trigger Drive Upload
+    console.log('\n📤 Starting Drive upload...');
+    const driveScript = path.join(ROOT_DIR, 'squads', squadName, 'scripts', 'upload-to-drive.mjs');
+    try {
+        const { spawnSync } = await import('node:child_process');
+        const uploadResult = spawnSync('node', [driveScript, runId], {
+            cwd: ROOT_DIR,
+            stdio: 'inherit'
+        });
+
+        if (uploadResult.status === 0) {
+            console.log('✅ Drive upload completed successfully!');
+        } else {
+            console.error('❌ Drive upload failed.');
+        }
+    } catch (error) {
+        console.error('❌ Error triggering Drive upload:', error);
+    }
 }
 
 run().catch(console.error);
