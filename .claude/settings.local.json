@@ -73,7 +73,9 @@
       "Bash(sed -i '/<div style=\"font-size:26px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba\\(192,254,253,0.80\\); margin-bottom:18px;\">Modelo 1 de 3<\\\\/div>/d' squads/agent-social-v3/output/2026-04-09-175920/slides/v1/slide-03.html)",
       "Bash(sed -i '/<div style=\"font-size:26px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:rgba\\(192,254,253,0.80\\); margin-bottom:18px;\">Modelos 2 e 3 de 3<\\\\/div>/d' squads/agent-social-v3/output/2026-04-09-175920/slides/v1/slide-04.html)",
       "Bash(node squads/agent-social-v3/scripts/inject-bg-and-render.mjs 03 squads/agent-social-v3/output/2026-04-09-175920/slides)",
-      "Bash(node squads/agent-social-v3/scripts/inject-bg-and-render.mjs 04 squads/agent-social-v3/output/2026-04-09-175920/slides)"
+      "Bash(node squads/agent-social-v3/scripts/inject-bg-and-render.mjs 04 squads/agent-social-v3/output/2026-04-09-175920/slides)",
+      "Bash(node scripts/webhook-server.mjs)",
+      "Bash(node squads/carousel-noticias/scripts/upload-to-drive.mjs*)"
     ]
   },
   "outputStyle": "default"

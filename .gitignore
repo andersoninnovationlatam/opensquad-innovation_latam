@@ -12,3 +12,6 @@ temp/
 # Secrets / credentials (never commit)
 secrets/
 secrets/*.json
+
+# Webhook server job queue (runtime state)
+scripts/.jobs/
