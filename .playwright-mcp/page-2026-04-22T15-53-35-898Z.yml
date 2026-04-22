@@ -1,0 +1,8 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: Inovação
+    - heading "A OpenAI acaba de transformar o ChatGPT em estúdio de design. O que sua empresa faz com isso agora?" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Lançamento global do ChatGPT Images 2.0 — disponível hoje.
+  - generic [ref=e8]:
+    - img "Innovation Latam" [ref=e9]
+    - generic [ref=e10]: "@innovationlatam"

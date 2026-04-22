@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: Ação
+  - heading "A barreira entre profissional e amador na criação visual acabou de ficar muito menor." [level=2] [ref=e3]
+  - paragraph [ref=e6]:
+    - text: Comenta
+    - generic [ref=e7]: IMAGE
+    - text: abaixo se você quer um guia de como estruturar fluxos de produção de conteúdo com IA no seu time.
+  - paragraph [ref=e8]: "Fonte: OpenAI — Anúncio oficial ChatGPT Images 2.0"
+  - generic [ref=e9]:
+    - img "Innovation Latam" [ref=e10]
+    - generic [ref=e11]: "@innovationlatam"

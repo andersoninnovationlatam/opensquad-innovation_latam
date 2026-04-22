@@ -1,0 +1,11 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: Produtividade
+    - heading "8 variações de uma campanha em um único prompt. Com identidade visual coesa entre elas." [level=2] [ref=e6]
+    - paragraph [ref=e7]:
+      - text: "Times que antes gastavam dias em variações agora geram 8 criativos simultaneamente. Para programas de inovação com múltiplos mercados:"
+      - strong [ref=e8]: mais velocidade, menos custo de agência
+      - text: em peças de teste.
+  - generic [ref=e9]:
+    - img "Innovation Latam" [ref=e10]
+    - generic [ref=e11]: "@innovationlatam"

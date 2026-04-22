@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: "03"
+  - generic [ref=e3]: Plus · Pro · Enterprise
+  - 'heading "Para Plus, Pro e Enterprise: a IA pensa antes de criar" [level=2] [ref=e4]'
+  - paragraph [ref=e6]: Integrado aos modelos de raciocínio da OpenAI, o Images 2.0 consulta dados da web para validar referências técnicas antes de gerar.
+  - paragraph [ref=e7]:
+    - text: Materiais com
+    - strong [ref=e8]: precisão de conteúdo, não apenas de estética.
+    - text: Para campanhas que precisam refletir contexto de mercado atualizado, isso muda o processo completamente.
+  - generic [ref=e9]:
+    - img "Innovation Latam" [ref=e10]
+    - generic [ref=e11]: "@innovationlatam"

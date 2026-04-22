@@ -6,6 +6,7 @@ const RECONNECT_BASE_MS = 1000;
 const RECONNECT_MAX_MS = 30000;
 const WS_FAIL_THRESHOLD = 3;
 const POLL_INTERVAL_MS = 3000;
+const MAX_RECONNECT_ATTEMPTS = 10;
 
 export function useSquadSocket() {
   const wsRef = useRef<WebSocket | null>(null);
@@ -110,10 +111,14 @@ export function useSquadSocket() {
           startPolling();
         }
 
-        reconnectTimer = setTimeout(() => {
-          reconnectDelay = Math.min(reconnectDelay * 2, RECONNECT_MAX_MS);
-          connect();
-        }, reconnectDelay);
+        if (wsFailCount <= MAX_RECONNECT_ATTEMPTS) {
+          reconnectTimer = setTimeout(() => {
+            reconnectDelay = Math.min(reconnectDelay * 2, RECONNECT_MAX_MS);
+            connect();
+          }, reconnectDelay);
+        }
+        // After MAX_RECONNECT_ATTEMPTS, polling (if active) keeps the data fresh.
+        // Reconnect resumes on next page load.
       };
 
       ws.onerror = () => {
@@ -128,7 +133,12 @@ export function useSquadSocket() {
       disposed = true;
       if (reconnectTimer !== undefined) clearTimeout(reconnectTimer);
       stopPolling();
-      wsRef.current?.close();
+      const ws = wsRef.current;
+      // Don't close a CONNECTING socket — onopen will close it via the disposed flag.
+      // Closing CONNECTING triggers a browser warning in React StrictMode.
+      if (ws && ws.readyState !== WebSocket.CONNECTING) {
+        ws.close();
+      }
       wsRef.current = null;
     };
   }, [setConnected, setSnapshot, updateSquadState, setSquadInactive]);

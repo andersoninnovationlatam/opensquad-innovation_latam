@@ -29,6 +29,9 @@ MODELS = {
     "production": "google/gemini-3.1-flash-image-preview",
 }
 
+# Allow env var override (set by the carousel frontend before each run)
+_ENV_MODEL_OVERRIDE = os.environ.get("OPENROUTER_MODELS_IMAGE")
+
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
@@ -60,7 +63,7 @@ def load_api_key():
 
 def generate_image(prompt, output_path, mode, api_key, reference_image=None):
     """Generate a single image and save to output_path."""
-    model = MODELS.get(mode, MODELS["production"])
+    model = _ENV_MODEL_OVERRIDE or MODELS.get(mode, MODELS["production"])
 
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
 
@@ -142,7 +145,7 @@ def main():
         parser.error("Either --prompt or --batch is required")
 
     api_key = load_api_key()
-    model = MODELS[args.mode]
+    model = _ENV_MODEL_OVERRIDE or MODELS[args.mode]
     print(f"Image Generator — Mode: {args.mode} | Model: {model}")
 
     if args.batch:

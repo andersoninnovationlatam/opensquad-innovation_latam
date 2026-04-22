@@ -1,0 +1,10 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: Oportunidade
+    - heading "A pergunta não é \"devo usar\". É \"quem no meu time começa na segunda-feira?\"" [level=2] [ref=e6]
+    - paragraph [ref=e7]:
+      - text: Quem incorporar o Images 2.0 agora reduz produção de criativos, corta dependência de agência para peças simples e testa mais hipóteses por mês. Quem esperar começa com
+      - strong [ref=e8]: meses de atraso.
+  - generic [ref=e9]:
+    - img "Innovation Latam" [ref=e10]
+    - generic [ref=e11]: "@innovationlatam"

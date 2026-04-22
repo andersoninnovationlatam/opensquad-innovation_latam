@@ -1,0 +1,10 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: "01"
+  - heading "Até ontem, IA criativa tinha um problema crítico" [level=2] [ref=e3]
+  - paragraph [ref=e5]: Textos em imagens saíam distorcidos. Layouts complexos eram ignorados. O resultado raramente estava pronto para publicar.
+  - paragraph [ref=e6]:
+    - text: Times de design ainda precisavam corrigir manualmente tudo que a IA gerava, tornando a ferramenta um
+    - strong [ref=e7]: rascunho caro, não uma solução de produção.
+  - generic [ref=e8]:
+    - img "Innovation Latam" [ref=e9]
+    - generic [ref=e10]: "@innovationlatam"

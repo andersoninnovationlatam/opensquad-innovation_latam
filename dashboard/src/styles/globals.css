@@ -34,3 +34,12 @@ body,
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
+
+@keyframes checkpoint-pulse {
+  0%, 100% { box-shadow: 0 0 4px var(--accent-amber); }
+  50% { box-shadow: 0 0 14px var(--accent-amber); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

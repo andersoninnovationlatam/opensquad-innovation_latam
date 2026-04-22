@@ -1,0 +1,12 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]: "02"
+  - heading "Controle de composição que antes exigia um designer sênior" [level=2] [ref=e3]
+  - paragraph [ref=e5]: Proporções de 3:1 a 1:3. Stories, feed, anúncios mobile, panorâmicos. O usuário especifica onde cada elemento deve estar e a IA respeita hierarquia visual clássica.
+  - paragraph [ref=e6]:
+    - text: É a primeira vez que uma ferramenta desse tipo obedece regras de design
+    - strong [ref=e7]: sem improviso
+    - text: ", entregando espaçamento e"
+    - strong [ref=e8]: proporções exatos.
+  - generic [ref=e9]:
+    - img "Innovation Latam" [ref=e10]
+    - generic [ref=e11]: "@innovationlatam"

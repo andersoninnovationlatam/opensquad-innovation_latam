@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: Novidade
+    - 'heading "Hoje: textos em imagens com clareza de agência profissional" [level=2] [ref=e6]'
+    - paragraph [ref=e7]:
+      - text: O ChatGPT Images 2.0 renderiza títulos e frases com alta fidelidade, em fontes variadas. Banners e capas
+      - strong [ref=e8]: prontos para publicar
+      - text: ", sem edição externa. Para times de marketing, isso é"
+      - strong [ref=e9]: horas de retrabalho eliminadas
+      - text: por criativo.
+  - generic [ref=e10]:
+    - img "Innovation Latam" [ref=e11]
+    - generic [ref=e12]: "@innovationlatam"

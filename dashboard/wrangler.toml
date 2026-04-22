@@ -1,0 +1,11 @@
+name = "carousel-noticias"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"
+
+[[kv_namespaces]]
+binding = "CAROUSEL_KV"
+id = "PLACEHOLDER_KV_ID"
+preview_id = "PLACEHOLDER_KV_PREVIEW_ID"
+
+[vars]
+VITE_CF_PAGES = "true"
