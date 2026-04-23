@@ -82,27 +82,29 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const response = await fetch(`/api/status/carousel-noticias/${runId}`);
 
-                if (!response.ok) {
-                    notFoundCount++;
-                    console.warn(`[poll] status not found (${notFoundCount}x) — runner may still be starting or crashed. HTTP ${response.status}`);
+                // Cloudflare Workers always return 200 even when proxying errors,
+                // so we must also check for an `error` field in the JSON body.
+                const state = await response.json();
 
-                    // After 5 failed polls (~15s), fetch the log to diagnose
+                if (!response.ok || state.error || state.status === undefined) {
+                    notFoundCount++;
+                    console.warn(`[poll] state.json not ready (${notFoundCount}x) — HTTP ${response.status} body:`, state);
+
+                    // Every 5 polls (~15s) fetch the runner log to expose crash details
                     if (notFoundCount % 5 === 0) {
                         const log = await fetchRunnerLog(runId);
                         if (log) {
-                            console.group(`[runner.log] — last lines (runId=${runId})`);
-                            log.split('\n').slice(-20).forEach(l => l && console.log(l));
+                            console.group(`%c[runner.log] runId=${runId}`, 'color: orange; font-weight: bold');
+                            log.split('\n').slice(-30).forEach(l => l && console.log(l));
                             console.groupEnd();
                         } else {
-                            console.warn('[poll] runner.log not found either — process likely failed to start');
+                            console.error('[poll] runner.log not found — process likely failed to spawn entirely');
                         }
                     }
                     return;
                 }
 
                 notFoundCount = 0;
-                const state = await response.json();
-
                 console.log(`[poll] state: status=${state.status} step=${JSON.stringify(state.step)}`);
 
                 if (state.step && state.step.current !== lastStep) {

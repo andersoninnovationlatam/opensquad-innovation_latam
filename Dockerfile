@@ -63,11 +63,17 @@ RUN npx playwright install chromium
 # Copy the rest of the application
 COPY . .
 
+# Ensure output directories exist and are writable
+RUN mkdir -p /app/squads/carousel-noticias/output
+
 # Install Python dependencies if any
 # RUN pip3 install -r requirements.txt
 
 # Expose the port the app runs on
 EXPOSE 3001
+
+# Mount this volume to persist run outputs across container restarts
+VOLUME ["/app/squads/carousel-noticias/output"]
 
 # Start the application
 CMD ["node", "backend-simples/server.js"]
