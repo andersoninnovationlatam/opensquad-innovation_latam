@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { promises as fs } from 'node:fs';
+import { promises as fs, openSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
@@ -25,6 +25,12 @@ app.use((req, res, next) => {
     next();
 });
 
+// Log every incoming request
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
+
 app.post('/api/generate', async (req, res) => {
     const { news, angle } = req.body;
 
@@ -43,9 +49,15 @@ app.post('/api/generate', async (req, res) => {
         await fs.writeFile(path.join(runDir, 'news-input.md'), `# News Input\n\n${news}`);
         await fs.writeFile(path.join(runDir, 'selected-angle.md'), `# Angle Selection\n\n**Selected Angle:** ${angle}`);
 
-        // Trigger squad execution (Headless Runner)
-        // Note: In a real scenario, we would use a proper task queue.
-        // For now, we'll spawn the process and return the runId.
+        // Redirect runner stdout/stderr to a log file so we can diagnose issues
+        const logPath = path.join(runDir, 'runner.log');
+        const logFd = openSync(logPath, 'w');
+
+        console.log(`[generate] Spawning headless-runner for runId=${runId}`);
+        console.log(`[generate] Runner log: ${logPath}`);
+        console.log(`[generate] ROOT_DIR: ${ROOT_DIR}`);
+        console.log(`[generate] Runner path: ${path.join(ROOT_DIR, 'src/headless-runner.js')}`);
+
         const runnerProcess = spawn('node', [
             path.join(ROOT_DIR, 'src/headless-runner.js'),
             '--squad', squadName,
@@ -54,7 +66,12 @@ app.post('/api/generate', async (req, res) => {
         ], {
             cwd: ROOT_DIR,
             detached: true,
-            stdio: 'ignore'
+            stdio: ['ignore', logFd, logFd],
+            env: { ...process.env }
+        });
+
+        runnerProcess.on('error', (err) => {
+            console.error(`[generate] Failed to spawn runner for runId=${runId}:`, err);
         });
 
         runnerProcess.unref();
@@ -79,7 +96,23 @@ app.get('/api/status/:squad/:runId', async (req, res) => {
         const state = await fs.readFile(statePath, 'utf-8');
         res.json(JSON.parse(state));
     } catch (error) {
+        console.warn(`[status] state.json not found for runId=${runId}: ${error.message}`);
         res.status(404).json({ error: 'Run not found or state not yet available' });
+    }
+});
+
+// Return last N lines of runner.log so the frontend can display errors
+app.get('/api/logs/:squad/:runId', async (req, res) => {
+    const { squad, runId } = req.params;
+    const logPath = path.join(ROOT_DIR, 'squads', squad, 'output', runId, 'runner.log');
+
+    try {
+        const content = await fs.readFile(logPath, 'utf-8');
+        const lines = content.split('\n');
+        const tail = lines.slice(-100).join('\n'); // last 100 lines
+        res.type('text/plain').send(tail);
+    } catch (error) {
+        res.status(404).send(`Log not found for runId=${runId}`);
     }
 });
 

@@ -61,22 +61,63 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    async function fetchRunnerLog(runId) {
+        try {
+            const res = await fetch(`/api/logs/carousel-noticias/${runId}`);
+            if (!res.ok) return null;
+            return await res.text();
+        } catch {
+            return null;
+        }
+    }
+
     async function pollStatus(runId) {
         let lastStep = 0;
+        let lastLogLength = 0;
+        let notFoundCount = 0;
+
+        console.log(`[poll] Starting status polling for runId=${runId}`);
+
         const pollInterval = setInterval(async () => {
             try {
                 const response = await fetch(`/api/status/carousel-noticias/${runId}`);
-                if (!response.ok) return;
 
+                if (!response.ok) {
+                    notFoundCount++;
+                    console.warn(`[poll] status not found (${notFoundCount}x) — runner may still be starting or crashed. HTTP ${response.status}`);
+
+                    // After 5 failed polls (~15s), fetch the log to diagnose
+                    if (notFoundCount % 5 === 0) {
+                        const log = await fetchRunnerLog(runId);
+                        if (log) {
+                            console.group(`[runner.log] — last lines (runId=${runId})`);
+                            log.split('\n').slice(-20).forEach(l => l && console.log(l));
+                            console.groupEnd();
+                        } else {
+                            console.warn('[poll] runner.log not found either — process likely failed to start');
+                        }
+                    }
+                    return;
+                }
+
+                notFoundCount = 0;
                 const state = await response.json();
+
+                console.log(`[poll] state: status=${state.status} step=${JSON.stringify(state.step)}`);
 
                 if (state.step && state.step.current !== lastStep) {
                     lastStep = state.step.current;
-                    console.log(`[Step ${state.step.current}/${state.step.total}] ${state.step.label}`);
+                    console.log(`━━ [Step ${state.step.current}/${state.step.total}] ${state.step.label}`);
                 }
 
                 if (state.status === 'completed') {
                     clearInterval(pollInterval);
+                    const log = await fetchRunnerLog(runId);
+                    if (log) {
+                        console.group('[runner.log] Final log');
+                        log.split('\n').forEach(l => l && console.log(l));
+                        console.groupEnd();
+                    }
                     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
                     console.log('✅ PROCESSO CONCLUÍDO COM SUCESSO');
                     console.log('📂 Arquivos disponíveis no Google Drive');
@@ -84,16 +125,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     showStatus('✨ Imagens geradas e enviadas para o Google Drive com sucesso!', 'success', true);
                 } else if (state.status === 'failed') {
                     clearInterval(pollInterval);
-                    console.log('❌ ERRO NA EXECUÇÃO DO SQUAD');
-                    showStatus('❌ Ocorreu um erro na geração das imagens.', 'error');
+                    const log = await fetchRunnerLog(runId);
+                    if (log) {
+                        console.group('[runner.log] Error log');
+                        log.split('\n').forEach(l => l && console.log(l));
+                        console.groupEnd();
+                    }
+                    console.error('❌ ERRO NA EXECUÇÃO DO SQUAD');
+                    console.error('Detalhes:', state.step?.label);
+                    showStatus(`❌ Erro: ${state.step?.label || 'falha na geração das imagens'}`, 'error');
                 } else {
                     const stepLabel = state.step ? state.step.label : 'Iniciando...';
                     const stepCurrent = state.step ? state.step.current : '?';
                     const stepTotal = state.step ? state.step.total : '?';
                     showStatus(`Processando: ${stepLabel} (${stepCurrent}/${stepTotal})`, 'info');
+
+                    // Fetch incremental log every ~30s (every 10 polls)
+                    if (lastStep > 0 && lastStep % 1 === 0) {
+                        const log = await fetchRunnerLog(runId);
+                        if (log) {
+                            const lines = log.split('\n');
+                            if (lines.length > lastLogLength) {
+                                const newLines = lines.slice(lastLogLength);
+                                newLines.forEach(l => l && console.log(`[runner] ${l}`));
+                                lastLogLength = lines.length;
+                            }
+                        }
+                    }
                 }
             } catch (error) {
-                console.error('Erro ao buscar status:', error);
+                console.error('[poll] Erro ao buscar status:', error);
             }
         }, 3000);
     }

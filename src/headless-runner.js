@@ -74,21 +74,47 @@ ${squadMemory}
 
 // ── Main Runner ───────────────────────────────────────────────────────────────
 async function run() {
+    console.log(`[runner] Process started at ${new Date().toISOString()}`);
+    console.log(`[runner] Node version: ${process.version}`);
+    console.log(`[runner] CWD: ${process.cwd()}`);
+    console.log(`[runner] ROOT_DIR: ${ROOT_DIR}`);
+    console.log(`[runner] Args: ${process.argv.slice(2).join(' ')}`);
+
     const env = await loadEnv();
     const apiKey = env.OPENROUTER_API_KEY;
     const contentModel = env.OPENROUTER_MODELS_CONTENT || 'openai/gpt-4o-mini';
+
+    console.log(`[runner] OPENROUTER_API_KEY present: ${!!apiKey}`);
+    console.log(`[runner] Model: ${contentModel}`);
 
     const args = process.argv.slice(2);
     const squadName = args[args.indexOf('--squad') + 1];
     const runId = args[args.indexOf('--runId') + 1];
     const startStep = parseInt(args[args.indexOf('--startStep') + 1] || '1');
 
+    if (!squadName || !runId) {
+        console.error(`[runner] FATAL: missing --squad or --runId arguments`);
+        process.exit(1);
+    }
+
     console.log(`🚀 Starting REAL headless run for squad: ${squadName}`);
     console.log(`📁 Run ID: ${runId}`);
 
     const squadDir = path.join(ROOT_DIR, 'squads', squadName);
     const pipelinePath = path.join(squadDir, 'pipeline', 'pipeline.yaml');
-    const pipeline = parseYaml(await fs.readFile(pipelinePath, 'utf-8'));
+
+    console.log(`[runner] Squad dir: ${squadDir}`);
+    console.log(`[runner] Pipeline path: ${pipelinePath}`);
+
+    let pipeline;
+    try {
+        const pipelineContent = await fs.readFile(pipelinePath, 'utf-8');
+        pipeline = parseYaml(pipelineContent);
+        console.log(`[runner] Pipeline loaded: ${pipeline.steps.length} steps`);
+    } catch (err) {
+        console.error(`[runner] FATAL: could not load pipeline.yaml: ${err.message}`);
+        process.exit(1);
+    }
 
     const runDir = path.join(squadDir, 'output', runId);
     await fs.mkdir(runDir, { recursive: true });
