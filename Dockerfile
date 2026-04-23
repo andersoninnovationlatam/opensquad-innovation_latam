@@ -53,6 +53,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
+# Copy backend-simples package.json and install its dependencies
+COPY backend-simples/package*.json ./backend-simples/
+RUN cd backend-simples && npm install
+
 # Install Playwright browsers
 RUN npx playwright install chromium
 
