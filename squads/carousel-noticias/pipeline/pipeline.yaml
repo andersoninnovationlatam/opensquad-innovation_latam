@@ -1,0 +1,40 @@
+squad: "carousel-noticias"
+
+steps:
+  - step: 1
+    name: "checkpoint-news-input"
+    file: "steps/step-01-checkpoint-news-input.md"
+  - step: 2
+    name: "gerar-angulos"
+    file: "steps/step-02-gerar-angulos.md"
+  - step: 3
+    name: "checkpoint-angle-selection"
+    file: "steps/step-03-checkpoint-angle-selection.md"
+  - step: 4
+    name: "criar-copy-carrossel"
+    file: "steps/step-04-criar-copy-carrossel.md"
+  - step: 5
+    name: "checkpoint-approve-content"
+    file: "steps/step-05-checkpoint-approve-content.md"
+  - step: 6
+    name: "criar-briefing-visual"
+    file: "steps/step-06-criar-briefing-visual.md"
+  - step: 7
+    name: "checkpoint-approve-art-brief"
+    file: "steps/step-07-checkpoint-approve-art-brief.md"
+  - step: 8
+    name: "gerar-e-renderizar-slides"
+    file: "steps/step-08-gerar-e-renderizar-slides.md"
+  - step: 9
+    name: "revisar-carrossel"
+    file: "steps/step-09-revisar-carrossel.md"
+  - step: 10
+    name: "checkpoint-final-approval"
+    file: "steps/step-10-checkpoint-final-approval.md"
+
+checkpoints:
+  - step-01-checkpoint-news-input
+  - step-03-checkpoint-angle-selection
+  - step-05-checkpoint-approve-content
+  - step-07-checkpoint-approve-art-brief
+  - step-10-checkpoint-final-approval

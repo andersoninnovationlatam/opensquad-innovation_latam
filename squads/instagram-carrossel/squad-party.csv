@@ -1,0 +1,5 @@
+id,name,title,icon,path
+rodrigo-radar,Rodrigo Radar,Pesquisador de Tendências,📡,./agents/rodrigo-radar.agent.md
+carlos-carrossel,Carlos Carrossel,Copywriter de Instagram,✍️,./agents/carlos-carrossel.agent.md
+beatriz-briefing,Beatriz Briefing,Diretora de Arte,🎨,./agents/beatriz-briefing.agent.md
+vera-veredito,Vera Veredito,Revisora de Conteúdo,✅,./agents/vera-veredito.agent.md

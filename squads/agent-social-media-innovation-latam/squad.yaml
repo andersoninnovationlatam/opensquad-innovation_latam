@@ -1,0 +1,33 @@
+code: "agent-social-media-innovation-latam"
+name: "Social Media Innovation Latam"
+description: "Produção automatizada de carrosséis Instagram da Innovation Latam. Input de texto/notícia em input/ → pesquisa enriquecida → copy estruturado → slides HTML post-05 renderizados em PNG → revisão de qualidade."
+language: "pt-BR"
+
+company: "_opensquad/_memory/company.md"
+preferences: "_opensquad/_memory/preferences.md"
+memory: "_memory/memories.md"
+
+platform: "Instagram Feed"
+format: "instagram-feed"
+
+skills:
+  - web_search
+  - web_fetch
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+  - pipeline/data/visual-identity.md
+  - pipeline/data/layout-variations.md
+
+agents:
+  manifest: squad-party.csv
+
+pipeline:
+  entry_point: pipeline/pipeline.yaml
+
+output_dir: output/

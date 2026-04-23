@@ -1,0 +1,27 @@
+code: "tech-instagram-carousel"
+name: "Tech Instagram Carousel"
+description: "Carrosséis tech para Instagram (post-05). Notícia em input/ → pipeline automático até slides PNG/HTML — sem checkpoints de revisão humana"
+language: "pt-BR"
+
+skills:
+  - image-creator
+  - image-ai-generator
+  - template-designer
+  - instagram-publisher
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+  - pipeline/data/visual-identity.md
+  - pipeline/data/social-media-informative.md
+  - pipeline/data/template-reference.html
+
+pipeline:
+  entry_point: pipeline/pipeline.yaml
+
+agents:
+  manifest: squad-party.csv

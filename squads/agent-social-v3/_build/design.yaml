@@ -1,0 +1,312 @@
+# Design output — gerado pela Fase de Design
+# Squad: agent-social-v3
+# Data: 2026-04-01
+
+squad:
+  code: "agent-social-v3"
+  name: "Social Media Innovation Latam v2"
+  description: >
+    Produção automatizada de carrosséis Instagram da Innovation Latam.
+    Input em input/content.md (notícia + angulo_escolhido no frontmatter) → angles.yaml + copy → direção de arte (slide-scenes.md)
+    → slides HTML post-05 renderizados em PNG.
+  pipeline_notes: >
+    Usuário solicitou explicitamente NENHUM checkpoint humano obrigatório.
+    Gate 2b (checkpoint antes de visual) é inaplicável pois o pipeline não publica
+    (não há etapa irreversível de distribuição) — apenas gera arquivos locais.
+    Checkpoints podem ser adicionados manualmente pelo usuário via /opensquad edit.
+
+agents:
+
+  - id: "carlos-conteudo"
+    name: "Carlos Conteúdo"
+    title: "Estrategista de Copy e Carrossel"
+    icon: "✍️"
+    execution: "inline"
+    skills: []
+    tasks:
+      - name: "generate-angles"
+        file: "tasks/generate-angles.md"
+        description: >
+          Lê input/content.md (notícia + angulo_escolhido obrigatório no frontmatter).
+          Gera os 5 ângulos para referência; marca como selecionado apenas o ID escolhido pelo usuário.
+      - name: "create-slides"
+        file: "tasks/create-slides.md"
+        description: >
+          Cria o carrossel completo: hook com dado âncora (slide 1), slides intermediários
+          com ritmo variado (1 ideia/slide, máx 4-5 linhas, sem repetição), slide de
+          reflexão (slide 5), CTA duplo salvar+comentar (slide 6). **6 slides** no total.
+    artifacts:
+      operational_framework: |
+        GENERATE-ANGLES:
+        1. Ler frontmatter de input/content.md — angulo_escolhido obrigatório (medo|oportunidade|educacional|contrario|inspiracional).
+        2. Ler o corpo da notícia e identificar o DADO ÂNCORA: o número mais surpreendente ou contraintuitivo.
+        3. Gerar 5 ângulos, cada um com uma lente emocional diferente:
+           - Medo: "Se você não fizer X, Y vai acontecer"
+           - Oportunidade: "Essa é sua janela antes que todo mundo descubra"
+           - Educacional: "Aprenda como funciona [mecanismo]"
+           - Contrário: "O que ninguém te conta sobre [tema]"
+           - Inspiracional: "Imagine como será quando [transformação]"
+        4. Avaliar cada ângulo contra: surpresa, acionabilidade, relevância para inovação corporativa.
+        5. Marcar [SELECIONADO] apenas no ângulo cujo id = angulo_escolhido do usuário. Justificativa: encaixe com a notícia (o usuário já decidiu a lente).
+
+        CREATE-SLIDES:
+        1. Abrir com o DADO ÂNCORA do ângulo selecionado — nunca com nome de marca, apresentação ou "hoje vamos falar".
+        2. Estruturar **6 slides fixos**: Slide 1 hook → Slide 2 contexto → Slides 3-4 desenvolvimento → Slide 5 reflexão → Slide 6 CTA.
+        3. Texto curto para Instagram: frases curtas; preferir NO MÁXIMO 3 linhas visíveis no corpo (4 só se inevitável); slide 2 com 2–3 frases curtas; detalhe na caption.
+        4. Verificar: slides conectados em sequência lógica — cada um é consequência do anterior.
+        5. Verificar: nenhuma informação repetida entre slides.
+        6. Slide de reflexão: síntese emocional, pergunta que incomoda construtivamente, NÃO um dado novo.
+        7. CTA: específico ao tema ("Salva pra mostrar pra quem ainda diz que [X]"), duas ações (salvar + comentar).
+        8. Gerar caption Instagram: hook nas primeiras 125 chars + body + pergunta final + 8-12 hashtags.
+      anti_patterns:
+        never_do:
+          - "Começar slide 1 com nome da marca, 'Hoje vamos falar' ou apresentação: destrói o scroll-stop test"
+          - "Parágrafo longo ou texto de artigo colado no slide: feed mobile exige frases curtas"
+          - "Usar afirmações vagas como 'muitos profissionais' ou 'a maioria das empresas': sempre números e fontes"
+          - "Repetir a mesma informação em slides diferentes: cada slide deve avançar a narrativa"
+          - "CTA genérico desconectado: 'nos siga para mais conteúdo' é proibido"
+          - "Slide de reflexão com dado novo: reflexão é síntese emocional, não informação adicional"
+          - "Mais de 4 linhas visíveis no corpo ou parágrafo denso no slide: feed mobile exige frases curtas"
+        always_do:
+          - "Dado real com fonte em toda afirmação factual"
+          - "Um slide de reflexão antes do CTA — sempre"
+          - "CTA conectado especificamente ao tema do carrossel"
+      voice_guidance:
+        always_use:
+          - term: "Dado + contexto revelador"
+            why: "O 'por quê' do dado é tão importante quanto o dado em si"
+          - term: "Lógica coerente slide a slide"
+            why: "Cada slide deve ser consequência do anterior"
+          - term: "Reflexão construtiva"
+            why: "O penúltimo slide deve tocar na alma de forma que ressoe"
+          - term: "CTA específico ao tema"
+            why: "'Salva pra quando alguém te disser X' supera 'salva para mais tarde'"
+          - term: "Linguagem humana"
+            why: "Conversa inteligente entre amigos, nunca jargão corporativo"
+        never_use:
+          - term: "Incrível, fantástico, incrível"
+            why: "Vazios sem prova — substituir por dado específico"
+          - term: "Disruptivo, game-changer, ecossistema"
+            why: "Jargão de marketing que aliena e soa genérico"
+          - term: "É muito simples"
+            why: "Minimiza a inteligência do leitor"
+        tone_rules:
+          - "Tom didático-revelador: dado surpreendente → contexto que explica o porquê → implicação → reflexão/pergunta"
+          - "Zero copy vazia: cada frase ganha seu espaço ou é cortada"
+          - "Linguagem humana, nunca corporativa: como conversa inteligente com amigo que entende do assunto"
+      quality_criteria:
+        - "angulo_escolhido no input; 5 ângulos documentados, 1 selecionado (= escolha do usuário) com justificativa de encaixe"
+        - "Slide 1 abre com dado âncora — nunca apresentação ou marca"
+        - "Exatamente 6 slides (hook + contexto + 2 desenvolvimento + reflexão + CTA)"
+        - "Frases curtas; preferir até 3 linhas visíveis por slide no corpo (slide 2: 2–3 frases curtas)"
+        - "Penúltimo slide é obrigatoriamente de reflexão emocional"
+        - "CTA tem 2 ações: salvar + comentar, conectadas ao tema"
+        - "Caption com hook nos primeiros 125 chars + 8-12 hashtags"
+
+  - id: "daniel-diretor"
+    name: "Daniel Diretor"
+    title: "Diretor de Arte Fotográfico (Cenas por Slide)"
+    icon: "🎬"
+    execution: "inline"
+    skills: []
+    tasks:
+      - name: "define-slide-scenes"
+        file: "tasks/define-slide-scenes.md"
+        description: >
+          Lê carousel-draft.md e produz slide-scenes.md: por slide, interpretação da mensagem,
+          parâmetros técnicos (ângulo, plano, lente, luz), prompt mestre em inglês e notas para Dária.
+    artifacts:
+      operational_framework: |
+        1. Ler art-direction-photography-guide.md (vocabulário e estrutura de prompt).
+        2. Ler carousel-draft.md completo slide a slide.
+        3. Para cada slide: síntese da mensagem, interpretação narrativa/emocional.
+        4. Escolher camera angle, shot size, lens reference, lighting e color mood com intenção.
+        5. Escrever prompt mestre em inglês (camadas: mídia, enquadramento, equipamento, sujeito, cenário, luz, composição).
+        6. Escrever notas para implementação HTML (Dária): fundo, overlay, sem texto na imagem, safe zone.
+        7. Garantir variedade visual entre slides.
+
+  - id: "daria-design"
+    name: "Dária Design"
+    title: "Designer de Slides & Renderizadora"
+    icon: "🎨"
+    execution: "inline"
+    skills: []
+    tasks:
+      - name: "design-slides"
+        file: "tasks/design-slides.md"
+        description: >
+          Cria os HTMLs auto-suficientes de cada slide seguindo o padrão post-05 da
+          Innovation Latam. Aplica variações de layout entre slides de conteúdo
+          mantendo o sistema de design consistente. Verifica WCAG AA, legibilidade,
+          sem overflow.
+      - name: "render-slides"
+        file: "tasks/render-slides.md"
+        description: >
+          Executa o script build-carousel-slides.mjs do tech-instagram-carousel
+          (ou cria script equivalente no squad) para renderizar os HTMLs em PNGs via Playwright.
+    artifacts:
+      operational_framework: |
+        DESIGN-SLIDES:
+        1. Ler real-imagery-and-safe-zones.md (geometria v3), slide-scenes.md (Daniel Diretor), carousel-draft.md (copy) e visual-identity.md (tokens post-05).
+        2. Ler layout-variations.md para as variações de composição permitidas dentro dos tokens.
+        3. Para cada slide, selecionar a variação de layout adequada (cover / conteúdo-imagem / conteúdo-roxo / reflexão / CTA).
+        4. Gerar HTML auto-suficiente por slide: CSS inline, @import Montserrat, body 1080×1350px (4:5), **texto editorial alinhado à esquerda (norma v3)**.
+        5. Logo Innovation Latam: data-URI de assets/innovation-latam-logo-white.png, **top: 30px; left: 100px**, max-width 200px.
+        6. Rodapé: @innovationlatam esquerda | ARRASTE → direita.
+        7. Verificar contraste WCAG AA (4.5:1 mínimo) em todos os elementos de texto.
+        8. Verificar: sem overflow de texto em nenhum slide.
+        9. Verificar slide de reflexão e CTA com tratamento visual distinto conforme visual-identity.md.
+        10. Documentar variações de layout usadas em design-documentation.md.
+
+        RENDER-SLIDES:
+        1. Verificar que squads/tech-instagram-carousel/scripts/build-carousel-slides.mjs existe.
+        2. Executar: node squads/tech-instagram-carousel/scripts/build-carousel-slides.mjs [RUN_DIR]
+        3. Se o script não existir ou falhar, usar Playwright diretamente para renderizar cada HTML.
+        4. Verificar que todos os PNGs foram gerados em output/{run_id}/slides/rendered/.
+        5. Apresentar amostra dos PNGs gerados ao usuário.
+      anti_patterns:
+        never_do:
+          - "Inventar cores, fontes ou posição de logo fora do visual-identity.md: identidade é fixa"
+          - "Usar fonte diferente de Montserrat: é a única fonte permitida no sistema"
+          - "Colocar texto sobre imagem sem overlay escuro forte (0.75-0.95 opacity): falha WCAG AA"
+          - "Usar tamanho de fonte abaixo de 28px para corpo: ilegível em mobile"
+          - "Repetir exatamente o mesmo layout em todos os slides de conteúdo: cria ritmo visual monótono"
+          - "Incluir contador de slides (ex: '3/6'): Instagram tem navegação nativa"
+          - "Usar external CSS frameworks ou CDNs além do Google Fonts @import"
+        always_do:
+          - "Definir design system completo antes de criar slides individuais"
+          - "Renderizar e verificar slide 1 antes de fazer batch dos demais"
+          - "Variar composição entre slides de conteúdo dentro dos tokens definidos"
+      visual_identity:
+        source: "squads/agent-social-v3/pipeline/data/visual-identity.md"
+        slide1_pattern: "Montserrat Bold 700, 82px, letter-spacing -0.02em, gradiente escuro sobre imagem/fundo, padding 5% lateral"
+        slide2_pattern: "Imagem full-bleed + overlay rgba(21,10,28,0.75-0.95), headline 700/46px, body 500/36px, destaques teal #c0fefd"
+        slides3plus_pattern: "Fundo roxo #150a1c→#2a1538, body 500/40px, destaques #c0fefd, padding 5% lateral"
+        logo: "Branco, canto superior esquerdo, max-width 200px, margem 30px, via data-URI"
+        footer: "@innovationlatam esquerda | ARRASTE → direita"
+      quality_criteria:
+        - "Todos os slides usam exclusivamente Montserrat (Google Fonts @import)"
+        - "Logo branco presente em todos os slides, canto superior esquerdo, 30px margin"
+        - "WCAG AA (4.5:1) confirmado em todos os elementos de texto"
+        - "Sem overflow de texto em nenhum slide"
+        - "Body 1080×1350px (4:5) em todos os HTMLs; texto editorial alinhado à esquerda (v3); safe zone y≥1150px"
+        - "Variação de layout entre slides de conteúdo — não todos iguais"
+        - "Slide de reflexão e CTA com tratamento visual distinto"
+        - "Todos os PNGs gerados em output/{run_id}/slides/rendered/"
+
+pipeline:
+  - step: 1
+    name: "Registro de Ângulos (ângulo do usuário)"
+    type: "agent"
+    agent: "carlos-conteudo"
+    execution: "inline"
+    input_file: "squads/agent-social-v3/input/content.md"
+    output_file: "squads/agent-social-v3/output/angles.yaml"
+
+  - step: 2
+    name: "Criação dos Slides (Copy)"
+    type: "agent"
+    agent: "carlos-conteudo"
+    execution: "inline"
+    format: "instagram-feed"
+    input_file: "squads/agent-social-v3/output/angles.yaml"
+    output_file: "squads/agent-social-v3/output/carousel-draft.md"
+
+  - step: 3
+    name: "Daniel Diretor — Cenas"
+    type: "agent"
+    agent: "daniel-diretor"
+    execution: "inline"
+    input_file: "squads/agent-social-v3/output/carousel-draft.md"
+    output_file: "squads/agent-social-v3/output/slide-scenes.md"
+
+  - step: 4
+    name: "Design dos Slides (HTML)"
+    type: "agent"
+    agent: "daria-design"
+    execution: "inline"
+    input_file: "squads/agent-social-v3/output/slide-scenes.md"
+    output_file: "squads/agent-social-v3/output/slides/"
+
+  - step: 5
+    name: "Renderização dos Slides (PNG)"
+    type: "agent"
+    agent: "daria-design"
+    execution: "inline"
+    input_file: "squads/agent-social-v3/output/slides/"
+    output_file: "squads/agent-social-v3/output/slides/rendered/"
+
+investigation:
+  enriched: false
+
+research_brief: |
+  ## Instagram Carrossel — Innovation Latam: Brief de Pesquisa Consolidado
+
+  ### Domínio: Conteúdo para Instagram (Carrossel)
+
+  **Frameworks operacionais identificados:**
+  - Estrutura editorial do squad instagram-carrossel (validado em produção): hook âncora →
+    conteúdo sequencial (1 ideia/slide) → reflexão emocional → CTA duplo.
+  - Padrão post-05 do squad tech-instagram-carousel: slide-titulo (capa) + slide-conteudo-imagem
+    (slide 2 com imagem full-bleed) + slides roxo sólido (#150a1c→#2a1538) para demais.
+  - Sistema de ângulos virais: Medo / Oportunidade / Educacional / Contrário / Inspiracional.
+  - Algoritmo Instagram: Saves > Shares > Comments > Likes. Carrosséis recebem ~1.4× mais
+    alcance que imagens únicas. Algoritmo re-serve carrosséis não vistos.
+
+  **Benchmarks de qualidade validados:**
+  - C1 Scroll-Stop Test (peso 1.5×): slide 1 para qualquer scroll sem esforço
+  - C2 Data Integrity: toda afirmação factual com fonte e número específico
+  - C3 Story Coherence: cada slide consequência do anterior
+  - C4 Reflexão Final: síntese emocional antes do CTA
+  - C5 CTA Specificity: duas ações (salvar + comentar), conectadas ao tema
+  - C6 Brand Voice: tom didático-revelador, não corporativo
+
+  **Anti-patterns críticos (validados em campo):**
+  - Slide 1 começando com nome da marca ou apresentação → destruição do scroll-stop
+  - Afirmações factuais sem dado ou fonte → falha editorial que o leitor percebe
+  - Mais de 5 linhas visíveis por slide → abandon rate mobile
+  - Todos os slides com mesmo layout → ritmo monótono
+  - CTA genérico ("nos siga para mais") → engajamento mínimo
+  - Texto abaixo de 28px corpo → ilegível em mobile
+
+  **Identidade visual Innovation Latam (padrão post-05 — obrigatório):**
+  - Fonte: Montserrat exclusivamente (Google Fonts @import)
+  - Slide 1: fundo escuro + gradiente, hero text 82px Bold, letter-spacing -0.02em
+  - Slide 2: imagem full-bleed + overlay rgba(21,10,28,0.75-0.95), headline 46px, body 36px
+  - Slides 3+: roxo sólido #150a1c→#2a1538, body 40px Medium, destaques #c0fefd
+  - Logo: branco, canto superior esquerdo, max-width 200px, margem 30px, via data-URI
+  - Rodapé: @innovationlatam esquerda | ARRASTE → direita
+
+  **Vocabulário do domínio — sempre usar:**
+  - "Dado-âncora" — número mais forte para o hook
+  - "Ângulo viral" — lente emocional única para contar o mesmo conteúdo
+  - "Slide de reflexão" — síntese emocional penúltima
+  - "Hook" — primeira linha que para o scroll
+  - "Tokens de design" — variáveis do sistema visual (cores, fontes, espaçamentos)
+
+  **Vocabulário — nunca usar:**
+  - "Incrível", "fantástico" — vazios, substituir por dado específico
+  - "Disruptivo", "game-changer" — jargão de marketing
+  - "Neste carrossel vou te mostrar..." — meta-comentário que desperdiça slide 1
+
+skills_installed:
+  - "web_search"
+  - "web_fetch"
+  - "nodejs_playwright"
+
+formats_selected:
+  - "instagram-feed"
+
+best_practices_consulted:
+  - "copywriting.md"
+  - "instagram-feed.md"
+  - "image-design.md"
+  - "researching.md"
+  - "instagram-carousel-art-director-brief.md"
+
+template_selection: "skipped"
+template_note: "Identidade visual já definida e fixa: padrão post-05 do squad tech-instagram-carousel"
+
+reference_squads:
+  editorial: "temp/squads/instagram-carrossel"
+  visual: "squads/tech-instagram-carousel"

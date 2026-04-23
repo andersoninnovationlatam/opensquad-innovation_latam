@@ -1,0 +1,33 @@
+squad_code: "instagram-carrossel"
+purpose: "Criar carrosseis para o Instagram da Innovation Latam"
+domain: "content"
+
+company:
+  name: "Innovation Latam"
+  tone: "Profissional, acessível e educativo — com energia empreendedora"
+  products:
+    - "Marketplace B2B de inovação corporativa"
+    - "Plataforma de gestão de programas de inovação"
+    - "Hub IA4FIN (inovação financeira)"
+    - "Robot Rock (IA)"
+    - "Blog de inovação e newsletter"
+
+language: "Português (Brasil)"
+
+context:
+  audience: "Público amplo de inovação — grandes empresas (clientes e potenciais) + ecossistema de startups e empreendedores"
+  platforms: "Instagram"
+  tone: "Profissional e inspirador"
+
+tools_needed:
+  - "template-designer"
+  - "image-creator"
+  - "image-ai-generator"
+  - "instagram-publisher"
+
+investigation:
+  enabled: false
+  profiles: []
+
+target_formats:
+  - "instagram-carousel"

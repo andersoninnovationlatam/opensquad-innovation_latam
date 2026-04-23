@@ -1,0 +1,14 @@
+{
+  "squad": "agent-social-media-v2",
+  "status": "idle",
+  "step": { "current": 6, "total": 6, "label": "step-06-publish-instagram" },
+  "agents": [
+    { "id": "carlos-conteudo", "name": "Carlos Conteúdo", "icon": "✍️", "status": "done", "desk": { "col": 1, "row": 1 } },
+    { "id": "daniel-diretor", "name": "Daniel Diretor", "icon": "🎬", "status": "done", "desk": { "col": 2, "row": 1 } },
+    { "id": "daria-design", "name": "Dária Design", "icon": "🎨", "status": "done", "desk": { "col": 3, "row": 1 } }
+  ],
+  "handoff": null,
+  "startedAt": "2026-04-08T18:42:26.000Z",
+  "updatedAt": "2026-04-08T18:45:00.000Z",
+  "lastRunId": "2026-04-08-184226"
+}

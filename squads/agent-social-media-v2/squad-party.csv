@@ -1,0 +1,4 @@
+id,name,title,icon,path
+carlos-conteudo,Carlos Conteúdo,Estrategista de Copy e Carrossel,✍️,./agents/carlos-conteudo.agent.md
+daniel-diretor,Daniel Diretor,Diretor de Arte Fotográfico (Cenas por Slide),🎬,./agents/daniel-diretor.agent.md
+daria-design,Dária Design,Designer de Slides & Renderizadora,🎨,./agents/daria-design.agent.md

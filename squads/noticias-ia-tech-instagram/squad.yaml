@@ -1,0 +1,47 @@
+squad:
+  code: noticias-ia-tech-instagram
+  name: "Notícias IA & Tech — Instagram"
+  description: "Curadoria diária de notícias de IA e tecnologia, carrossel para feed Instagram com copy JSON, prompts visuais e verificação factual antes das imagens finais."
+  icon: "📰"
+  agents:
+    - researcher
+    - copywriter
+    - strategist
+    - designer
+    - reviewer
+
+skills:
+  - web_search
+  - web_fetch
+  - apify
+  - image-creator
+  - image-ai-generator
+  - template-designer
+  - image-fetcher
+  - blotato
+  - instagram-publisher
+
+data:
+  - pipeline/artifacts/news_raw.schema.json
+  - pipeline/artifacts/carousel_copy.schema.json
+  - pipeline/artifacts/visual_prompts.schema.json
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+  - pipeline/data/carousel-visual-language.md
+
+pipeline:
+  steps:
+    - pipeline/steps/step-01-checkpoint-research-focus.md
+    - pipeline/steps/step-02-find-and-rank-news.md
+    - pipeline/steps/step-03-checkpoint-select-news.md
+    - pipeline/steps/step-04-write-carousel-copy.md
+    - pipeline/steps/step-05-checkpoint-approve-carousel-copy.md
+    - pipeline/steps/step-06-visual-strategy.md
+    - pipeline/steps/step-07-checkpoint-approve-visual-prompts.md
+    - pipeline/steps/step-08-generate-carousel-images.md
+    - pipeline/steps/step-09-review.md
+    - pipeline/steps/step-10-checkpoint-final-manager.md

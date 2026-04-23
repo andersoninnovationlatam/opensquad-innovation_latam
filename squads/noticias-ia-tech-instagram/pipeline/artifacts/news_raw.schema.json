@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "squads/noticias-ia-tech-instagram/pipeline/artifacts/news_raw.schema.json",
+  "title": "NewsResearchHandoff",
+  "description": "Espelho estruturado da pesquisa; ficheiro emitido em squads/noticias-ia-tech-instagram/output/{run_id}/news_raw.json",
+  "type": "array",
+  "minItems": 3,
+  "items": {
+    "type": "object",
+    "required": ["rank", "titulo", "link", "published_date", "conteudo", "fonte", "confidence"],
+    "properties": {
+      "rank": { "type": "integer", "minimum": 1 },
+      "titulo": { "type": "string", "minLength": 1 },
+      "link": { "type": "string", "format": "uri" },
+      "published_date": {
+        "type": "string",
+        "description": "YYYY-MM-DD ou 'desconhecido' com resumo na nota do item em ranked-news"
+      },
+      "conteudo": {
+        "type": "string",
+        "minLength": 1,
+        "description": "Resumo com factos principais; sem cópia literal de trechos protegidos"
+      },
+      "fonte": {
+        "type": "string",
+        "description": "Nome limpo da publicação (ex.: TechCrunch)"
+      },
+      "confidence": {
+        "type": "string",
+        "enum": ["alta", "media", "baixa"]
+      },
+      "theme_axis": {
+        "type": "string",
+        "description": "Opcional: qual dos quatro eixos de research-focus.md melhor cobre este item"
+      }
+    },
+    "additionalProperties": false
+  }
+}

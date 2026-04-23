@@ -1,0 +1,29 @@
+name: "Instagram Carrossel — Innovation Latam"
+code: "instagram-carrossel"
+description: "Squad para criação de carrosseis de Instagram com pesquisa de tendências, copywriting, direção de arte e revisão."
+language: "Português (Brasil)"
+
+skills:
+  - web_search
+  - web_fetch
+  - image-creator
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+  - pipeline/data/visual-identity.md
+  - pipeline/data/template-reference.html
+
+agents:
+  - agents/rodrigo-radar.agent.md
+  - agents/carlos-carrossel.agent.md
+  - agents/beatriz-briefing.agent.md
+  - agents/vera-veredito.agent.md
+
+pipeline: pipeline/pipeline.yaml
+
+memory: _memory/memories.md

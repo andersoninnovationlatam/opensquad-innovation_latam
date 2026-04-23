@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px;
+      height: 1440px;
+      overflow: hidden;
+      background: #121212;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: column;
+      padding: 72px;
+      position: relative;
+    }
+    
+    /* Header tag */
+    .header-tag {
+      display: inline-block;
+      background: #FFD70033;
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+    
+    /* Card container */
+    .card {
+      background: #ffffff08;
+      border: 1px solid #ffffff15;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+    
+    /* Card title */
+    .card-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    
+    .card-title .highlight {
+      color: #FFD700;
+    }
+    
+    /* Card body */
+    .card-body-text {
+      font-size: 34px;
+      font-weight: 500;
+      color: #aaa;
+      line-height: 1.5;
+    }
+    
+    /* Footer */
+    .footer {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-top: 32px;
+      border-top: 1px solid #333;
+      margin-top: auto;
+    }
+    
+    .footer .brand {
+      font-size: 24px;
+      color: #888;
+      font-weight: 600;
+    }
+    
+    .footer .swipe {
+      margin-left: auto;
+      font-size: 24px;
+      color: #666;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header tag -->
+  <div class="header-tag">CONTRAPONTO</div>
+  
+  <!-- Card content -->
+  <div class="card">
+    <div class="card-title">
+      usar muita IA tá <span class="highlight">fritando</span> teu cérebro
+    </div>
+    <div class="card-body-text">
+      Harvard publicou estudo e deu nome pro efeito: brain fry. Quem usa até 3 IAs simultâneas reportou menos cansaço, mais produtividade no dia a dia.
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div class="footer">
+    <div class="brand">Innovation Latam</div>
+    <div class="swipe">ARRASTE →</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      background: #993CB1;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: column;
+      padding: 72px;
+      position: relative;
+    }
+
+    /* Elemento decorativo de fundo */
+    .bg-circle-1 {
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      pointer-events: none;
+    }
+    .bg-circle-2 {
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.10);
+      pointer-events: none;
+    }
+
+    /* Tag de categoria */
+    .tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.20);
+      border-radius: 100px;
+      padding: 12px 28px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 48px;
+      align-self: flex-start;
+      flex-shrink: 0;
+    }
+
+    /* Título principal */
+    h1 {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1.15;
+      margin: 0 0 40px 0;
+    }
+    h1 .accent {
+      color: #50beba;
+    }
+
+    /* Texto de suporte */
+    .body-text {
+      font-size: 34px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    /* Lista de itens */
+    .items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+      justify-content: center;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 24px 28px;
+    }
+    .item-number {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .item-text {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .item-subtext {
+      font-size: 26px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.70);
+      margin-top: 6px;
+    }
+
+    /* Swipe hint */
+    .swipe-hint {
+      display: flex;
+      justify-content: center;
+      margin: 32px 0 24px;
+      flex-shrink: 0;
+    }
+    .swipe-hint span {
+      font-size: 24px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.60);
+    }
+
+    /* Rodapé com branding — SEMPRE canto inferior direito */
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.25);
+      flex-shrink: 0;
+    }
+    .footer-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .footer-brand {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+    .footer-handle {
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+    }
+    .footer-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-circle-1"></div>
+  <div class="bg-circle-2"></div>
+
+  <!-- Tag de categoria — substitua pelo tema do slide -->
+  <div class="tag">Inovação Corporativa</div>
+
+  <!-- Título — substitua pelo headline do copywriter -->
+  <h1>
+    O jeito certo de estruturar inovação na sua empresa em <span class="accent">2025</span>
+  </h1>
+
+  <!-- Itens de conteúdo — substitua com os pontos do carrossel -->
+  <div class="items">
+    <div class="item">
+      <div class="item-number">1</div>
+      <div>
+        <div class="item-text">Defina um orçamento dedicado à inovação</div>
+        <div class="item-subtext">Mínimo 2-5% da receita anual, segundo benchmarks globais.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-number">2</div>
+      <div>
+        <div class="item-text">Conecte com o ecossistema de startups</div>
+        <div class="item-subtext">Open innovation acelera resultados em 3-5x.</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="item-number">3</div>
+      <div>
+        <div class="item-text">Engaje colaboradores no processo</div>
+        <div class="item-subtext">Intraempreendedorismo gera ideias de dentro para fora.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Swipe hint (omitir no último slide) -->
+  <div class="swipe-hint">
+    <span>Arraste para continuar →</span>
+  </div>
+
+  <!-- Branding — SEMPRE no canto inferior direito de todos os slides -->
+  <div class="footer">
+    <div class="footer-text">
+      <span class="footer-brand">INNOVATION LATAM</span>
+      <span class="footer-handle">@innovationlatam</span>
+    </div>
+    <!-- Substituir por: <img src="squads/instagram-carrossel/assets/innovation-latam-logo-white.png" width="48"> -->
+    <div class="footer-logo">IL</div>
+  </div>
+</body>
+</html>

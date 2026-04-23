@@ -1,0 +1,32 @@
+code: "agent-social-v3"
+name: "Social Media Innovation Latam v3 (Google Drive)"
+description: "Produção automatizada de carrosséis Instagram (1080×1350px, 4:5) da Innovation Latam; após o render, upload das imagens para uma pasta do Google Drive por run."
+language: "pt-BR"
+
+company: "_opensquad/_memory/company.md"
+preferences: "_opensquad/_memory/preferences.md"
+memory: "_memory/memories.md"
+
+platform: "Instagram Feed"
+format: "instagram-feed"
+
+skills: []
+
+data:
+  - pipeline/data/art-direction-photography-guide.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
+  - pipeline/data/visual-identity.md
+  - pipeline/data/real-imagery-and-safe-zones.md
+  - pipeline/data/layout-variations.md
+
+agents:
+  manifest: squad-party.csv
+
+pipeline:
+  entry_point: pipeline/pipeline.yaml
+
+output_dir: output/

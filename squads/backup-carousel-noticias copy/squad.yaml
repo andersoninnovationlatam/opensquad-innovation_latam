@@ -1,0 +1,20 @@
+name: "Carrossel de Notícias"
+code: "carousel-noticias"
+description: "Transforma notícias fornecidas pelo usuário em carrosséis visuais para Instagram, com geração de imagens AI como fundo dos slides."
+version: "1.0.0"
+language: "pt-BR"
+
+agents: squad-party.csv
+pipeline: pipeline/pipeline.yaml
+
+skills:
+  - image-ai-generator
+  - image-creator
+
+data:
+  - pipeline/data/research-brief.md
+  - pipeline/data/domain-framework.md
+  - pipeline/data/quality-criteria.md
+  - pipeline/data/output-examples.md
+  - pipeline/data/anti-patterns.md
+  - pipeline/data/tone-of-voice.md
