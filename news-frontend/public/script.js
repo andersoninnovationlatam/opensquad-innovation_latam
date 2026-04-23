@@ -31,7 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                throw new Error('Erro na resposta do servidor');
+                let errorDetail = `Status ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    console.error('Detalhes do erro:', errorData);
+                    errorDetail = errorData.error || errorData.hint || errorDetail;
+                    if (errorData.details) errorDetail += ` — ${errorData.details}`;
+                } catch { /* response wasn't JSON */ }
+                throw new Error(errorDetail);
             }
 
             const result = await response.json();
@@ -47,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newsForm.reset();
         } catch (error) {
             console.error('Erro:', error);
-            showStatus('Ocorreu um erro ao processar sua solicitação. Tente novamente.', 'error');
+            showStatus(`Erro: ${error.message}`, 'error');
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;

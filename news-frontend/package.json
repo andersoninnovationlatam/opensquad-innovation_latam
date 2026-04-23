@@ -4,9 +4,8 @@
     "description": "Frontend para gerador de notícias com Cloudflare Workers",
     "main": "src/index.js",
     "scripts": {
-        "dev": "npm run build && wrangler pages dev public",
-        "deploy": "wrangler deploy",
-        "build": "cp src/index.js public/_worker.js"
+        "dev": "wrangler pages dev public",
+        "deploy": "npx wrangler pages deploy public --project-name=opensquad-innovation-latam"
     },
     "devDependencies": {
         "wrangler": "^3.0.0"
