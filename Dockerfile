@@ -71,8 +71,5 @@ RUN mkdir -p /app/squads/carousel-noticias/output
 # Expose the port the app runs on
 EXPOSE 3001
 
-# Mount this volume to persist run outputs across container restarts
-VOLUME ["/app/squads/carousel-noticias/output"]
-
 # Start the application
 CMD ["node", "backend-simples/server.js"]
