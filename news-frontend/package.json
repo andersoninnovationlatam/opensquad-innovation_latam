@@ -5,6 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "dev": "wrangler pages dev public",
+        "build": "echo 'No build step needed'",
         "deploy": "npx wrangler pages deploy public --project-name=opensquad-innovation-latam"
     },
     "devDependencies": {
