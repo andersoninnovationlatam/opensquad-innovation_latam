@@ -9,7 +9,8 @@ export default {
                 const { news, angle } = body;
 
                 // Call the backend bridge
-                const response = await fetch('http://localhost:3001/api/generate', {
+                const apiUrl = env.API_URL || 'http://localhost:3001';
+                const response = await fetch(`${apiUrl}/api/generate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ news, angle })
@@ -35,7 +36,8 @@ export default {
         // Handle Status requests
         if (url.pathname.startsWith('/api/status/') && request.method === 'GET') {
             try {
-                const response = await fetch(`http://localhost:3001${url.pathname}`);
+                const apiUrl = env.API_URL || 'http://localhost:3001';
+                const response = await fetch(`${apiUrl}${url.pathname}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch status');
                 }

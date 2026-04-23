@@ -6,7 +6,12 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT_DIR = path.resolve(__dirname, '..');
+// In production (Docker), the backend-simples is in /app/backend-simples
+// ROOT_DIR should be /app
+const ROOT_DIR = process.env.NODE_ENV === 'production'
+    ? path.resolve(__dirname, '..')
+    : path.resolve(__dirname, '..');
+// Actually, it's the same if the structure is preserved.
 
 const app = express();
 const port = process.env.PORT || 3001;
