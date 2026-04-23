@@ -23,10 +23,10 @@ import time
 import urllib.request
 import urllib.error
 
-# Model configuration per mode
+# Model configuration per mode — production model can be overridden via OPENROUTER_MODELS_IMAGE env var
 MODELS = {
-    "test": "sourceful/riverflow-v2-fast",
-    "production": "google/gemini-3.1-flash-image-preview",
+    "test": os.environ.get("OPENROUTER_MODELS_IMAGE_TEST", "sourceful/riverflow-v2-fast"),
+    "production": os.environ.get("OPENROUTER_MODELS_IMAGE", "google/gemini-2.5-flash-preview-05-20"),
 }
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"

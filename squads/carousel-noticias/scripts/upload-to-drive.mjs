@@ -45,23 +45,34 @@ const parentFolderId =
   env["GOOGLE_DRIVE_PARENT_FOLDER_ID"] ||
   DEFAULT_PARENT_FOLDER_ID;
 
-const saPathRaw =
+const saRaw =
   process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON ||
   env["GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON"];
 
-if (!saPathRaw) {
-  console.error("❌ GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON não configurada no .env");
-  console.error("   Adicione: GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON=secrets/google-drive-service-account.json");
+if (!saRaw) {
+  console.error("❌ GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON não configurada");
+  console.error("   Local: aponte para o arquivo — GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON=secrets/sa.json");
+  console.error("   Railway: cole o JSON completo na variável de ambiente");
   process.exit(1);
 }
 
-const saAbs = path.isAbsolute(saPathRaw)
-  ? saPathRaw
-  : path.join(REPO_ROOT, saPathRaw);
-
-if (!existsSync(saAbs)) {
-  console.error(`❌ Arquivo de service account não encontrado: ${saAbs}`);
-  process.exit(1);
+// Accepts either a file path or a JSON string (for Railway env vars)
+let serviceAccountCredentials;
+const isJsonString = saRaw.trim().startsWith("{");
+if (isJsonString) {
+  try {
+    serviceAccountCredentials = JSON.parse(saRaw);
+  } catch (e) {
+    console.error("❌ GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON contém JSON inválido:", e.message);
+    process.exit(1);
+  }
+} else {
+  const saAbs = path.isAbsolute(saRaw) ? saRaw : path.join(REPO_ROOT, saRaw);
+  if (!existsSync(saAbs)) {
+    console.error(`❌ Arquivo de service account não encontrado: ${saAbs}`);
+    process.exit(1);
+  }
+  serviceAccountCredentials = JSON.parse(readFileSync(saAbs, "utf-8"));
 }
 
 // ── Args ───────────────────────────────────────────────────────────────────────
@@ -112,10 +123,9 @@ console.log(`   Slides:  ${files.length} arquivos`);
 console.log(`   Origem:  ${slidesDir}`);
 
 // ── Autenticação Google Drive ──────────────────────────────────────────────────
-const sa = JSON.parse(readFileSync(saAbs, "utf8"));
 const auth = new google.auth.JWT({
-  email: sa.client_email,
-  key: sa.private_key,
+  email: serviceAccountCredentials.client_email,
+  key: serviceAccountCredentials.private_key,
   scopes: ["https://www.googleapis.com/auth/drive"],
 });
 const drive = google.drive({ version: "v3", auth });

@@ -116,6 +116,10 @@ app.get('/api/logs/:squad/:runId', async (req, res) => {
     }
 });
 
-app.listen(port, () => {
-    console.log(`Backend bridge listening at http://localhost:${port}`);
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', uptime: process.uptime() });
+});
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Backend bridge listening at http://0.0.0.0:${port}`);
 });
