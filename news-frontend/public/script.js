@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const state = await response.json();
 
-                if (state.step.current !== lastStep) {
+                if (state.step && state.step.current !== lastStep) {
                     lastStep = state.step.current;
                     console.log(`[Step ${state.step.current}/${state.step.total}] ${state.step.label}`);
                 }
@@ -87,7 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('❌ ERRO NA EXECUÇÃO DO SQUAD');
                     showStatus('❌ Ocorreu um erro na geração das imagens.', 'error');
                 } else {
-                    showStatus(`Processando: ${state.step.label || 'Iniciando...'} (${state.step.current}/${state.step.total})`, 'info');
+                    const stepLabel = state.step ? state.step.label : 'Iniciando...';
+                    const stepCurrent = state.step ? state.step.current : '?';
+                    const stepTotal = state.step ? state.step.total : '?';
+                    showStatus(`Processando: ${stepLabel} (${stepCurrent}/${stepTotal})`, 'info');
                 }
             } catch (error) {
                 console.error('Erro ao buscar status:', error);
