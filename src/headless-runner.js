@@ -260,6 +260,7 @@ If the instructions ask to save a file, provide the content of that file clearly
                 const pngPath = path.join(slidesDir, `slide-${String(slide.number).padStart(2, '0')}.png`);
 
                 const isOdd = slide.number % 2 !== 0;
+                const isFirst = slide.number === 1;
                 const bgPath = path.resolve(path.join(imagesDir, `slide-${String(slide.number).padStart(2, '0')}-bg.png`));
                 const logoPath = path.resolve(path.join(ROOT_DIR, 'squads', 'carousel-noticias', 'assets', 'innovation-latam-logo-white.png'));
 
@@ -280,7 +281,9 @@ If the instructions ask to save a file, provide the content of that file clearly
             font-family: 'Montserrat', sans-serif;
             position: relative;
             display: flex; flex-direction: column;
-            justify-content: center; padding: 100px;
+            justify-content: ${isFirst ? 'flex-end' : 'center'}; 
+            padding: 100px;
+            padding-bottom: ${isFirst ? '160px' : '100px'};
             ${bgStyle}
             color: white;
             text-align: left;
