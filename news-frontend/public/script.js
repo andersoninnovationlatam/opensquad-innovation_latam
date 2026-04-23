@@ -16,7 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Real API call to the Worker
-            console.log('Enviando dados:', { news, angle });
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log('🚀 INICIANDO PROCESSO DE GERAÇÃO');
+            console.log('📰 Notícia:', news);
+            console.log('🎯 Ângulo:', angle);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
             const response = await fetch('/api/generate', {
                 method: 'POST',
@@ -51,19 +55,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function pollStatus(runId) {
+        let lastStep = 0;
         const pollInterval = setInterval(async () => {
             try {
                 const response = await fetch(`/api/status/carousel-noticias/${runId}`);
                 if (!response.ok) return;
 
                 const state = await response.json();
-                console.log('Status do Squad:', state);
+
+                if (state.step.current !== lastStep) {
+                    lastStep = state.step.current;
+                    console.log(`[Step ${state.step.current}/${state.step.total}] ${state.step.label}`);
+                }
 
                 if (state.status === 'completed') {
                     clearInterval(pollInterval);
+                    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+                    console.log('✅ PROCESSO CONCLUÍDO COM SUCESSO');
+                    console.log('📂 Arquivos disponíveis no Google Drive');
+                    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
                     showStatus('✨ Imagens geradas e enviadas para o Google Drive com sucesso!', 'success', true);
                 } else if (state.status === 'failed') {
                     clearInterval(pollInterval);
+                    console.log('❌ ERRO NA EXECUÇÃO DO SQUAD');
                     showStatus('❌ Ocorreu um erro na geração das imagens.', 'error');
                 } else {
                     showStatus(`Processando: ${state.step.label || 'Iniciando...'} (${state.step.current}/${state.step.total})`, 'info');

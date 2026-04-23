@@ -2,57 +2,306 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, '..');
 
+// ── Load Env ──────────────────────────────────────────────────────────────────
+async function loadEnv() {
+    const envPath = path.join(ROOT_DIR, '.env');
+    try {
+        const content = await fs.readFile(envPath, 'utf-8');
+        return content.split('\n').reduce((acc, line) => {
+            const [key, ...val] = line.split('=');
+            if (key && val.length > 0) acc[key.trim()] = val.join('=').trim().replace(/^['"]|['"]$/g, '');
+            return acc;
+        }, {});
+    } catch {
+        return {};
+    }
+}
+
+// ── OpenRouter API ────────────────────────────────────────────────────────────
+async function callOpenRouter(prompt, model, apiKey) {
+    console.log(`🤖 Calling LLM (${model})...`);
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://github.com/renatoasse/opensquad',
+            'X-Title': 'OpenSquad Headless Runner'
+        },
+        body: JSON.stringify({
+            model: model,
+            messages: [{ role: 'user', content: prompt }]
+        })
+    });
+
+    if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`OpenRouter API error: ${err}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
+
+// ── Agent Context ─────────────────────────────────────────────────────────────
+async function getAgentContext(squadDir, agentId) {
+    const agentPath = path.join(squadDir, 'agents', `${agentId}.agent.md`);
+    const content = await fs.readFile(agentPath, 'utf-8');
+
+    // Add company context and squad memory
+    const companyContext = await fs.readFile(path.join(ROOT_DIR, '_opensquad', '_memory', 'company.md'), 'utf-8').catch(() => '');
+    const squadMemory = await fs.readFile(path.join(squadDir, '_memory', 'memories.md'), 'utf-8').catch(() => '');
+
+    return `
+AGENT DEFINITION:
+${content}
+
+COMPANY CONTEXT:
+${companyContext}
+
+SQUAD MEMORY:
+${squadMemory}
+`;
+}
+
+// ── Main Runner ───────────────────────────────────────────────────────────────
 async function run() {
+    const env = await loadEnv();
+    const apiKey = env.OPENROUTER_API_KEY;
+    const contentModel = env.OPENROUTER_MODELS_CONTENT || 'openai/gpt-4o-mini';
+
     const args = process.argv.slice(2);
     const squadName = args[args.indexOf('--squad') + 1];
     const runId = args[args.indexOf('--runId') + 1];
     const startStep = parseInt(args[args.indexOf('--startStep') + 1] || '1');
 
-    console.log(`🚀 Starting headless run for squad: ${squadName}`);
+    console.log(`🚀 Starting REAL headless run for squad: ${squadName}`);
     console.log(`📁 Run ID: ${runId}`);
 
     const squadDir = path.join(ROOT_DIR, 'squads', squadName);
     const pipelinePath = path.join(squadDir, 'pipeline', 'pipeline.yaml');
-
-    const pipelineRaw = await fs.readFile(pipelinePath, 'utf-8');
-    const pipeline = parseYaml(pipelineRaw);
+    const pipeline = parseYaml(await fs.readFile(pipelinePath, 'utf-8'));
 
     const runDir = path.join(squadDir, 'output', runId);
     await fs.mkdir(runDir, { recursive: true });
-
     const statePath = path.join(runDir, 'state.json');
 
-    // Initial state
     let state = {
         squad: squadName,
         status: 'running',
         step: { current: startStep, total: pipeline.steps.length, label: '' },
-        agents: [], // To be populated from squad-party.csv
         updatedAt: new Date().toISOString()
     };
 
-    await fs.writeFile(statePath, JSON.stringify(state, null, 2));
-
     for (let i = startStep - 1; i < pipeline.steps.length; i++) {
         const step = pipeline.steps[i];
-        console.log(`\nStep ${step.step}: ${step.name}`);
+        const stepFile = path.join(squadDir, 'pipeline', step.file);
+        const stepContent = await fs.readFile(stepFile, 'utf-8');
+        const stepMeta = parseYaml(stepContent.match(/^---\n([\s\S]*?)\n---/)[1]);
 
-        // Update state
+        let logMessage = `Agente ${stepMeta.agent} processando ${step.name}...`;
+        console.log(`\n[Step ${step.step}/${pipeline.steps.length}] ${logMessage}`);
+
         state.step.current = step.step;
-        state.step.label = step.name;
+        state.step.label = logMessage;
         state.updatedAt = new Date().toISOString();
         await fs.writeFile(statePath, JSON.stringify(state, null, 2));
 
-        // EXECUTION LOGIC
-        // In a real headless runner, this would call an LLM API.
-        // For this implementation, we simulate the delay and output.
-        // The actual content generation should be handled by the AI agents.
+        // EXECUTION
+        if (stepMeta.execution === 'subagent' || stepMeta.execution === 'inline') {
+            const agentContext = await getAgentContext(squadDir, stepMeta.agent);
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+            // Read input files from Context Loading section and frontmatter
+            let contextData = '';
+            const contextFiles = [];
+
+            // 1. From frontmatter
+            if (stepMeta.inputFile) contextFiles.push(stepMeta.inputFile);
+
+            // 2. From Context Loading section
+            const contextSection = stepContent.match(/## Context Loading\n\nLoad these files before executing:\n([\s\S]*?)\n##/);
+            if (contextSection) {
+                const matches = contextSection[1].matchAll(/- `(.+?)`/g);
+                for (const match of matches) contextFiles.push(match[1]);
+            }
+
+            for (const file of [...new Set(contextFiles)]) {
+                let filePath = file.replace('{run_id}', runId).replace('{squad}', squadName);
+
+                // If it's an output file but doesn't have runId, try to inject it
+                if (filePath.includes('/output/') && !filePath.includes(runId)) {
+                    filePath = filePath.replace('/output/', `/output/${runId}/`);
+                }
+
+                const fullPath = path.isAbsolute(filePath) ? filePath : path.join(ROOT_DIR, filePath);
+                try {
+                    const data = await fs.readFile(fullPath, 'utf-8');
+                    contextData += `\nFILE: ${file}\n---\n${data}\n---\n`;
+                } catch (err) {
+                    console.warn(`⚠️ Could not load context file: ${file}`);
+                }
+            }
+
+            const prompt = `
+${agentContext}
+
+STEP INSTRUCTIONS:
+${stepContent}
+
+CONTEXT DATA:
+${contextData}
+
+Please perform the task described in the STEP INSTRUCTIONS. 
+If the instructions ask to save a file, provide the content of that file clearly.
+`;
+
+            const output = await callOpenRouter(prompt, contentModel, apiKey);
+
+            // Save output if specified
+            if (stepMeta.outputFile) {
+                let outputPath = stepMeta.outputFile.replace('{run_id}', runId).replace('{squad}', squadName);
+
+                // If it's an output file but doesn't have runId, try to inject it
+                if (outputPath.includes('/output/') && !outputPath.includes(runId)) {
+                    outputPath = outputPath.replace('/output/', `/output/${runId}/`);
+                }
+
+                let fullOutputPath = path.isAbsolute(outputPath) ? outputPath : path.join(ROOT_DIR, outputPath);
+
+                // If the output path is a directory (ends with /), save the LLM response as report.md inside it
+                if (fullOutputPath.endsWith('/') || fullOutputPath.endsWith('\\')) {
+                    await fs.mkdir(fullOutputPath, { recursive: true });
+                    fullOutputPath = path.join(fullOutputPath, 'report.md');
+                } else {
+                    await fs.mkdir(path.dirname(fullOutputPath), { recursive: true });
+                }
+
+                // Extract content if the LLM wrapped it in code blocks
+                let cleanOutput = output;
+                const codeBlockMatch = output.match(/```(?:markdown|html|yaml|json)?\n([\s\S]*?)\n```/);
+                if (codeBlockMatch) cleanOutput = codeBlockMatch[1];
+
+                await fs.writeFile(fullOutputPath, cleanOutput);
+                console.log(`✓ Output saved to ${fullOutputPath}`);
+            }
+        } else {
+            // For checkpoint steps or steps without agents
+            console.log(`ℹ️ Step ${step.step} is a ${stepMeta.type || 'system'} step, skipping LLM call.`);
+        }
+
+        // Special handling for image generation step (Step 8)
+        if (step.name === 'gerar-e-renderizar-slides') {
+            console.log('🎨 Starting real image generation and rendering...');
+
+            const artBriefPath = path.join(runDir, 'art-brief.md');
+            const artBrief = await fs.readFile(artBriefPath, 'utf-8').catch(() => '');
+            const copyPath = path.join(runDir, 'carousel-copy.md');
+            const copy = await fs.readFile(copyPath, 'utf-8').catch(() => '');
+
+            // 1. Parse art-brief for image prompts
+            const slides = [];
+            const slideBlocks = artBrief.split(/Slide \d+/);
+            for (let j = 1; j < slideBlocks.length; j++) {
+                const block = slideBlocks[j];
+                const bgMatch = block.match(/Background: (?:foto — )?(.+)/);
+                const headlineMatch = block.match(/Headline: "(.+)"/);
+                const textMatch = block.match(/Supporting text: "(.+)"/);
+
+                slides.push({
+                    number: j,
+                    bgPrompt: bgMatch ? bgMatch[1] : '',
+                    headline: headlineMatch ? headlineMatch[1] : '',
+                    text: textMatch ? textMatch[1] : ''
+                });
+            }
+
+            // 2. Generate images for odd slides
+            const imagesDir = path.join(runDir, 'images');
+            await fs.mkdir(imagesDir, { recursive: true });
+
+            for (const slide of slides) {
+                if (slide.number % 2 !== 0 && slide.bgPrompt) {
+                    console.log(`📸 Generating background for Slide ${slide.number}...`);
+                    const imgPath = path.join(imagesDir, `slide-${String(slide.number).padStart(2, '0')}-bg.png`);
+
+                    // Call image-ai-generator
+                    const genScript = path.join(ROOT_DIR, 'skills', 'image-ai-generator', 'scripts', 'generate.py');
+                    spawnSync('python3', [
+                        genScript,
+                        '--prompt', slide.bgPrompt,
+                        '--output', imgPath,
+                        '--mode', 'production'
+                    ], { env: { ...process.env, OPENROUTER_API_KEY: apiKey } });
+                }
+            }
+
+            // 3. Render slides to PNG
+            console.log('🖼️ Rendering slides to PNG...');
+            const slidesDir = path.join(runDir, 'slides', 'v1');
+            await fs.mkdir(slidesDir, { recursive: true });
+
+            // We'll use a simple HTML template for rendering
+            for (const slide of slides) {
+                const htmlPath = path.join(slidesDir, `slide-${String(slide.number).padStart(2, '0')}.html`);
+                const pngPath = path.join(slidesDir, `slide-${String(slide.number).padStart(2, '0')}.png`);
+
+                const isOdd = slide.number % 2 !== 0;
+                const bgStyle = isOdd
+                    ? `background-image: url('../../images/slide-${String(slide.number).padStart(2, '0')}-bg.png'); background-size: cover;`
+                    : `background-color: #993CB1;`;
+
+                const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 1080px; height: 1350px; overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            display: flex; flex-direction: column;
+            justify-content: flex-end; padding: 80px;
+            ${bgStyle}
+        }
+        ${isOdd ? '.overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%); }' : ''}
+        .content { position: relative; z-index: 2; color: white; }
+        h1 { font-size: 60px; font-weight: 700; margin-bottom: 20px; }
+        p { font-size: 34px; font-weight: 500; opacity: 0.9; }
+    </style>
+</head>
+<body>
+    ${isOdd ? '<div class="overlay"></div>' : ''}
+    <div class="content">
+        <h1>${slide.headline}</h1>
+        <p>${slide.text}</p>
+    </div>
+</body>
+</html>`;
+                await fs.writeFile(htmlPath, html);
+            }
+
+            // Call the real rendering script
+            console.log('🖼️ Calling render-slides.js...');
+            const renderScript = path.join(ROOT_DIR, 'src', 'render-slides.js');
+            const renderResult = spawnSync('node', [renderScript, slidesDir], {
+                cwd: ROOT_DIR,
+                stdio: 'inherit'
+            });
+
+            if (renderResult.status === 0) {
+                console.log('✅ Slides rendered successfully!');
+            } else {
+                console.error('❌ Slide rendering failed.');
+            }
+        }
 
         console.log(`✓ Step ${step.step} completed`);
     }
@@ -65,19 +314,14 @@ async function run() {
 
     // Trigger Drive Upload
     console.log('\n📤 Starting Drive upload...');
-    const driveScript = path.join(ROOT_DIR, 'squads', squadName, 'scripts', 'upload-to-drive.mjs');
+    const driveScript = path.join(squadDir, 'scripts', 'upload-to-drive.mjs');
     try {
-        const { spawnSync } = await import('node:child_process');
         const uploadResult = spawnSync('node', [driveScript, runId], {
             cwd: ROOT_DIR,
             stdio: 'inherit'
         });
-
-        if (uploadResult.status === 0) {
-            console.log('✅ Drive upload completed successfully!');
-        } else {
-            console.error('❌ Drive upload failed.');
-        }
+        if (uploadResult.status === 0) console.log('✅ Drive upload completed successfully!');
+        else console.error('❌ Drive upload failed.');
     } catch (error) {
         console.error('❌ Error triggering Drive upload:', error);
     }

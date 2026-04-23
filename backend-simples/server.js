@@ -36,7 +36,7 @@ app.post('/api/generate', async (req, res) => {
 
         // Inject inputs
         await fs.writeFile(path.join(runDir, 'news-input.md'), `# News Input\n\n${news}`);
-        await fs.writeFile(path.join(runDir, 'angle-selection.md'), `# Angle Selection\n\n**Selected Angle:** ${angle}`);
+        await fs.writeFile(path.join(runDir, 'selected-angle.md'), `# Angle Selection\n\n**Selected Angle:** ${angle}`);
 
         // Trigger squad execution (Headless Runner)
         // Note: In a real scenario, we would use a proper task queue.
