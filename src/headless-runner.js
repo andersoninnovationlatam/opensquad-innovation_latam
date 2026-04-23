@@ -203,21 +203,30 @@ If the instructions ask to save a file, provide the content of that file clearly
             const copyPath = path.join(runDir, 'carousel-copy.md');
             const copy = await fs.readFile(copyPath, 'utf-8').catch(() => '');
 
-            // 1. Parse art-brief for image prompts
+            // 1. Parse carousel-copy for text
             const slides = [];
-            const slideBlocks = artBrief.split(/Slide \d+/);
-            for (let j = 1; j < slideBlocks.length; j++) {
-                const block = slideBlocks[j];
-                const bgMatch = block.match(/Background: (?:foto — )?(.+)/);
-                const headlineMatch = block.match(/Headline: "(.+)"/);
-                const textMatch = block.match(/Supporting text: "(.+)"/);
+            const copyBlocks = copy.split(/Slide \d+/);
+            for (let j = 1; j < copyBlocks.length; j++) {
+                const block = copyBlocks[j];
+                const headlineMatch = block.match(/Headline: "(.+)"/) || block.match(/Headline: (.+)/);
+                const textMatch = block.match(/Supporting text: "(.+)"/) || block.match(/Supporting text: (.+)/);
 
                 slides.push({
                     number: j,
-                    bgPrompt: bgMatch ? bgMatch[1] : '',
-                    headline: headlineMatch ? headlineMatch[1] : '',
-                    text: textMatch ? textMatch[1] : ''
+                    headline: headlineMatch ? headlineMatch[1].replace(/"/g, '').trim() : '',
+                    text: textMatch ? textMatch[1].replace(/"/g, '').trim() : '',
+                    bgPrompt: '' // Will be filled from art-brief
                 });
+            }
+
+            // 2. Parse art-brief for image prompts
+            const briefBlocks = artBrief.split(/Slide \d+/);
+            for (let j = 1; j < briefBlocks.length; j++) {
+                const block = briefBlocks[j];
+                const bgMatch = block.match(/Prompt de imagem AI: "(.+)"/) || block.match(/Prompt de imagem AI: (.+)/) || block.match(/Background: (.+)/);
+                if (bgMatch && slides[j - 1]) {
+                    slides[j - 1].bgPrompt = bgMatch[1].replace(/"/g, '').trim();
+                }
             }
 
             // 2. Generate images for odd slides
