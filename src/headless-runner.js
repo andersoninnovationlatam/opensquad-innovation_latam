@@ -251,8 +251,11 @@ If the instructions ask to save a file, provide the content of that file clearly
                 const pngPath = path.join(slidesDir, `slide-${String(slide.number).padStart(2, '0')}.png`);
 
                 const isOdd = slide.number % 2 !== 0;
+                const bgPath = path.resolve(path.join(imagesDir, `slide-${String(slide.number).padStart(2, '0')}-bg.png`));
+                const logoPath = path.resolve(path.join(ROOT_DIR, 'squads', 'carousel-noticias', 'assets', 'innovation-latam-logo-white.png'));
+
                 const bgStyle = isOdd
-                    ? `background-image: url('../../images/slide-${String(slide.number).padStart(2, '0')}-bg.png'); background-size: cover;`
+                    ? `background-image: url('file://${bgPath}'); background-size: cover; background-position: center;`
                     : `background-color: #993CB1;`;
 
                 const html = `
@@ -261,27 +264,43 @@ If the instructions ask to save a file, provide the content of that file clearly
 <head>
     <meta charset="UTF-8">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             width: 1080px; height: 1350px; overflow: hidden;
             font-family: 'Montserrat', sans-serif;
             position: relative;
             display: flex; flex-direction: column;
-            justify-content: flex-end; padding: 80px;
+            justify-content: center; padding: 100px;
             ${bgStyle}
+            color: white;
+            text-align: left;
         }
-        ${isOdd ? '.overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%); }' : ''}
-        .content { position: relative; z-index: 2; color: white; }
-        h1 { font-size: 60px; font-weight: 700; margin-bottom: 20px; }
-        p { font-size: 34px; font-weight: 500; opacity: 0.9; }
+        ${isOdd ? '.overlay { position: absolute; inset: 0; background: rgba(21, 10, 28, 0.7); z-index: 1; }' : ''}
+        .logo {
+            position: absolute; top: 30px; left: 100px;
+            height: 40px; z-index: 2;
+        }
+        .content { position: relative; z-index: 2; width: 100%; }
+        h1 { font-size: 64px; font-weight: 700; line-height: 1.2; margin-bottom: 30px; }
+        p { font-size: 38px; font-weight: 500; line-height: 1.45; opacity: 0.95; }
+        .footer {
+            position: absolute; bottom: 40px; left: 100px; right: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 2; font-size: 24px; font-weight: 600;
+        }
     </style>
 </head>
 <body>
+    <img src="file://${logoPath}" class="logo" />
     ${isOdd ? '<div class="overlay"></div>' : ''}
     <div class="content">
         <h1>${slide.headline}</h1>
         <p>${slide.text}</p>
+    </div>
+    <div class="footer">
+        <span>@innovationlatam</span>
+        <span>ARRASTE -></span>
     </div>
 </body>
 </html>`;
