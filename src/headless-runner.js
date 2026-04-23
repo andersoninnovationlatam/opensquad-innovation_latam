@@ -210,11 +210,17 @@ If the instructions ask to save a file, provide the content of that file clearly
                 const block = copyBlocks[j];
                 const headlineMatch = block.match(/Headline: "(.+)"/) || block.match(/Headline: (.+)/);
                 const textMatch = block.match(/Supporting text: "(.+)"/) || block.match(/Supporting text: (.+)/);
+                const ctaMatch = block.match(/CTA: "(.+)"/) || block.match(/CTA: (.+)/);
+
+                let text = textMatch ? textMatch[1].replace(/"/g, '').trim() : '';
+                // Remove source if it's the last slide or contains "Fonte"
+                if (text.toLowerCase().includes('fonte:')) text = '';
 
                 slides.push({
                     number: j,
                     headline: headlineMatch ? headlineMatch[1].replace(/"/g, '').trim() : '',
-                    text: textMatch ? textMatch[1].replace(/"/g, '').trim() : '',
+                    text: text,
+                    cta: ctaMatch ? ctaMatch[1].replace(/"/g, '').trim() : '',
                     bgPrompt: '' // Will be filled from art-brief
                 });
             }
@@ -261,6 +267,7 @@ If the instructions ask to save a file, provide the content of that file clearly
 
                 const isOdd = slide.number % 2 !== 0;
                 const isFirst = slide.number === 1;
+                const isLast = slide.number === slides.length;
                 const bgPath = path.resolve(path.join(imagesDir, `slide-${String(slide.number).padStart(2, '0')}-bg.png`));
                 const logoPath = path.resolve(path.join(ROOT_DIR, 'squads', 'carousel-noticias', 'assets', 'innovation-latam-logo-white.png'));
 
@@ -281,9 +288,9 @@ If the instructions ask to save a file, provide the content of that file clearly
             font-family: 'Montserrat', sans-serif;
             position: relative;
             display: flex; flex-direction: column;
-            justify-content: ${isFirst ? 'flex-end' : 'center'}; 
+            justify-content: ${isFirst || isLast ? 'flex-end' : 'center'}; 
             padding: 100px;
-            padding-bottom: ${isFirst ? '160px' : '100px'};
+            padding-bottom: ${isFirst || isLast ? '160px' : '100px'};
             ${bgStyle}
             color: white;
             text-align: left;
@@ -296,6 +303,7 @@ If the instructions ask to save a file, provide the content of that file clearly
         .content { position: relative; z-index: 2; width: 100%; }
         h1 { font-size: 64px; font-weight: 700; line-height: 1.2; margin-bottom: 30px; }
         p { font-size: 38px; font-weight: 500; line-height: 1.45; opacity: 0.95; }
+        .cta { font-size: 42px; font-weight: 700; color: #FFD700; margin-top: 40px; }
         .footer {
             position: absolute; bottom: 40px; left: 100px; right: 100px;
             display: flex; justify-content: space-between; align-items: center;
@@ -309,6 +317,7 @@ If the instructions ask to save a file, provide the content of that file clearly
     <div class="content">
         <h1>${slide.headline}</h1>
         <p>${slide.text}</p>
+        ${isLast && slide.cta ? `<div class="cta">${slide.cta}</div>` : ''}
     </div>
     <div class="footer">
         <span>@innovationlatam</span>
