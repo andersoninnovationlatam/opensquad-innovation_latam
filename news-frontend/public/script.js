@@ -45,6 +45,11 @@ async function attemptLogin(username, password) {
         showApp();
     }
 
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        clearToken();
+        location.reload();
+    });
+
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         loginError.classList.add('hidden');

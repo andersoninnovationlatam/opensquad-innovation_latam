@@ -715,3 +715,28 @@ select option {
     border-color: var(--secondary);
     box-shadow: 0 0 0 3px rgba(43, 168, 159, 0.12);
 }
+
+/* ── Logout Button ───────────────────────────────── */
+
+.btn-logout {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    padding: 0.35rem 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-logout:hover {
+    border-color: var(--secondary);
+    color: var(--text-main);
+}
+
+.header {
+    position: relative;
+}
