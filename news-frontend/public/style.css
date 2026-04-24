@@ -333,6 +333,216 @@ select option {
     }
 }
 
+/* ── Progress Panel ─────────────────────────────── */
+
+.progress-panel {
+    margin-top: 1.5rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--radius) * 2);
+    padding: 1.75rem;
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.progress-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* ── Step Item ───────────────────────────────────── */
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: calc(var(--radius) + 2px);
+    border: 1px solid transparent;
+    transition: opacity 0.5s ease, filter 0.5s ease, border-color 0.4s ease, background 0.4s ease;
+}
+
+/* pending — fosco */
+.step-item.pending {
+    opacity: 0.25;
+    filter: grayscale(1);
+    border-color: transparent;
+}
+
+/* active — brilhando */
+.step-item.active {
+    opacity: 1;
+    filter: none;
+    background: rgba(107, 27, 107, 0.08);
+    border-color: rgba(107, 27, 107, 0.35);
+    box-shadow: 0 0 18px -4px rgba(107, 27, 107, 0.25);
+}
+
+/* done — confirmado */
+.step-item.done {
+    opacity: 1;
+    filter: none;
+    background: rgba(16, 185, 129, 0.05);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+/* error */
+.step-item.error {
+    opacity: 1;
+    filter: none;
+    background: rgba(127, 29, 29, 0.08);
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
+/* ── Step Icon ───────────────────────────────────── */
+
+.step-icon {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-number,
+.step-spinner,
+.step-check,
+.step-error-icon {
+    position: absolute;
+    transition: opacity 0.3s ease;
+}
+
+.step-number {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    opacity: 1;
+}
+
+.step-spinner,
+.step-check,
+.step-error-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+}
+
+/* pending: show number only */
+.step-item.pending .step-number  { opacity: 1; }
+.step-item.pending .step-spinner { opacity: 0; }
+.step-item.pending .step-check   { opacity: 0; }
+.step-item.pending .step-error-icon { opacity: 0; }
+
+/* active: show spinner, hide number */
+.step-item.active .step-number  { opacity: 0; }
+.step-item.active .step-spinner {
+    opacity: 1;
+    color: var(--accent-color);
+    animation: spin 1s linear infinite;
+}
+.step-item.active .step-check   { opacity: 0; }
+.step-item.active .step-error-icon { opacity: 0; }
+
+/* done: show check */
+.step-item.done .step-number  { opacity: 0; }
+.step-item.done .step-spinner { opacity: 0; }
+.step-item.done .step-check {
+    opacity: 1;
+    color: var(--success);
+}
+.step-item.done .step-error-icon { opacity: 0; }
+
+/* error: show X */
+.step-item.error .step-number  { opacity: 0; }
+.step-item.error .step-spinner { opacity: 0; }
+.step-item.error .step-check   { opacity: 0; }
+.step-item.error .step-error-icon {
+    opacity: 1;
+    color: #f87171;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Step Info ───────────────────────────────────── */
+
+.step-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.step-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.step-item.pending .step-label {
+    color: var(--text-dim);
+}
+
+.step-desc {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.step-item.done .step-label {
+    color: var(--success);
+}
+
+.step-item.error .step-label {
+    color: #f87171;
+}
+
+/* ── Progress Result ─────────────────────────────── */
+
+.progress-result {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: calc(var(--radius) + 2px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.progress-result.success {
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.progress-result.error {
+    background: rgba(127, 29, 29, 0.1);
+    border: 1px solid rgba(127, 29, 29, 0.3);
+    color: #f87171;
+}
+
+.progress-result-text {
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
 /* ── Footer ─────────────────────────────────────── */
 
 .version-footer {

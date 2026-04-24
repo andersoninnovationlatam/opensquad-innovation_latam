@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const newsForm = document.getElementById('newsForm');
     const submitBtn = document.getElementById('submitBtn');
     const statusMessage = document.getElementById('statusMessage');
+    const progressPanel = document.getElementById('progressPanel');
+    const progressResult = document.getElementById('progressResult');
 
     newsForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -9,13 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const news = document.getElementById('newsInput').value;
         const angle = document.getElementById('angleSelect').value;
 
-        // Visual feedback for loading
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span>Processando...</span><div class="btn-glow"></div>';
 
+        resetProgressPanel();
+        showProgressPanel();
+
         try {
-            // Real API call to the Worker
             console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
             console.log('🚀 INICIANDO PROCESSO DE GERAÇÃO');
             console.log('📰 Notícia:', news);
@@ -24,9 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const response = await fetch('/api/generate', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ news, angle })
             });
 
@@ -45,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Resultado:', result);
 
             if (result.success && result.runId) {
-                showStatus('Iniciando geração do conteúdo... Acompanhe o progresso.', 'info');
                 pollStatus(result.runId);
             } else {
                 showStatus('Conteúdo enviado com sucesso!', 'success');
@@ -55,11 +55,68 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Erro:', error);
             showStatus(`Erro: ${error.message}`, 'error');
+            hideProgressPanel();
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
         }
     });
+
+    // ── Progress Panel helpers ──────────────────────
+
+    function resetProgressPanel() {
+        document.querySelectorAll('.step-item').forEach(el => {
+            el.className = 'step-item pending';
+        });
+        progressResult.className = 'progress-result hidden';
+        progressResult.innerHTML = '';
+    }
+
+    function showProgressPanel() {
+        progressPanel.classList.remove('hidden');
+        statusMessage.classList.add('hidden');
+    }
+
+    function hideProgressPanel() {
+        progressPanel.classList.add('hidden');
+    }
+
+    function setStepState(stepNumber, state) {
+        const el = progressPanel.querySelector(`[data-step="${stepNumber}"]`);
+        if (el) el.className = `step-item ${state}`;
+    }
+
+    function activateStep(current, total) {
+        for (let i = 1; i < current; i++) setStepState(i, 'done');
+        setStepState(current, 'active');
+        for (let i = current + 1; i <= total; i++) setStepState(i, 'pending');
+    }
+
+    function markAllDone(total) {
+        for (let i = 1; i <= total; i++) setStepState(i, 'done');
+    }
+
+    function markStepError(stepNumber, total) {
+        setStepState(stepNumber, 'error');
+        for (let i = stepNumber + 1; i <= total; i++) setStepState(i, 'pending');
+    }
+
+    function showResultInPanel(type, message, driveUrl = null) {
+        progressResult.className = `progress-result ${type}`;
+        if (driveUrl) {
+            progressResult.innerHTML = `
+                <span class="progress-result-text">${message}</span>
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-drive">
+                    Abrir pasta no Drive
+                </a>
+            `;
+        } else {
+            progressResult.innerHTML = `<span class="progress-result-text">${message}</span>`;
+        }
+        progressResult.classList.remove('hidden');
+    }
+
+    // ── Polling ─────────────────────────────────────
 
     async function fetchRunnerLog(runId) {
         try {
@@ -81,16 +138,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const pollInterval = setInterval(async () => {
             try {
                 const response = await fetch(`/api/status/carousel-noticias/${runId}`);
-
-                // Cloudflare Workers always return 200 even when proxying errors,
-                // so we must also check for an `error` field in the JSON body.
                 const state = await response.json();
 
                 if (!response.ok || state.error || state.status === undefined) {
                     notFoundCount++;
                     console.warn(`[poll] state.json not ready (${notFoundCount}x) — HTTP ${response.status} body:`, state);
 
-                    // Every 5 polls (~15s) fetch the runner log to expose crash details
                     if (notFoundCount % 5 === 0) {
                         const log = await fetchRunnerLog(runId);
                         if (log) {
@@ -107,13 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 notFoundCount = 0;
                 console.log(`[poll] state: status=${state.status} step=${JSON.stringify(state.step)}`);
 
-                if (state.step && state.step.current !== lastStep) {
-                    lastStep = state.step.current;
-                    console.log(`━━ [Step ${state.step.current}/${state.step.total}] ${state.step.label}`);
+                const current = state.step?.current ?? 1;
+                const total = state.step?.total ?? 6;
+                const label = state.step?.label ?? 'Iniciando...';
+
+                if (current !== lastStep) {
+                    lastStep = current;
+                    console.log(`━━ [Step ${current}/${total}] ${label}`);
                 }
 
                 if (state.status === 'completed') {
                     clearInterval(pollInterval);
+                    markAllDone(total);
+
                     const log = await fetchRunnerLog(runId);
                     if (log) {
                         console.group('[runner.log] Final log');
@@ -124,9 +183,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('✅ PROCESSO CONCLUÍDO COM SUCESSO');
                     console.log('📂 Arquivos disponíveis no Google Drive');
                     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-                    showStatus('✨ Imagens geradas e enviadas para o Google Drive com sucesso!', 'success', true, 'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing');
+
+                    showResultInPanel(
+                        'success',
+                        '✨ Imagens geradas e enviadas para o Google Drive com sucesso!',
+                        'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing'
+                    );
+
                 } else if (state.status === 'failed') {
                     clearInterval(pollInterval);
+                    markStepError(current, total);
+
                     const log = await fetchRunnerLog(runId);
                     if (log) {
                         console.group('[runner.log] Error log');
@@ -134,22 +201,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.groupEnd();
                     }
                     console.error('❌ ERRO NA EXECUÇÃO DO SQUAD');
-                    console.error('Detalhes:', state.step?.label);
-                    showStatus(`❌ Erro: ${state.step?.label || 'falha na geração das imagens'}`, 'error');
-                } else {
-                    const stepLabel = state.step ? state.step.label : 'Iniciando...';
-                    const stepCurrent = state.step ? state.step.current : '?';
-                    const stepTotal = state.step ? state.step.total : '?';
-                    showStatus(`Processando: ${stepLabel} (${stepCurrent}/${stepTotal})`, 'info');
+                    console.error('Detalhes:', label);
 
-                    // Fetch incremental log every ~30s (every 10 polls)
-                    if (lastStep > 0 && lastStep % 1 === 0) {
+                    showResultInPanel('error', `❌ Erro: ${label || 'falha na geração das imagens'}`);
+
+                } else {
+                    activateStep(current, total);
+
+                    if (lastStep > 0) {
                         const log = await fetchRunnerLog(runId);
                         if (log) {
                             const lines = log.split('\n');
                             if (lines.length > lastLogLength) {
-                                const newLines = lines.slice(lastLogLength);
-                                newLines.forEach(l => l && console.log(`[runner] ${l}`));
+                                lines.slice(lastLogLength).forEach(l => l && console.log(`[runner] ${l}`));
                                 lastLogLength = lines.length;
                             }
                         }
@@ -160,6 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 3000);
     }
+
+    // ── Status fallback (erros fora do fluxo normal) ─
 
     function showStatus(message, type, persistent = false, driveUrl = null) {
         statusMessage.className = `status-message ${type}`;
@@ -183,5 +249,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 5000);
         }
     }
-
 });
