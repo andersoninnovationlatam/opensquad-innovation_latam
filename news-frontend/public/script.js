@@ -171,11 +171,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (state.status === 'completed') {
                     clearInterval(pollInterval);
                     markAllDone(total);
-                    showResultInPanel(
-                        'success',
-                        '✨ Imagens geradas e enviadas para o Google Drive!',
-                        'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing'
-                    );
+
+                    progressResult.className = 'progress-result loading';
+                    progressResult.innerHTML = `
+                        <svg class="result-spinner" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/>
+                        </svg>
+                        <span style="font-size:0.875rem;font-weight:500;">Finalizando...</span>
+                    `;
+                    progressResult.classList.remove('hidden');
+
+                    setTimeout(() => {
+                        showResultInPanel(
+                            'success',
+                            '✨ Imagens geradas e enviadas para o Google Drive!',
+                            'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing'
+                        );
+                    }, 600);
 
                 } else if (state.status === 'failed') {
                     clearInterval(pollInterval);
