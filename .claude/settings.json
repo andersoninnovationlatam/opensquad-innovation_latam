@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xargs cat *)"
+      "Bash(xargs cat *)",
+      "Bash(curl -s http://localhost:3001/health)",
+      "Bash(curl -s -X POST http://localhost:3001/api/login -H 'Content-Type: application/json' -d '{\"username\":\"anderson.pinto@innovationlatam.com\",\"password\":\"Anderson@123\"}')"
     ]
   }
 }
