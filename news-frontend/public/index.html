@@ -13,50 +13,144 @@
     <link rel="icon" href="assets/logo-innovation-latam-rounded.png">
 </head>
 
-<body class="dark-theme">
+<body>
     <div class="background-glow"></div>
 
     <main class="container">
         <header class="header">
             <div class="logo">
-                <span class="logo-icon">✨</span>
+                <img src="assets/logo-innovation-latam-rounded.png" alt="Innovation Latam" class="logo-img">
                 <h1>Innovation<span>Latam</span></h1>
             </div>
             <p class="subtitle">Transforme notícias brutas em posts magnéticos</p>
         </header>
 
         <section class="card-glass">
-            <form id="newsForm" class="form">
-                <div class="input-group">
-                    <label for="newsInput">Notícia</label>
-                    <textarea id="newsInput" placeholder="Cole aqui o link ou o texto da notícia..."
-                        required></textarea>
-                    <span class="input-focus-line"></span>
+
+            <!-- ── Form View ── -->
+            <div id="formView" class="form-view">
+                <form id="newsForm" class="form">
+                    <div class="input-group">
+                        <label for="newsInput">Notícia</label>
+                        <textarea id="newsInput" placeholder="Cole aqui o link ou o texto da notícia..."
+                            required></textarea>
+                        <span class="input-focus-line"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="angleSelect">Ângulo de Perspectiva</label>
+                        <div class="custom-select-wrapper">
+                            <select id="angleSelect" required>
+                                <option value="" disabled selected>Selecione um ângulo...</option>
+                                <option value="educacional">🎓 Educacional (Ensino e Valor)</option>
+                                <option value="medo">⚠️ Medo (Urgência e Alerta)</option>
+                                <option value="entusiasmo">🚀 Entusiasmo (Oportunidade e Futuro)</option>
+                                <option value="curiosidade">🤔 Curiosidade (Mistério e Descoberta)</option>
+                                <option value="polemica">🔥 Polêmica (Debate e Opinião)</option>
+                                <option value="empatia">❤️ Empatia (Conexão Humana)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <span>Gerar Conteúdo</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- ── Progress View ── -->
+            <div id="progressView" class="progress-view hidden">
+
+                <div class="summary-bar">
+                    <span id="summaryNews" class="summary-news"></span>
+                    <span id="summaryAngle" class="summary-angle"></span>
                 </div>
 
-                <div class="input-group">
-                    <label for="angleSelect">Ângulo de Perspectiva</label>
-                    <div class="custom-select-wrapper">
-                        <select id="angleSelect" required>
-                            <option value="" disabled selected>Selecione um ângulo...</option>
-                            <option value="educacional">🎓 Educacional (Ensino e Valor)</option>
-                            <option value="medo">⚠️ Medo (Urgência e Alerta)</option>
-                            <option value="entusiasmo">🚀 Entusiasmo (Oportunidade e Futuro)</option>
-                            <option value="curiosidade">🤔 Curiosidade (Mistério e Descoberta)</option>
-                            <option value="polemica">🔥 Polêmica (Debate e Opinião)</option>
-                            <option value="empatia">❤️ Empatia (Conexão Humana)</option>
-                        </select>
+                <div class="progress-steps">
+                    <div class="step-item pending" data-step="1">
+                        <div class="step-icon">
+                            <span class="step-number">01</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Pesquisa e Enriquecimento</span>
+                            <span class="step-desc">Buscando dados e contexto da notícia</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="2">
+                        <div class="step-icon">
+                            <span class="step-number">02</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Registro de Ângulos</span>
+                            <span class="step-desc">Aplicando o ângulo de perspectiva escolhido</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="3">
+                        <div class="step-icon">
+                            <span class="step-number">03</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Criação dos Slides (Copy)</span>
+                            <span class="step-desc">Escrevendo os textos de cada slide</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="4">
+                        <div class="step-icon">
+                            <span class="step-number">04</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Design dos Slides (HTML)</span>
+                            <span class="step-desc">Gerando o layout visual dos cards</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="5">
+                        <div class="step-icon">
+                            <span class="step-number">05</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Renderização dos Slides (PNG)</span>
+                            <span class="step-desc">Exportando imagens em alta resolução</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="6">
+                        <div class="step-icon">
+                            <span class="step-number">06</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Revisão de Qualidade</span>
+                            <span class="step-desc">Validando e aprovando o conteúdo final</span>
+                        </div>
                     </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="btn-primary">
-                    <span>Gerar Conteúdo</span>
-                    <div class="btn-glow"></div>
-                </button>
-            </form>
-        </section>
+                <div id="progressResult" class="progress-result hidden"></div>
+            </div>
 
-        <div id="statusMessage" class="status-message hidden"></div>
+        </section>
     </main>
     <footer class="version-footer">v0.0.3</footer>
     <script src="script.js"></script>
