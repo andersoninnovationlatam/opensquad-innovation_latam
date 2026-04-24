@@ -1,22 +1,103 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const newsForm = document.getElementById('newsForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusMessage = document.getElementById('statusMessage');
-    const progressPanel = document.getElementById('progressPanel');
+    const newsForm     = document.getElementById('newsForm');
+    const submitBtn    = document.getElementById('submitBtn');
+    const formView     = document.getElementById('formView');
+    const progressView = document.getElementById('progressView');
     const progressResult = document.getElementById('progressResult');
+    const summaryNews  = document.getElementById('summaryNews');
+    const summaryAngle = document.getElementById('summaryAngle');
+
+    const angleLabels = {
+        educacional: '🎓 Educacional',
+        medo:        '⚠️ Medo',
+        entusiasmo:  '🚀 Entusiasmo',
+        curiosidade: '🤔 Curiosidade',
+        polemica:    '🔥 Polêmica',
+        empatia:     '❤️ Empatia',
+    };
+
+    // ── View transitions ─────────────────────────────
+
+    function showProgressView(news, angle) {
+        const excerpt = news.length > 90 ? news.slice(0, 90) + '…' : news;
+        summaryNews.textContent  = excerpt;
+        summaryAngle.textContent = angleLabels[angle] || angle;
+
+        formView.classList.add('is-hiding');
+        setTimeout(() => {
+            formView.classList.add('hidden');
+            formView.classList.remove('is-hiding');
+            progressView.classList.remove('hidden');
+        }, 280);
+    }
+
+    function showFormView() {
+        progressView.classList.add('hidden');
+        formView.classList.remove('hidden');
+        resetProgress();
+        newsForm.reset();
+    }
+
+    // ── Progress helpers ─────────────────────────────
+
+    function resetProgress() {
+        document.querySelectorAll('.step-item').forEach(el => {
+            el.className = 'step-item pending';
+        });
+        progressResult.className = 'progress-result hidden';
+        progressResult.innerHTML = '';
+    }
+
+    function setStepState(stepNumber, state) {
+        const el = progressView.querySelector(`[data-step="${stepNumber}"]`);
+        if (el) el.className = `step-item ${state}`;
+    }
+
+    function activateStep(current, total) {
+        for (let i = 1; i < current; i++) setStepState(i, 'done');
+        setStepState(current, 'active');
+        for (let i = current + 1; i <= total; i++) setStepState(i, 'pending');
+    }
+
+    function markAllDone(total) {
+        for (let i = 1; i <= total; i++) setStepState(i, 'done');
+    }
+
+    function markStepError(stepNumber, total) {
+        setStepState(stepNumber, 'error');
+        for (let i = stepNumber + 1; i <= total; i++) setStepState(i, 'pending');
+    }
+
+    function showResultInPanel(type, message, driveUrl = null) {
+        progressResult.className = `progress-result ${type}`;
+
+        const driveBtn = driveUrl
+            ? `<a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-drive">Abrir pasta no Drive</a>`
+            : '';
+
+        progressResult.innerHTML = `
+            <div class="progress-result-row">
+                <span class="progress-result-text">${message}</span>
+                ${driveBtn}
+            </div>
+            <button class="btn-restart" id="restartBtn">Gerar Novo Carrossel</button>
+        `;
+        progressResult.classList.remove('hidden');
+
+        document.getElementById('restartBtn').addEventListener('click', showFormView);
+    }
+
+    // ── Form submit ──────────────────────────────────
 
     newsForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const news = document.getElementById('newsInput').value;
+        const news  = document.getElementById('newsInput').value;
         const angle = document.getElementById('angleSelect').value;
 
-        const originalBtnText = submitBtn.innerHTML;
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span>Processando...</span><div class="btn-glow"></div>';
-
-        resetProgressPanel();
-        showProgressPanel();
+        resetProgress();
+        showProgressView(news, angle);
 
         try {
             console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -48,75 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success && result.runId) {
                 pollStatus(result.runId);
             } else {
-                showStatus('Conteúdo enviado com sucesso!', 'success');
+                showResultInPanel('success', 'Conteúdo enviado com sucesso!');
             }
 
             newsForm.reset();
         } catch (error) {
             console.error('Erro:', error);
-            showStatus(`Erro: ${error.message}`, 'error');
-            hideProgressPanel();
+            showResultInPanel('error', `Erro: ${error.message}`);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
         }
     });
 
-    // ── Progress Panel helpers ──────────────────────
-
-    function resetProgressPanel() {
-        document.querySelectorAll('.step-item').forEach(el => {
-            el.className = 'step-item pending';
-        });
-        progressResult.className = 'progress-result hidden';
-        progressResult.innerHTML = '';
-    }
-
-    function showProgressPanel() {
-        progressPanel.classList.remove('hidden');
-        statusMessage.classList.add('hidden');
-    }
-
-    function hideProgressPanel() {
-        progressPanel.classList.add('hidden');
-    }
-
-    function setStepState(stepNumber, state) {
-        const el = progressPanel.querySelector(`[data-step="${stepNumber}"]`);
-        if (el) el.className = `step-item ${state}`;
-    }
-
-    function activateStep(current, total) {
-        for (let i = 1; i < current; i++) setStepState(i, 'done');
-        setStepState(current, 'active');
-        for (let i = current + 1; i <= total; i++) setStepState(i, 'pending');
-    }
-
-    function markAllDone(total) {
-        for (let i = 1; i <= total; i++) setStepState(i, 'done');
-    }
-
-    function markStepError(stepNumber, total) {
-        setStepState(stepNumber, 'error');
-        for (let i = stepNumber + 1; i <= total; i++) setStepState(i, 'pending');
-    }
-
-    function showResultInPanel(type, message, driveUrl = null) {
-        progressResult.className = `progress-result ${type}`;
-        if (driveUrl) {
-            progressResult.innerHTML = `
-                <span class="progress-result-text">${message}</span>
-                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-drive">
-                    Abrir pasta no Drive
-                </a>
-            `;
-        } else {
-            progressResult.innerHTML = `<span class="progress-result-text">${message}</span>`;
-        }
-        progressResult.classList.remove('hidden');
-    }
-
-    // ── Polling ─────────────────────────────────────
+    // ── Polling ──────────────────────────────────────
 
     async function fetchRunnerLog(runId) {
         try {
@@ -161,8 +186,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(`[poll] state: status=${state.status} step=${JSON.stringify(state.step)}`);
 
                 const current = state.step?.current ?? 1;
-                const total = state.step?.total ?? 6;
-                const label = state.step?.label ?? 'Iniciando...';
+                const total   = state.step?.total ?? 6;
+                const label   = state.step?.label ?? 'Iniciando...';
 
                 if (current !== lastStep) {
                     lastStep = current;
@@ -181,12 +206,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
                     console.log('✅ PROCESSO CONCLUÍDO COM SUCESSO');
-                    console.log('📂 Arquivos disponíveis no Google Drive');
                     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
                     showResultInPanel(
                         'success',
-                        '✨ Imagens geradas e enviadas para o Google Drive com sucesso!',
+                        '✨ Imagens geradas e enviadas para o Google Drive!',
                         'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing'
                     );
 
@@ -201,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.groupEnd();
                     }
                     console.error('❌ ERRO NA EXECUÇÃO DO SQUAD');
-                    console.error('Detalhes:', label);
 
                     showResultInPanel('error', `❌ Erro: ${label || 'falha na geração das imagens'}`);
 
@@ -223,30 +246,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('[poll] Erro ao buscar status:', error);
             }
         }, 3000);
-    }
-
-    // ── Status fallback (erros fora do fluxo normal) ─
-
-    function showStatus(message, type, persistent = false, driveUrl = null) {
-        statusMessage.className = `status-message ${type}`;
-        statusMessage.classList.remove('hidden');
-
-        if (driveUrl) {
-            statusMessage.innerHTML = `
-                <span>${message}</span>
-                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-drive">
-                    Abrir pasta no Drive
-                </a>
-            `;
-        } else {
-            statusMessage.textContent = message;
-        }
-
-        if (!persistent) {
-            if (window.statusTimeout) clearTimeout(window.statusTimeout);
-            window.statusTimeout = setTimeout(() => {
-                statusMessage.classList.add('hidden');
-            }, 5000);
-        }
     }
 });
