@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('✅ PROCESSO CONCLUÍDO COM SUCESSO');
                     console.log('📂 Arquivos disponíveis no Google Drive');
                     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-                    showStatus('✨ Imagens geradas e enviadas para o Google Drive com sucesso!', 'success', true);
+                    showStatus('✨ Imagens geradas e enviadas para o Google Drive com sucesso!', 'success', true, 'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing');
                 } else if (state.status === 'failed') {
                     clearInterval(pollInterval);
                     const log = await fetchRunnerLog(runId);
@@ -161,10 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    function showStatus(message, type, persistent = false) {
-        statusMessage.textContent = message;
+    function showStatus(message, type, persistent = false, driveUrl = null) {
         statusMessage.className = `status-message ${type}`;
         statusMessage.classList.remove('hidden');
+
+        if (driveUrl) {
+            statusMessage.innerHTML = `
+                <span>${message}</span>
+                <a href="${driveUrl}" target="_blank" rel="noopener noreferrer" class="btn-drive">
+                    Abrir pasta no Drive
+                </a>
+            `;
+        } else {
+            statusMessage.textContent = message;
+        }
 
         if (!persistent) {
             if (window.statusTimeout) clearTimeout(window.statusTimeout);

@@ -238,12 +238,34 @@ select:focus {
     font-weight: 500;
     font-size: 0.9rem;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .status-message.success {
     background: rgba(16, 185, 129, 0.08);
     color: var(--success);
     border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.btn-drive {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1.25rem;
+    background: var(--primary-gradient);
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: calc(var(--radius) + 2px);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-drive:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px -4px rgba(107, 27, 107, 0.45);
 }
 
 .status-message.processing {
