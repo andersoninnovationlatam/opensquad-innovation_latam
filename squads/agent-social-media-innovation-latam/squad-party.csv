@@ -1,5 +1,0 @@
-id,name,title,icon,path
-rafael-rastreio,Rafael Rastreio,Pesquisador e Enriquecedor de Conteúdo,🔍,./agents/rafael-rastreio.agent.md
-carlos-conteudo,Carlos Conteúdo,Estrategista de Copy e Carrossel,✍️,./agents/carlos-conteudo.agent.md
-daria-design,Dária Design,Designer de Slides & Renderizadora,🎨,./agents/daria-design.agent.md
-beatriz-balizadora,Beatriz Balizadora,Revisora de Qualidade Editorial e Visual,✅,./agents/beatriz-balizadora.agent.md

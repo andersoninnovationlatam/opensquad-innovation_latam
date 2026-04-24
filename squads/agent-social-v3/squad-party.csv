@@ -1,6 +1,0 @@
-id,name,title,icon,path
-carlos-conteudo,Carlos Conteúdo,Estrategista de Copy e Carrossel,✍️,./agents/carlos-conteudo.agent.md
-leo-logos,Leo Logos,Pesquisador de Marcas e Ativos Visuais,🔎,./agents/leo-logos.agent.md
-daniel-diretor,Daniel Diretor,Diretor de Arte Fotográfico (Cenas por Slide),🎬,./agents/daniel-diretor.agent.md
-daria-design,Dária Design,Designer de Slides & Renderizadora,🎨,./agents/daria-design.agent.md
-rafael-revisor,Rafael Revisor,Revisor de Arte & Conexão Visual-Conteúdo,🔍,./agents/rafael-revisor.agent.md

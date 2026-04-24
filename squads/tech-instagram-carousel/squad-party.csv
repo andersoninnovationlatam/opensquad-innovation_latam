@@ -1,5 +1,0 @@
-id,name,title,icon,path
-news-ingest,Ingestão de Notícia,Ingestão,📥,./agents/news-ingest.agent.md
-social-media,Social Media,Social Media,📱,./agents/social-media.agent.md
-copywriter,Copywriter,Copywriter Instagram,✍️,./agents/copywriter.agent.md
-diana-design,Diana Design,Designer Visual,🎨,./agents/diana-design.agent.md
