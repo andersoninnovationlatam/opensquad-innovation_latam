@@ -25,8 +25,10 @@ Load these files before executing:
    - Alternativa via script: `node squads/carousel-noticias/scripts/generate-bg-image.mjs <N> squads/carousel-noticias/output` — o script lê automaticamente o `image-refs.json` para enriquecer os prompts.
 3. Criar HTML do slide 1 com o design system do briefing. Renderizar via image-creator (Playwright) em `squads/carousel-noticias/output/slides/slide-01.png`. Inspecionar screenshot.
 4. Se slide 1 aprovado na inspeção visual, criar e renderizar todos os slides restantes.
-5. Slides pares: background #993CB1, texto branco, hierarquia heading/body.
-6. Slides ímpares: background-image com imagem gerada + overlay de gradiente, título/body sobre overlay.
+5. Slides pares: background #993CB1, texto branco, hierarquia heading/body. **Sem overlay — fundo sólido não precisa de scrim.**
+6. Slides ímpares: background-image com imagem gerada + dois layers de contraste obrigatórios:
+   - `.overlay` — gradiente sutil cobrindo o slide inteiro (escurece levemente a foto)
+   - `.text-scrim` — gradiente fosco matte concentrado atrás do bloco de texto (bottom 60% do slide, rgba(0,0,0,0.85) → transparent), garante contraste WCAG AA com fonte branca
 7. Todo HTML: dimensão exata 1080×1350px, Montserrat @import, logo + @handle no canto inferior direito.
 8. Apresentar todos os slides renderizados para inspeção final.
 
@@ -104,7 +106,12 @@ HTML exemplo (slide ímpar):
     }
     .overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.25) 55%, transparent 100%);
+      background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 60%);
+    }
+    .text-scrim {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 62%;
+      background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.72) 35%, rgba(0,0,0,0.40) 65%, transparent 100%);
     }
     .content { position: relative; z-index: 2; max-width: 920px; }
     h1 { font-size: 67px; font-weight: 700; color: #ffffff; line-height: 1.2; margin-bottom: 24px; }
@@ -120,6 +127,7 @@ HTML exemplo (slide ímpar):
 <body>
   <div class="bg"></div>
   <div class="overlay"></div>
+  <div class="text-scrim"></div>
   <div class="content">
     <h1>O Brasil tem o 2º maior Open Banking do mundo. O que sua empresa vai fazer com isso?</h1>
     <p>40 milhões de usuários ativos — Banco Central 2024</p>
@@ -136,7 +144,8 @@ HTML exemplo (slide ímpar):
 
 Rejeitar e redo se:
 1. Qualquer slide sem logo + @innovationlatam visível no canto inferior direito
-2. Qualquer slide com foto mas sem overlay de contraste (texto não legível)
+2. Qualquer slide com foto mas sem `.text-scrim` (gradiente fosco atrás do texto) — texto branco sobre foto sem scrim é ilegível
+3. Slides pares (#993CB1) com `.text-scrim` ou `.overlay` — fundo sólido não recebe esses layers
 
 ## Quality Criteria
 

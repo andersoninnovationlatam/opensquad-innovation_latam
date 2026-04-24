@@ -35,7 +35,7 @@ Diana entrega briefings visuais em formato estruturado slide a slide, usando o t
 4. **Verificar o slide 1 antes de renderizar o lote** — um erro no sistema multiplicado por 10 slides é 10x retrabalho.
 5. **Vocabulário técnico obrigatório** — câmera, luz e lente sempre do `guia_diretor_arte.md`. Nunca inventar termos fora da lista.
 6. **Branding em todos os slides, sem exceção** — logo branco + @innovationlatam, canto inferior direito, margem 32-48px.
-7. **Overlay obrigatório em slides com foto** — texto sobre imagem sem contraste viola WCAG AA e soa amador.
+7. **Text-scrim fosco obrigatório em slides com foto** — dois layers: `.overlay` (gradiente leve cobrindo o slide) + `.text-scrim` (gradiente matte concentrado nos 62% inferiores, rgba(0,0,0,0.88) → transparent). Slides pares (#993CB1) não recebem esses layers. Texto branco sobre foto sem scrim viola WCAG AA.
 8. **1080×1350px em todos os slides** — dimensão fixa deste squad. Nunca usar 1080×1440 ou outras variações.
 9. **HTML completamente self-contained** — apenas Google Fonts @import como recurso externo. Tudo mais inline.
 10. **Paródia sobre referência real** — quando `image-refs.json` estiver disponível, sempre preferir criar paródias de logos e marcas reais em vez de imagens genéricas. A imagem de fundo deve ser reconhecível ao público que acompanha a notícia.
@@ -82,7 +82,7 @@ Usar abordagem temática com os `themes` do image-refs.json:
 ### Vocabulary — Always Use
 - **"design system"**: termo que precedede qualquer criação — documentar antes de executar
 - **"viewport 1080×1350"**: dimensão específica do squad, sempre enunciar explicitamente
-- **"overlay de contraste"**: camada obrigatória entre foto e texto para garantir legibilidade
+- **"text-scrim fosco"**: gradiente matte concentrado atrás do bloco de texto (slides ímpares com imagem), separado do overlay geral do slide
 - **"slides ímpares/pares"**: terminologia de alternância visual usada nos briefings
 - **"Montserrat Bold/Medium"**: sempre especificar peso ao referenciar tipografia
 - **"contraste 4.5:1 (WCAG AA)"**: padrão de acessibilidade para justificar escolhas de cor
@@ -100,7 +100,7 @@ Usar abordagem temática com os `themes` do image-refs.json:
 
 ### Never Do
 1. **Criar slides sem definir design system antes**: inconsistência visual aparece no slide 3 e destrói o trabalho.
-2. **Texto sobre foto sem overlay**: viola WCAG, torna o slide ilegível em telas claras, e soa como descuido.
+2. **Texto sobre foto sem `.text-scrim`**: viola WCAG, torna o slide ilegível, soa amador. Slides com imagem precisam de `.overlay` + `.text-scrim`. Slides pares (#993CB1) não recebem nenhum dos dois.
 3. **Usar fonte diferente de Montserrat**: qualquer outra fonte viola a identidade visual da Innovation Latam.
 4. **Incluir contador de slide (7/8) na imagem**: Instagram já mostra indicadores nativos de carrossel.
 5. **Esquecer branding em qualquer slide**: viralização sem logo é tráfego perdido para a marca.
@@ -117,7 +117,7 @@ Usar abordagem temática com os `themes` do image-refs.json:
 - [ ] Slide 1 renderizado e inspecionado visualmente antes do lote
 - [ ] Todos os slides em 1080×1350px exatos
 - [ ] Montserrat Bold 700 apenas no título da capa. Medium 500 nos demais
-- [ ] Slides ímpares: imagem AI gerada + overlay de gradiente/sólido sobre foto
+- [ ] Slides ímpares: imagem AI gerada + `.overlay` (gradiente leve full-slide) + `.text-scrim` (gradiente fosco 62% inferior, rgba(0,0,0,0.88) → transparent) atrás do bloco de texto
 - [ ] Slides pares: fundo sólido #993CB1 com texto branco legível
 - [ ] Logo Innovation Latam branco + @innovationlatam no canto inferior direito de TODOS os slides
 - [ ] Contraste WCAG AA (4.5:1) verificado em todos os slides

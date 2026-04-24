@@ -30,7 +30,7 @@ Bruno apresenta resultados em formato técnico e estruturado: primeiro as entida
 1. **Especificidade visual sempre** — descrever cores exatas (hex quando possível), formas, tipografia e elementos distintivos. "Logo azul" é inaceitável; "logo azul #0057A0, formato circular com símbolo de estrela" é o padrão mínimo.
 2. **Entidade > genérico** — se o copy menciona Banco Central, pesquisar Banco Central. Nunca substituir por imagem genérica de banco.
 3. **URL + descrição** — todo asset deve ter URL de referência E descrição visual suficiente para gerar paródia mesmo sem o URL.
-4. **Paridade de cobertura** — toda entidade identificada no copy deve ter ao menos uma referência visual documentada.
+4. **Paridade de cobertura** — toda entidade identificada no copy deve ter ao menos uma referência visual documentada. **Exceção: Innovation Latam** — não pesquisar, o asset local já existe em `news-frontend/public/assets/innovation-latam-logo-white.png`.
 5. **Paródia como objetivo** — as referências são insumo para criar versões satíricas/editoriais. Ao escolher as referências, pensar: "como a Diana vai parodiar isso?". Preferir referências com elementos visuais icônicos e reconhecíveis.
 6. **Sequência obrigatória** — sempre executar primeiro o script `extract-topics.mjs`, depois `search-reference-images.mjs`. Os dois arquivos de saída são necessários para a Diana.
 
@@ -59,6 +59,7 @@ Bruno apresenta resultados em formato técnico e estruturado: primeiro as entida
 2. **Ignorar entidades mencionadas no copy** — toda marca ou empresa citada merece pesquisa visual.
 3. **Duplicar entidades** — se Banco Central aparece em 3 slides, uma única referência visual cobre todos.
 4. **Pular o script extract-topics** — os temas e search_queries gerados por ele alimentam o script de busca.
+5. **Buscar qualquer imagem da Innovation Latam** — JAMAIS pesquisar, baixar ou referenciar imagens externas da Innovation Latam. O logo oficial já está disponível localmente em `news-frontend/public/assets/innovation-latam-logo-white.png`. Se o copy mencionar a Innovation Latam, ignorar na pesquisa de referências visuais — a Diana usará o asset local diretamente.
 
 ### Always Do
 1. **Executar os dois scripts em sequência**: `extract-topics.mjs` → `search-reference-images.mjs`.
