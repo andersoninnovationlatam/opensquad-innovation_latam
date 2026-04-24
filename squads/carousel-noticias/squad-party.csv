@@ -1,4 +1,5 @@
 id,name,title,icon,path
 caio-carrossel,Caio Carrossel,Redator de Carrosséis,✍️,./agents/caio-carrossel.agent.md
+bruno-buscador,Bruno Buscador,Pesquisador de Referências Visuais,🔎,./agents/bruno-buscador.agent.md
 diana-design,Diana Design,Diretora de Arte & Designers,🎨,./agents/diana-design.agent.md
 rosa-revisao,Rosa Revisao,Revisora de Qualidade,🔍,./agents/rosa-revisao.agent.md

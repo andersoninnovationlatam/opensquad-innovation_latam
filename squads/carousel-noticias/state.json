@@ -1,7 +1,7 @@
 {
   "squad": "carousel-noticias",
   "status": "running",
-  "step": { "current": 10, "total": 10, "label": "checkpoint-final-approval" },
+  "step": { "current": 11, "total": 11, "label": "checkpoint-final-approval" },
   "agents": [
     {
       "id": "caio-carrossel",
@@ -11,18 +11,25 @@
       "desk": { "col": 1, "row": 1 }
     },
     {
+      "id": "bruno-buscador",
+      "name": "Bruno Buscador",
+      "icon": "🔎",
+      "status": "done",
+      "desk": { "col": 2, "row": 1 }
+    },
+    {
       "id": "diana-design",
       "name": "Diana Design",
       "icon": "🎨",
       "status": "done",
-      "desk": { "col": 2, "row": 1 }
+      "desk": { "col": 3, "row": 1 }
     },
     {
       "id": "rosa-revisao",
       "name": "Rosa Revisao",
       "icon": "🔍",
       "status": "done",
-      "desk": { "col": 3, "row": 1 }
+      "desk": { "col": 4, "row": 1 }
     }
   ],
   "handoff": {

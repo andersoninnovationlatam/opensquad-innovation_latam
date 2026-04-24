@@ -2,13 +2,16 @@
  * Gera imagem de fundo para um slide via OpenRouter.
  * Modelo configurável via OPENROUTER_MODELS_IMAGE no .env.
  *
+ * Se image-refs.json existir no output-dir, o prompt é automaticamente enriquecido
+ * com referências de paródia das marcas/empresas identificadas pelo Bruno Buscador.
+ *
  * Uso (na raiz do repo):
  *   node squads/carousel-noticias/scripts/generate-bg-image.mjs <slide-number> <output-dir>
  *
  * Exemplo:
- *   node squads/carousel-noticias/scripts/generate-bg-image.mjs 01 squads/carousel-noticias/output/2026-04-14-094324
+ *   node squads/carousel-noticias/scripts/generate-bg-image.mjs 01 squads/carousel-noticias/output
  *
- * Prompts customizados: coloque bg-prompts.json na pasta pai do output-dir com formato:
+ * Prompts customizados: coloque bg-prompts.json no output-dir com formato:
  *   { "01": "seu prompt aqui", "03": "...", ... }
  */
 
@@ -64,9 +67,36 @@ const outputDir = path.isAbsolute(outputDirArg)
   ? outputDirArg
   : path.resolve(REPO_ROOT, outputDirArg);
 
+// ── Carregar image-refs.json (gerado pelo Bruno Buscador) ─────────────────────
+const imageRefsPath = path.join(outputDir, "image-refs.json");
+let imageRefs = null;
+if (fs.existsSync(imageRefsPath)) {
+  try {
+    imageRefs = JSON.parse(fs.readFileSync(imageRefsPath, "utf-8"));
+    console.log(`📚 image-refs.json carregado: ${imageRefs.refs?.length || 0} referências de marca`);
+  } catch (e) {
+    console.warn("⚠️  image-refs.json inválido, ignorando:", e.message);
+  }
+}
+
+// Monta sufixo de paródia com base nas referências do Bruno
+function buildParodySuffix(refs) {
+  if (!refs || refs.length === 0) return "";
+  const parts = refs
+    .filter((r) => r.parody_notes || r.visual_description)
+    .slice(0, 3) // usar até 3 referências para não sobrecarregar o prompt
+    .map((r) => {
+      const colors = r.brand_colors?.length ? ` (colors: ${r.brand_colors.slice(0, 2).join(", ")})` : "";
+      const notes = r.parody_notes || r.logo_style || "";
+      return `${r.entity}${colors}: ${notes}`;
+    });
+  if (parts.length === 0) return "";
+  return ` — Parody editorial style inspired by: ${parts.join("; ")}. Premium news magazine illustration, recognizable brand elements in satirical context, 8k, clean composition.`;
+}
+
 // ── Prompts padrão (carousel-noticias) ────────────────────────────────────────
-// Prompts genéricos de alta qualidade para slides inspiracionais.
-// Sobrescreva com bg-prompts.json na pasta pai do output-dir.
+// Prompts de base — enriquecidos automaticamente com paródia do image-refs.json quando disponível.
+// Sobrescreva completamente com bg-prompts.json no output-dir.
 const DEFAULT_PROMPTS = {
   "01": "A breathtaking aerial view of a glowing city at dawn, light rays emerging from the horizon cutting through urban skyline, network nodes and data streams subtly overlaid, sense of historical transformation and possibility, cinematic and hopeful atmosphere, deep blue and gold tones. Ultra realistic, professional photography, high resolution, 4:5 aspect ratio, clean composition. --no text, watermark, cartoon, illustration",
   "03": "Abstract visualization of global technological adoption waves, concentric circles of light expanding from a central point across a world map, interconnected nodes glowing in sequence, sense of unstoppable momentum and speed, deep space blue background with bright cyan and white light pulses. Ultra realistic, high resolution, 4:5 aspect ratio, clean composition. --no text, watermark",
@@ -74,25 +104,37 @@ const DEFAULT_PROMPTS = {
   "07": "Aerial view of a vibrant modern city at night with glowing infrastructure, roads and buildings forming a network pattern, warm amber and blue lights, one illuminated tower standing taller as a metaphor for leadership and vision. Ultra realistic, professional photography, high resolution, 4:5 aspect ratio. --no text, watermark",
 };
 
-// Tentar carregar bg-prompts.json customizado (na pasta pai do outputDir)
-const overridePath = path.join(path.dirname(outputDir), "bg-prompts.json");
+// Tentar carregar bg-prompts.json customizado no output-dir (sobrescreve tudo, incluindo paródia)
+const overridePath = path.join(outputDir, "bg-prompts.json");
 let prompts = { ...DEFAULT_PROMPTS };
+let usingOverride = false;
 if (fs.existsSync(overridePath)) {
   try {
     const custom = JSON.parse(fs.readFileSync(overridePath, "utf8"));
     prompts = { ...prompts, ...custom };
+    usingOverride = true;
     console.log(`📎 Prompts override carregados: ${overridePath}`);
   } catch (e) {
     console.warn("⚠️  bg-prompts.json inválido, usando padrão:", e.message);
   }
 }
 
-const prompt = prompts[slideNum];
-if (!prompt) {
+let basePrompt = prompts[slideNum];
+if (!basePrompt) {
   console.error(
     `❌ Slide ${slideNum} não tem prompt definido. Disponíveis: ${Object.keys(prompts).join(", ")}`
   );
   process.exit(1);
+}
+
+// Enriquecer prompt com referências de paródia (apenas se não há override manual)
+let prompt = basePrompt;
+if (!usingOverride && imageRefs?.refs?.length > 0) {
+  const suffix = buildParodySuffix(imageRefs.refs);
+  if (suffix) {
+    prompt = basePrompt.replace(/\. ?--no text.*$/, "") + suffix + " --no text, watermark";
+    console.log(`🎭 Prompt enriquecido com paródia de ${imageRefs.refs.length} marcas`);
+  }
 }
 
 // ── Gerar imagem ───────────────────────────────────────────────────────────────

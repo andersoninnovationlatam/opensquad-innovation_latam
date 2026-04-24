@@ -10,6 +10,7 @@ pipeline: pipeline/pipeline.yaml
 skills:
   - image-ai-generator
   - image-creator
+  - image-fetcher
 
 data:
   - pipeline/data/research-brief.md

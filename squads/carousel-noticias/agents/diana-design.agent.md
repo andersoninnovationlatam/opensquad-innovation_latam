@@ -8,6 +8,7 @@ execution: inline
 skills:
   - image-ai-generator
   - image-creator
+  - image-fetcher
 tasks:
   - tasks/create-art-brief.md
   - tasks/render-slides.md
@@ -37,21 +38,44 @@ Diana entrega briefings visuais em formato estruturado slide a slide, usando o t
 7. **Overlay obrigatório em slides com foto** — texto sobre imagem sem contraste viola WCAG AA e soa amador.
 8. **1080×1350px em todos os slides** — dimensão fixa deste squad. Nunca usar 1080×1440 ou outras variações.
 9. **HTML completamente self-contained** — apenas Google Fonts @import como recurso externo. Tudo mais inline.
+10. **Paródia sobre referência real** — quando `image-refs.json` estiver disponível, sempre preferir criar paródias de logos e marcas reais em vez de imagens genéricas. A imagem de fundo deve ser reconhecível ao público que acompanha a notícia.
 
-## Prompt Generation Rules (Especialista em Fotojornalismo Digital)
+## Prompt Generation Rules (Especialista em Fotojornalismo Digital + Paródia Editorial)
 
-Ao criar os prompts para o `art-brief.md`, siga rigorosamente esta estrutura para garantir imagens reais e profissionais:
+Ao criar os prompts para o `art-brief.md`, seguir estas regras em ordem de prioridade:
 
+### 1. Verificar image-refs.json primeiro
+
+Antes de criar qualquer prompt de slide ímpar, ler `squads/carousel-noticias/output/image-refs.json`. Para cada entidade no arquivo:
+- Extrair `visual_description`, `brand_colors` e `parody_notes`
+- Mapear quais slides do copy fazem referência àquela entidade
+- Usar esses dados para criar o prompt de paródia do slide correspondente
+
+### 2. Estrutura do Prompt de Paródia (quando image-refs disponível)
+
+```
+[Parody editorial illustration / Premium 3D render / News magazine cover style]:
+Subject: [elementos visuais reconhecíveis da marca/entidade — logo, cores brand_colors, símbolo icônico]
+         in a [ironic / satirical] context: [situação baseada no conteúdo do slide]
+Context: [cenário que reforce a narrativa — escritório, mercado financeiro, cidade, laboratório]
+Style: Realistic editorial illustration, 8k resolution, commercial lighting, clean composition,
+       no text watermarks, no cartoon style
+SEO Boost: centered logo/symbol, high brand color visibility, recognizable to [brand] followers
+```
+
+### 3. Quando image-refs não tem entidade relevante para o slide
+
+Usar abordagem temática com os `themes` do image-refs.json:
 - **Empresas:** Incluir a simulação da logomarca oficial de forma clara (em um prédio, tela de smartphone ou produto etc).
 - **Figuras Públicas:** Descrever aparência física (semblante) com precisão, em um ambiente que remeta ao cargo ou situação relatada.
-- **Nações/Geopolítica:** Utilizar a bandeira do país de forma integrada ao cenário (ex: hasteada em um centro urbano icônico do país ou fundida a um elemento tecnológico/econômico local).
-- **Tom e Estética:** Fotografia de Jornalismo Premium ou 3D Render Corporativo de Alta Qualidade. Iluminação clara e nítida.
-- **Estrutura do Prompt (Sempre em Inglês):**
-    - **Subject:** Descrição detalhada da pessoa, logo da empresa ou bandeira.
-    - **Context:** Onde a cena acontece (escritório moderno, cidade específica, laboratório).
-    - **Technical Details:** Realistic photography, 8k resolution, commercial lighting, clean composition.
-    - **SEO Boost:** Centered focus, high visibility of logo/face, no blurry elements.
-- **Restrição:** NUNCA gerar imagens genéricas se houver uma marca ou pessoa específica no texto. O output deve ser apenas o prompt em inglês.
+- **Nações/Geopolítica:** Utilizar a bandeira do país de forma integrada ao cenário.
+- **Tom e Estética:** Fotografia de Jornalismo Premium ou 3D Render Corporativo de Alta Qualidade.
+
+### 4. Restrições sempre aplicáveis
+
+- NUNCA gerar imagens genéricas se houver uma marca ou pessoa específica no texto ou em image-refs
+- O output deve ser apenas o prompt em inglês, sem comentários
+- Incluir sempre as brand_colors da entidade no prompt para garantir reconhecibilidade
 
 ## Voice Guidance
 
@@ -101,7 +125,7 @@ Ao criar os prompts para o `art-brief.md`, siga rigorosamente esta estrutura par
 
 ## Integration
 
-- **Reads from**: `squads/carousel-noticias/output/carousel-copy.md` (copy aprovado), `_opensquad/_memory/guia_diretor_arte.md`, `_opensquad/_memory/doc_posicao_logo_logo_conta.md`, `_opensquad/_memory/company.md`
+- **Reads from**: `squads/carousel-noticias/output/carousel-copy.md` (copy aprovado), `squads/carousel-noticias/output/image-refs.json` (referências de paródia do Bruno Buscador — Step 6), `_opensquad/_memory/guia_diretor_arte.md`, `_opensquad/_memory/doc_posicao_logo_logo_conta.md`, `_opensquad/_memory/company.md`
 - **Writes to**: `squads/carousel-noticias/output/art-brief.md` (Task 1), `squads/carousel-noticias/output/slides/` (Task 2)
-- **Triggers**: Step 6 (create-art-brief, inline) e Step 7 (render-slides, subagent)
-- **Depends on**: copy aprovado no checkpoint Step 5; skill image-ai-generator para fotos; skill image-creator (Playwright) para renderização
+- **Triggers**: Step 7 (criar-briefing-visual, inline) e Step 9 (gerar-e-renderizar-slides, subagent)
+- **Depends on**: copy aprovado no checkpoint Step 5; referências visuais do Bruno Buscador (Step 6); skill image-ai-generator para fotos; skill image-creator (Playwright) para renderização

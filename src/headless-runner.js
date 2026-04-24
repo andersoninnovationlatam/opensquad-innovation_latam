@@ -279,12 +279,25 @@ If the instructions ask to save a file, provide the content of that file clearly
 
                         // Call image-ai-generator
                         const genScript = path.join(ROOT_DIR, 'skills', 'image-ai-generator', 'scripts', 'generate.py');
-                        spawnSync('python3', [
+                        const imgResult = spawnSync('python3', [
                             genScript,
                             '--prompt', slide.bgPrompt,
                             '--output', imgPath,
                             '--mode', 'production'
-                        ], { env: { ...process.env, OPENROUTER_API_KEY: apiKey } });
+                        ], {
+                            env: {
+                                ...process.env,
+                                OPENROUTER_API_KEY: apiKey,
+                                OPENROUTER_MODELS_IMAGE: env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image'
+                            },
+                            stdio: 'inherit'
+                        });
+
+                        if (imgResult.status !== 0) {
+                            console.error(`❌ Failed to generate image for slide ${slide.number} (exit ${imgResult.status})`);
+                        } else {
+                            console.log(`✅ slide-${String(slide.number).padStart(2, '0')}-bg.png saved`);
+                        }
                     }
                 }
 

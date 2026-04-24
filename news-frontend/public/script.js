@@ -40,6 +40,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Progress helpers ─────────────────────────────
 
+    // Mapeia step do pipeline (1–11) para step visual da UI (1–7)
+    // Pipeline:  1-2=input+ângulos | 3=angle | 4-5=copy | 6=Bruno | 7-8=design | 9=render | 10-11=revisão
+    // UI:        1=Pesquisa        | 2=Ângulos| 3=Copy  | 4=Refs  | 5=Design   | 6=Render | 7=Revisão
+    function pipelineToUiStep(pipelineStep) {
+        if (pipelineStep <= 2) return 1;
+        if (pipelineStep === 3) return 2;
+        if (pipelineStep <= 5) return 3;
+        if (pipelineStep === 6) return 4;
+        if (pipelineStep <= 8) return 5;
+        if (pipelineStep === 9) return 6;
+        return 7;
+    }
+
+    const UI_TOTAL = 7;
+
     function resetProgress() {
         document.querySelectorAll('.step-item').forEach(el => {
             el.className = 'step-item pending';
@@ -54,18 +69,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function activateStep(current, total) {
-        for (let i = 1; i < current; i++) setStepState(i, 'done');
-        setStepState(current, 'active');
-        for (let i = current + 1; i <= total; i++) setStepState(i, 'pending');
+        const uiCurrent = pipelineToUiStep(current);
+        for (let i = 1; i < uiCurrent; i++) setStepState(i, 'done');
+        setStepState(uiCurrent, 'active');
+        for (let i = uiCurrent + 1; i <= UI_TOTAL; i++) setStepState(i, 'pending');
     }
 
     function markAllDone(total) {
-        for (let i = 1; i <= total; i++) setStepState(i, 'done');
+        for (let i = 1; i <= UI_TOTAL; i++) setStepState(i, 'done');
     }
 
     function markStepError(stepNumber, total) {
-        setStepState(stepNumber, 'error');
-        for (let i = stepNumber + 1; i <= total; i++) setStepState(i, 'pending');
+        const uiStep = pipelineToUiStep(stepNumber);
+        setStepState(uiStep, 'error');
+        for (let i = uiStep + 1; i <= UI_TOTAL; i++) setStepState(i, 'pending');
     }
 
     function showResultInPanel(type, message, driveUrl = null) {

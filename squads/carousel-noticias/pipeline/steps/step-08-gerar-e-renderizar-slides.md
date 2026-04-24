@@ -6,20 +6,23 @@ inputFile: squads/carousel-noticias/output/art-brief.md
 outputFile: squads/carousel-noticias/output/slides/
 ---
 
-# Step 08: Gerar Imagens e Renderizar Slides
+# Step 09: Gerar Imagens e Renderizar Slides
 
 ## Context Loading
 
 Load these files before executing:
-- `squads/carousel-noticias/output/art-brief.md` — briefing visual com design system e especificações de cada slide
+- `squads/carousel-noticias/output/art-brief.md` — briefing visual com design system, especificações de cada slide e prompts de paródia editorial
 - `squads/carousel-noticias/output/carousel-copy.md` — textos dos slides para incluir nos HTMLs
+- `squads/carousel-noticias/output/image-refs.json` — referências visuais das marcas (cores, logos, notas de paródia) para usar como contexto ao gerar imagens via script
 - `_opensquad/_memory/company.md` — identidade visual (logo path, handle, cores)
 
 ## Instructions
 
 ### Process
 1. Verificar que `squads/carousel-noticias/output/slides/` existe. Verificar que `squads/carousel-noticias/assets/innovation-latam-logo-white.png` existe (ou seguir instrução do briefing para copiá-lo).
-2. Para cada slide ímpar no briefing: chamar `image-ai-generator` com o prompt do briefing, mode production, output em `squads/carousel-noticias/output/images/slide-0N-bg.png`.
+2. Para cada slide ímpar no briefing: chamar `image-ai-generator` com o prompt do briefing (que já incorpora os elementos de paródia definidos pelo Bruno + Diana), mode production, output em `squads/carousel-noticias/output/images/slide-0N-bg.png`.
+   - Os prompts já chegam enriquecidos com identidade visual das marcas — usar exatamente o prompt do briefing, sem simplificar.
+   - Alternativa via script: `node squads/carousel-noticias/scripts/generate-bg-image.mjs <N> squads/carousel-noticias/output` — o script lê automaticamente o `image-refs.json` para enriquecer os prompts.
 3. Criar HTML do slide 1 com o design system do briefing. Renderizar via image-creator (Playwright) em `squads/carousel-noticias/output/slides/slide-01.png`. Inspecionar screenshot.
 4. Se slide 1 aprovado na inspeção visual, criar e renderizar todos os slides restantes.
 5. Slides pares: background #993CB1, texto branco, hierarquia heading/body.

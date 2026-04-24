@@ -17,18 +17,21 @@ steps:
     name: "checkpoint-approve-content"
     file: "steps/step-05-checkpoint-approve-content.md"
   - step: 6
+    name: "pesquisa-imagens-referencia"
+    file: "steps/step-06-pesquisa-imagens.md"
+  - step: 7
     name: "criar-briefing-visual"
     file: "steps/step-06-criar-briefing-visual.md"
-  - step: 7
+  - step: 8
     name: "checkpoint-approve-art-brief"
     file: "steps/step-07-checkpoint-approve-art-brief.md"
-  - step: 8
+  - step: 9
     name: "gerar-e-renderizar-slides"
     file: "steps/step-08-gerar-e-renderizar-slides.md"
-  - step: 9
+  - step: 10
     name: "revisar-carrossel"
     file: "steps/step-09-revisar-carrossel.md"
-  - step: 10
+  - step: 11
     name: "checkpoint-final-approval"
     file: "steps/step-10-checkpoint-final-approval.md"
 
