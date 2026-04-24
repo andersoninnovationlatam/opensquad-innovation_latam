@@ -641,3 +641,77 @@ select option {
     z-index: 1000;
     letter-spacing: 0.5px;
 }
+
+/* ── Auth Overlay ────────────────────────────────── */
+
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+    z-index: 9999;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.auth-overlay.hidden {
+    display: none;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 1.5rem;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.auth-logo {
+    height: 36px;
+    object-fit: contain;
+}
+
+.auth-subtitle {
+    color: var(--text-dim);
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.auth-error {
+    color: #f87171;
+    font-size: 0.85rem;
+    text-align: center;
+    width: 100%;
+}
+
+.auth-error.hidden {
+    display: none;
+}
+
+.auth-card .form {
+    width: 100%;
+    gap: 1rem;
+}
+
+.auth-card input[type="text"],
+.auth-card input[type="password"] {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.auth-card input:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(43, 168, 159, 0.12);
+}

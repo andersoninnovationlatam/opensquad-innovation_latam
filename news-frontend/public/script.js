@@ -1,3 +1,74 @@
+// ── Auth ──────────────────────────────────────────
+
+const TOKEN_KEY = 'il_auth_token';
+
+function getToken() { return localStorage.getItem(TOKEN_KEY); }
+function saveToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+function authHeaders() {
+    const token = getToken();
+    return {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+}
+
+async function attemptLogin(username, password) {
+    const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
+    if (!res.ok) throw new Error('invalid');
+    const { token } = await res.json();
+    saveToken(token);
+}
+
+// ── Auth Overlay ──────────────────────────────────
+
+(function initAuth() {
+    const overlay   = document.getElementById('authOverlay');
+    const appMain   = document.getElementById('appMain');
+    const appFooter = document.getElementById('appFooter');
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn  = document.getElementById('loginBtn');
+    const loginError = document.getElementById('loginError');
+
+    function showApp() {
+        overlay.classList.add('hidden');
+        appMain.style.display = '';
+        appFooter.style.display = '';
+    }
+
+    if (getToken()) {
+        showApp();
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.classList.add('hidden');
+        loginBtn.disabled = true;
+        loginBtn.querySelector('span').textContent = 'Entrando…';
+
+        try {
+            await attemptLogin(
+                document.getElementById('usernameInput').value,
+                document.getElementById('passwordInput').value
+            );
+            showApp();
+        } catch {
+            loginError.classList.remove('hidden');
+            document.getElementById('passwordInput').value = '';
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.querySelector('span').textContent = 'Entrar';
+        }
+    });
+})();
+
+// ── App ───────────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', () => {
     const newsForm     = document.getElementById('newsForm');
     const submitBtn    = document.getElementById('submitBtn');
@@ -119,9 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/generate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: authHeaders(),
                 body: JSON.stringify({ news, angle })
             });
+
+            if (response.status === 401) {
+                clearToken();
+                location.reload();
+                return;
+            }
 
             if (!response.ok) {
                 let errorDetail = `Status ${response.status}`;
@@ -153,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchRunnerLog(runId) {
         try {
-            const res = await fetch(`/api/logs/carousel-noticias/${runId}`);
+            const res = await fetch(`/api/logs/carousel-noticias/${runId}`, { headers: authHeaders() });
             if (!res.ok) return null;
             return await res.text();
         } catch {
@@ -167,7 +244,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const pollInterval = setInterval(async () => {
             try {
-                const response = await fetch(`/api/status/carousel-noticias/${runId}`);
+                const response = await fetch(`/api/status/carousel-noticias/${runId}`, { headers: authHeaders() });
+                if (response.status === 401) { clearToken(); location.reload(); return; }
                 const state = await response.json();
 
                 if (!response.ok || state.error || state.status === undefined) {

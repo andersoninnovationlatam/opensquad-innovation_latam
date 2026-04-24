@@ -21,7 +21,32 @@
 <body>
     <div class="background-glow"></div>
 
-    <main class="container">
+    <!-- ── Login Overlay ── -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-card card-glass">
+            <img src="assets/innovation-latam-logo-white.png" alt="Innovation Latam" class="auth-logo">
+            <p class="auth-subtitle">Acesso Restrito</p>
+            <form id="loginForm" class="form">
+                <div class="input-group">
+                    <label for="usernameInput">Usuário</label>
+                    <input type="text" id="usernameInput" placeholder="seu usuário" required autocomplete="username">
+                    <span class="input-focus-line"></span>
+                </div>
+                <div class="input-group">
+                    <label for="passwordInput">Senha</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" required autocomplete="current-password">
+                    <span class="input-focus-line"></span>
+                </div>
+                <p id="loginError" class="auth-error hidden">Credenciais inválidas</p>
+                <button type="submit" id="loginBtn" class="btn-primary">
+                    <span>Entrar</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <main class="container" id="appMain" style="display:none">
         <header class="header">
             <div class="logo">
                 <img src="assets/innovation-latam-logo-white.png" alt="Innovation Latam" class="logo-brand">
@@ -170,7 +195,7 @@
         </section>
     </main>
 
-    <footer class="version-footer">v0.0.5</footer>
+    <footer class="version-footer" id="appFooter" style="display:none">v0.0.5</footer>
     <script src="script.js"></script>
 </body>
 
