@@ -51,6 +51,221 @@ async function callOpenRouter(prompt, model, apiKey) {
     return data.choices[0].message.content;
 }
 
+// ── Bruno: Image Research (script-based, not LLM) ─────────────────────────────
+async function runBrunoImageSearch(squadDir, runDir, env) {
+    const extractScript = path.join(squadDir, 'scripts', 'extract-topics.mjs');
+    const searchScript = path.join(squadDir, 'scripts', 'search-reference-images.mjs');
+
+    console.log('🔍 Running extract-topics.mjs (parsing === ENTIDADES === block)...');
+    const extractResult = spawnSync('node', [extractScript, runDir], {
+        cwd: ROOT_DIR,
+        stdio: 'inherit',
+        env: { ...process.env, ...env }
+    });
+    if (extractResult.status !== 0) {
+        throw new Error(`extract-topics.mjs failed with exit ${extractResult.status}`);
+    }
+
+    // Skip search if topics.json has no entities
+    const topicsPath = path.join(runDir, 'topics.json');
+    try {
+        const topics = JSON.parse(await fs.readFile(topicsPath, 'utf-8'));
+        if (!Array.isArray(topics.entities) || topics.entities.length === 0) {
+            console.log('ℹ️ Nenhuma entidade declarada — Bruno encerra sem downloads.');
+            const imagesDir = path.join(runDir, 'images');
+            await fs.mkdir(imagesDir, { recursive: true });
+            await fs.writeFile(
+                path.join(imagesDir, 'index.json'),
+                JSON.stringify({ generated_at: new Date().toISOString(), images: [], pending_manual_download: [] }, null, 2)
+            );
+            return;
+        }
+    } catch (err) {
+        throw new Error(`Could not read topics.json: ${err.message}`);
+    }
+
+    console.log('🌐 Running search-reference-images.mjs (SerpAPI Google Images)...');
+    const searchResult = spawnSync('node', [searchScript, runDir], {
+        cwd: ROOT_DIR,
+        stdio: 'inherit',
+        env: { ...process.env, ...env }
+    });
+    if (searchResult.status !== 0) {
+        console.warn(`⚠️ search-reference-images.mjs exited with ${searchResult.status} — continuing (Diana will fallback to AI)`);
+    }
+    console.log('✅ Bruno image search complete');
+}
+
+// ── Helpers for render: find Bruno's reference + build HTML ───────────────────
+async function findBrunoReference(imagesDir, slideNumber) {
+    const slideLabel = String(slideNumber).padStart(2, '0');
+    for (const ext of ['.webp', '.png', '.jpg', '.jpeg']) {
+        const candidate = path.join(imagesDir, `slide-${slideLabel}-ref${ext}`);
+        try {
+            await fs.access(candidate);
+            return { path: candidate, ext };
+        } catch {}
+    }
+    return null;
+}
+
+async function readBrunoIndex(imagesDir) {
+    try {
+        const data = await fs.readFile(path.join(imagesDir, 'index.json'), 'utf-8');
+        return JSON.parse(data);
+    } catch {
+        return { images: [] };
+    }
+}
+
+function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }) {
+    const headline = (slide.headline || '').replace(/"/g, '&quot;');
+    const supporting = (slide.text || '').replace(/"/g, '&quot;');
+    const cta = (slide.cta || '').replace(/"/g, '&quot;');
+
+    if (!isOdd) {
+        // Even slides: solid #993CB1, white text, no overlay/scrim
+        return `<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px; height: 1350px; overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+      position: relative;
+      background-color: #993CB1;
+      color: #FFFFFF;
+    }
+    .content {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      transform: translateY(-50%);
+      padding: 80px;
+      max-width: 1000px;
+    }
+    h1 { font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 28px; letter-spacing: -0.5px; }
+    p { font-size: 32px; font-weight: 500; line-height: 1.5; opacity: 0.95; }
+    .cta { font-size: 36px; font-weight: 700; margin-top: 40px; }
+    .branding {
+      position: absolute; bottom: 44px; right: 56px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .branding img { height: 36px; width: auto; }
+    .handle { font-size: 24px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <h1>${headline}</h1>
+    ${supporting ? `<p>${supporting}</p>` : ''}
+    ${isLast && cta ? `<div class="cta">${cta}</div>` : ''}
+  </div>
+  <div class="branding">
+    <img src="file://${logoPath}" alt="Innovation Latam" />
+    <span class="handle">@innovationlatam</span>
+  </div>
+</body>
+</html>`;
+    }
+
+    // Odd slides: image bg + .overlay + .text-scrim
+    // For company/brand logos (typically transparent PNGs): centered <img> on dark bg
+    // For photos (person/location/AI-generated): full-bleed background-image
+    const isLogo = bgEntityType === 'company' || bgEntityType === 'brand';
+    const bgUrl = `file://${bgPath}`;
+
+    const bgLayer = isLogo
+        ? `<img class="bg-logo" src="${bgUrl}" alt="" />`
+        : '';
+    const bgStyle = isLogo
+        ? `background-color: #0a0a0a;`
+        : `background-color: #0a0a0a; background-image: url('${bgUrl}'); background-size: cover; background-position: center;`;
+
+    return `<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1080px; height: 1350px; overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+      position: relative;
+      ${bgStyle}
+    }
+    .bg-logo {
+      position: absolute;
+      top: 18%; left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: auto;
+      filter: invert(1) brightness(1.05);
+      z-index: 1;
+    }
+    .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 60%);
+      z-index: 2;
+    }
+    .text-scrim {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 62%;
+      background: linear-gradient(to top,
+        rgba(0,0,0,0.92) 0%,
+        rgba(0,0,0,0.78) 35%,
+        rgba(0,0,0,0.45) 65%,
+        transparent 100%);
+      z-index: 3;
+    }
+    .content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 80px;
+      padding-bottom: 160px;
+      z-index: 4;
+      max-width: 920px;
+    }
+    h1 {
+      font-size: 67px; font-weight: 700; color: #FFFFFF;
+      line-height: 1.15; margin-bottom: 28px; letter-spacing: -0.5px;
+    }
+    p {
+      font-size: 32px; font-weight: 500; color: rgba(255,255,255,0.85);
+      line-height: 1.45;
+    }
+    .cta {
+      font-size: 36px; font-weight: 700; color: #FFFFFF; margin-top: 32px;
+    }
+    .branding {
+      position: absolute; bottom: 44px; right: 56px;
+      display: flex; align-items: center; gap: 14px;
+      z-index: 5;
+    }
+    .branding img { height: 36px; width: auto; }
+    .handle { font-size: 24px; font-weight: 500; color: rgba(255,255,255,0.85); }
+  </style>
+</head>
+<body>
+  ${bgLayer}
+  <div class="overlay"></div>
+  <div class="text-scrim"></div>
+  <div class="content">
+    <h1>${headline}</h1>
+    ${supporting ? `<p>${supporting}</p>` : ''}
+    ${isLast && cta ? `<div class="cta">${cta}</div>` : ''}
+  </div>
+  <div class="branding">
+    <img src="file://${logoPath}" alt="Innovation Latam" />
+    <span class="handle">@innovationlatam</span>
+  </div>
+</body>
+</html>`;
+}
+
 // ── Agent Context ─────────────────────────────────────────────────────────────
 async function getAgentContext(squadDir, agentId) {
     const agentPath = path.join(squadDir, 'agents', `${agentId}.agent.md`);
@@ -145,6 +360,13 @@ async function run() {
             state.updatedAt = new Date().toISOString();
             await fs.writeFile(statePath, JSON.stringify(state, null, 2));
 
+            // ─── Special: Bruno's image research is script-driven, NOT LLM ───
+            if (step.name === 'pesquisa-imagens-referencia') {
+                await runBrunoImageSearch(squadDir, runDir, env);
+                console.log(`✓ Step ${step.step} completed`);
+                continue;
+            }
+
             // EXECUTION
             if (stepMeta.execution === 'subagent' || stepMeta.execution === 'inline') {
                 const agentContext = await getAgentContext(squadDir, stepMeta.agent);
@@ -227,16 +449,16 @@ If the instructions ask to save a file, provide the content of that file clearly
                 console.log(`ℹ️ Step ${step.step} is a ${stepMeta.type || 'system'} step, skipping LLM call.`);
             }
 
-            // Special handling for image generation step (Step 8)
+            // Special handling for image generation step (Bruno-first policy)
             if (step.name === 'gerar-e-renderizar-slides') {
-                console.log('🎨 Starting real image generation and rendering...');
+                console.log('🎨 Starting visual production (Bruno-first → AI fallback)...');
 
                 const artBriefPath = path.join(runDir, 'art-brief.md');
                 const artBrief = await fs.readFile(artBriefPath, 'utf-8').catch(() => '');
                 const copyPath = path.join(runDir, 'carousel-copy.md');
                 const copy = await fs.readFile(copyPath, 'utf-8').catch(() => '');
 
-                // 1. Parse carousel-copy for text
+                // 1. Parse carousel-copy.md for slide text
                 const slides = [];
                 const copyBlocks = copy.split(/Slide \d+/);
                 for (let j = 1; j < copyBlocks.length; j++) {
@@ -246,43 +468,58 @@ If the instructions ask to save a file, provide the content of that file clearly
                     const ctaMatch = block.match(/CTA: "(.+)"/) || block.match(/CTA: (.+)/);
 
                     let text = textMatch ? textMatch[1].replace(/"/g, '').trim() : '';
-                    // Remove source if it's the last slide or contains "Fonte"
                     if (text.toLowerCase().includes('fonte:')) text = '';
 
                     slides.push({
                         number: j,
                         headline: headlineMatch ? headlineMatch[1].replace(/"/g, '').trim() : '',
-                        text: text,
+                        text,
                         cta: ctaMatch ? ctaMatch[1].replace(/"/g, '').trim() : '',
-                        bgPrompt: '' // Will be filled from art-brief
+                        bgPrompt: ''
                     });
                 }
 
-                // 2. Parse art-brief for image prompts
+                // 2. Parse art-brief.md for AI prompts (only used if Bruno didn't bring a reference)
                 const briefBlocks = artBrief.split(/Slide \d+/);
                 for (let j = 1; j < briefBlocks.length; j++) {
                     const block = briefBlocks[j];
-                    const bgMatch = block.match(/Prompt de imagem AI: "(.+)"/) || block.match(/Prompt de imagem AI: (.+)/) || block.match(/Background: (.+)/);
+                    const bgMatch = block.match(/Prompt de imagem AI: "(.+)"/) || block.match(/Prompt de imagem AI: (.+)/);
                     if (bgMatch && slides[j - 1]) {
                         slides[j - 1].bgPrompt = bgMatch[1].replace(/"/g, '').trim();
                     }
                 }
 
-                // 2. Generate images for odd slides
                 const imagesDir = path.join(runDir, 'images');
                 await fs.mkdir(imagesDir, { recursive: true });
 
-                for (const slide of slides) {
-                    if (slide.number % 2 !== 0 && slide.bgPrompt) {
-                        console.log(`📸 Generating background for Slide ${slide.number}...`);
-                        const imgPath = path.join(imagesDir, `slide-${String(slide.number).padStart(2, '0')}-bg.png`);
+                // 3. Read Bruno's index.json to know entity type per slide (logo vs photo layout)
+                const brunoIndex = await readBrunoIndex(imagesDir);
+                const brunoBySlide = new Map(brunoIndex.images.map((img) => [img.slide, img]));
 
-                        // Call image-ai-generator
+                // 4. Resolve background per odd slide: Bruno's reference > AI generation
+                const backgroundOrigins = []; // {slide, origin: 'reference'|'ai-generated', file, type}
+                for (const slide of slides) {
+                    if (slide.number % 2 === 0) continue;
+                    const slideLabel = String(slide.number).padStart(2, '0');
+
+                    const ref = await findBrunoReference(imagesDir, slide.number);
+                    if (ref) {
+                        const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg${ref.ext}`);
+                        await fs.copyFile(ref.path, bgPath);
+                        const entityType = brunoBySlide.get(slide.number)?.type || 'photo';
+                        backgroundOrigins.push({ slide: slide.number, origin: 'reference', file: bgPath, type: entityType });
+                        console.log(`📷 Slide ${slide.number}: usando referência do Bruno (${entityType})`);
+                        continue;
+                    }
+
+                    if (slide.bgPrompt) {
+                        console.log(`🎨 Slide ${slide.number}: gerando imagem AI (fallback)...`);
+                        const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
                         const genScript = path.join(ROOT_DIR, 'skills', 'image-ai-generator', 'scripts', 'generate.py');
                         const imgResult = spawnSync('python3', [
                             genScript,
                             '--prompt', slide.bgPrompt,
-                            '--output', imgPath,
+                            '--output', bgPath,
                             '--mode', 'production'
                         ], {
                             env: {
@@ -292,90 +529,43 @@ If the instructions ask to save a file, provide the content of that file clearly
                             },
                             stdio: 'inherit'
                         });
-
-                        if (imgResult.status !== 0) {
-                            console.error(`❌ Failed to generate image for slide ${slide.number} (exit ${imgResult.status})`);
+                        if (imgResult.status === 0) {
+                            backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
+                            console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
                         } else {
-                            console.log(`✅ slide-${String(slide.number).padStart(2, '0')}-bg.png saved`);
+                            console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number} (exit ${imgResult.status})`);
                         }
+                    } else {
+                        console.warn(`⚠️ Slide ${slide.number}: sem referência do Bruno e sem prompt AI no art-brief — slide ficará sem background.`);
                     }
                 }
 
-                // 3. Render slides to PNG
-                console.log('🖼️ Rendering slides to PNG...');
+                // 5. Build HTML per slide using design system (text-scrim, branding, etc.)
                 const slidesDir = path.join(runDir, 'slides', 'v1');
                 await fs.mkdir(slidesDir, { recursive: true });
 
-                // We'll use a simple HTML template for rendering
+                const logoPath = path.resolve(path.join(ROOT_DIR, 'squads', 'carousel-noticias', 'assets', 'innovation-latam-logo-white.png'));
+
                 for (const slide of slides) {
-                    const htmlPath = path.join(slidesDir, `slide-${String(slide.number).padStart(2, '0')}.html`);
-                    const pngPath = path.join(slidesDir, `slide-${String(slide.number).padStart(2, '0')}.png`);
-
+                    const slideLabel = String(slide.number).padStart(2, '0');
                     const isOdd = slide.number % 2 !== 0;
-                    const isFirst = slide.number === 1;
                     const isLast = slide.number === slides.length;
-                    const bgPath = path.resolve(path.join(imagesDir, `slide-${String(slide.number).padStart(2, '0')}-bg.png`));
-                    const logoPath = path.resolve(path.join(ROOT_DIR, 'squads', 'carousel-noticias', 'assets', 'innovation-latam-logo-white.png'));
 
-                    const bgStyle = isOdd
-                        ? `background-image: url('file://${bgPath}'); background-size: cover; background-position: center;`
-                        : `background-color: #993CB1;`;
+                    const bgInfo = backgroundOrigins.find((b) => b.slide === slide.number);
+                    const bgPath = bgInfo ? path.resolve(bgInfo.file) : null;
+                    const bgEntityType = bgInfo?.type || null;
 
-                    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            width: 1080px; height: 1350px; overflow: hidden;
-            font-family: 'Montserrat', sans-serif;
-            position: relative;
-            display: flex; flex-direction: column;
-            justify-content: ${isFirst || isLast ? 'flex-end' : 'center'}; 
-            padding: 100px;
-            padding-bottom: ${isFirst || isLast ? '160px' : '100px'};
-            ${bgStyle}
-            color: white;
-            text-align: left;
-        }
-        ${isOdd ? '.overlay { position: absolute; inset: 0; background: rgba(21, 10, 28, 0.7); z-index: 1; }' : ''}
-        .logo {
-            position: absolute; top: 30px; left: 100px;
-            height: 40px; z-index: 2;
-        }
-        .content { position: relative; z-index: 2; width: 100%; }
-        h1 { font-size: 64px; font-weight: 700; line-height: 1.2; margin-bottom: 30px; }
-        p { font-size: 38px; font-weight: 500; line-height: 1.45; opacity: 0.95; }
-        .cta { font-size: 42px; font-weight: 700; color: #FFD700; margin-top: 40px; }
-        .footer {
-            position: absolute; bottom: 40px; left: 100px; right: 100px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 2; font-size: 24px; font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    <img src="file://${logoPath}" class="logo" />
-    ${isOdd ? '<div class="overlay"></div>' : ''}
-    <div class="content">
-        <h1>${slide.headline}</h1>
-        <p>${slide.text}</p>
-        ${isLast && slide.cta ? `<div class="cta">${slide.cta}</div>` : ''}
-    </div>
-    <div class="footer">
-        <span>@innovationlatam</span>
-        <span>ARRASTE -></span>
-    </div>
-</body>
-</html>`;
-                    await fs.writeFile(htmlPath, html);
+                    const html = buildSlideHtml({
+                        slide, isOdd, isLast,
+                        bgPath, bgEntityType,
+                        logoPath
+                    });
+
+                    await fs.writeFile(path.join(slidesDir, `slide-${slideLabel}.html`), html);
                 }
 
-                // Call the real rendering script
-                console.log('🖼️ Calling render-slides.js...');
+                // 6. Render via Playwright
+                console.log('🖼️ Calling render-slides.js (Playwright → PNG)...');
                 const renderScript = path.join(ROOT_DIR, 'src', 'render-slides.js');
                 const renderResult = spawnSync('node', [renderScript, slidesDir], {
                     cwd: ROOT_DIR,
@@ -383,10 +573,22 @@ If the instructions ask to save a file, provide the content of that file clearly
                 });
 
                 if (renderResult.status === 0) {
-                    console.log('✅ Slides rendered successfully!');
+                    console.log('✅ Slides renderizados.');
                 } else {
-                    console.error('❌ Slide rendering failed.');
+                    console.error(`❌ Render falhou (exit ${renderResult.status}).`);
                 }
+
+                // 7. Salvar report.md com origens dos backgrounds
+                const reportLines = ['=== PRODUÇÃO VISUAL ===\n', 'Backgrounds dos slides ímpares:'];
+                for (const b of backgroundOrigins) {
+                    reportLines.push(`  slide-${String(b.slide).padStart(2, '0')}-bg — ${b.origin}${b.origin === 'reference' ? ` (Bruno: ${b.type})` : ''}`);
+                }
+                reportLines.push('\nSlides renderizados:');
+                for (const slide of slides) {
+                    reportLines.push(`  slide-${String(slide.number).padStart(2, '0')}.png — 1080×1350px`);
+                }
+                reportLines.push(`\nTotal: ${slides.length} slides em squads/carousel-noticias/output/<runId>/slides/v1/`);
+                await fs.writeFile(path.join(runDir, 'slides', 'report.md'), reportLines.join('\n'));
             }
 
             console.log(`✓ Step ${step.step} completed`);

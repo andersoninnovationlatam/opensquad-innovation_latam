@@ -88,6 +88,32 @@ Slide N (CTA):
 - Não inventar entidades. Apenas o que está no texto da notícia.
 - O campo `slide alvo` deve coincidir com o slide do carrossel onde a entidade aparece pela primeira vez.
 
+#### Formato literal — siga ESTA sintaxe sem variação
+
+O parser que extrai esse bloco (`squads/carousel-noticias/scripts/extract-topics.mjs`) só reconhece linhas neste formato exato:
+
+```
+- <Nome> (tipo: <empresa|marca|pessoa|pais>) — slide alvo: <1|3|5|7>
+```
+
+Regras invioláveis:
+- A linha começa com `- ` (hífen + espaço).
+- O tipo é UMA das 4 palavras: `empresa`, `marca`, `pessoa`, `pais` (sem acento, sem maiúsculas).
+- O separador entre o tipo e o slide é o travessão `—` (U+2014). Hífen comum também é aceito.
+- O slide alvo é exatamente um dos números: `1`, `3`, `5` ou `7`.
+- Sem nenhum outro texto na linha (sem comentário, sem aspas, sem itálico).
+
+Exemplo correto:
+```
+=== ENTIDADES ===
+- Nubank (tipo: empresa) — slide alvo: 1
+- Banco Central (tipo: empresa) — slide alvo: 3
+- Roberto Campos Neto (tipo: pessoa) — slide alvo: 5
+- Brasil (tipo: pais) — slide alvo: 7
+```
+
+Linhas fora desse padrão são ignoradas pelo parser e a busca de imagens correspondente não acontece.
+
 ## Veto Conditions
 
 Rejeitar e redo se:

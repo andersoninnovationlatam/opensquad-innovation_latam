@@ -42,7 +42,9 @@
       "Bash(node --check /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/backend-simples/server.js)",
       "Bash(node squads/carousel-noticias/scripts/extract-topics.mjs squads/carousel-noticias/output/test-slide1)",
       "Bash(node squads/carousel-noticias/scripts/search-reference-images.mjs squads/carousel-noticias/output/test-slide1)",
-      "Bash(node src/render-slides.js squads/carousel-noticias/output/test-slide1/slides/v1)"
+      "Bash(node src/render-slides.js squads/carousel-noticias/output/test-slide1/slides/v1)",
+      "Bash(node --check /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/src/headless-runner.js)",
+      "Bash(command -v fnm n)"
     ],
     "additionalDirectories": [
       "/tmp",
