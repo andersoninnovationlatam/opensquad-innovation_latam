@@ -123,6 +123,8 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
     const supporting = (slide.text || '').replace(/"/g, '&quot;');
     const cta = (slide.cta || '').replace(/"/g, '&quot;');
 
+    const arrasteHtml = isLast ? '' : '<div class="arraste">ARRASTE →</div>';
+
     if (!isOdd) {
         // Even slides: solid #993CB1, white text, no overlay/scrim
         return `<!DOCTYPE html>
@@ -139,6 +141,11 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
       background-color: #993CB1;
       color: #FFFFFF;
     }
+    .logo-top {
+      position: absolute; top: 56px; left: 56px;
+      height: 40px; width: auto;
+      z-index: 5;
+    }
     .content {
       position: absolute;
       top: 50%; left: 0; right: 0;
@@ -149,24 +156,28 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
     h1 { font-size: 48px; font-weight: 700; line-height: 1.2; margin-bottom: 28px; letter-spacing: -0.5px; }
     p { font-size: 32px; font-weight: 500; line-height: 1.5; opacity: 0.95; }
     .cta { font-size: 36px; font-weight: 700; margin-top: 40px; }
-    .branding {
-      position: absolute; bottom: 44px; right: 56px;
-      display: flex; align-items: center; gap: 14px;
+    .handle-bottom {
+      position: absolute; bottom: 48px; left: 56px;
+      font-size: 26px; font-weight: 600; color: #FFFFFF;
+      z-index: 5;
     }
-    .branding img { height: 36px; width: auto; }
-    .handle { font-size: 24px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .arraste {
+      position: absolute; bottom: 48px; right: 56px;
+      font-size: 24px; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.9);
+      z-index: 5;
+    }
   </style>
 </head>
 <body>
+  <img class="logo-top" src="file://${logoPath}" alt="Innovation Latam" />
   <div class="content">
     <h1>${headline}</h1>
     ${supporting ? `<p>${supporting}</p>` : ''}
     ${isLast && cta ? `<div class="cta">${cta}</div>` : ''}
   </div>
-  <div class="branding">
-    <img src="file://${logoPath}" alt="Innovation Latam" />
-    <span class="handle">@innovationlatam</span>
-  </div>
+  <span class="handle-bottom">@innovationlatam</span>
+  ${arrasteHtml}
 </body>
 </html>`;
     }
@@ -221,6 +232,11 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
         transparent 100%);
       z-index: 3;
     }
+    .logo-top {
+      position: absolute; top: 56px; left: 56px;
+      height: 40px; width: auto;
+      z-index: 5;
+    }
     .content {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -240,28 +256,31 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
     .cta {
       font-size: 36px; font-weight: 700; color: #FFFFFF; margin-top: 32px;
     }
-    .branding {
-      position: absolute; bottom: 44px; right: 56px;
-      display: flex; align-items: center; gap: 14px;
+    .handle-bottom {
+      position: absolute; bottom: 48px; left: 56px;
+      font-size: 26px; font-weight: 600; color: #FFFFFF;
       z-index: 5;
     }
-    .branding img { height: 36px; width: auto; }
-    .handle { font-size: 24px; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .arraste {
+      position: absolute; bottom: 48px; right: 56px;
+      font-size: 24px; font-weight: 700; letter-spacing: 1px;
+      color: rgba(255,255,255,0.9);
+      z-index: 5;
+    }
   </style>
 </head>
 <body>
   ${bgLayer}
   <div class="overlay"></div>
   <div class="text-scrim"></div>
+  <img class="logo-top" src="file://${logoPath}" alt="Innovation Latam" />
   <div class="content">
     <h1>${headline}</h1>
     ${supporting ? `<p>${supporting}</p>` : ''}
     ${isLast && cta ? `<div class="cta">${cta}</div>` : ''}
   </div>
-  <div class="branding">
-    <img src="file://${logoPath}" alt="Innovation Latam" />
-    <span class="handle">@innovationlatam</span>
-  </div>
+  <span class="handle-bottom">@innovationlatam</span>
+  ${arrasteHtml}
 </body>
 </html>`;
 }

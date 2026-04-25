@@ -32,7 +32,10 @@ Load these files before executing:
 7. Slides ímpares: background-image com imagem (referência do Bruno OU gerada por IA) + dois layers de contraste obrigatórios:
    - `.overlay` — gradiente sutil cobrindo o slide inteiro (escurece levemente a foto)
    - `.text-scrim` — gradiente fosco matte concentrado atrás do bloco de texto (bottom 60% do slide, rgba(0,0,0,0.85) → transparent), garante contraste WCAG AA com fonte branca
-8. Todo HTML: dimensão exata 1080×1350px, Montserrat @import, logo + @handle no canto inferior direito.
+8. Todo HTML: dimensão exata 1080×1350px, Montserrat @import. Branding fixo em todos os slides:
+   - Logo Innovation Latam branco → canto superior esquerdo (margem 56px, altura 40px)
+   - `@innovationlatam` → canto inferior esquerdo (margem 56px)
+   - `ARRASTE →` → canto inferior direito (omitir no último slide)
 9. Apresentar todos os slides renderizados para inspeção final.
 
 ## Output Format
@@ -147,9 +150,11 @@ HTML exemplo (slide ímpar):
 ## Veto Conditions
 
 Rejeitar e redo se:
-1. Qualquer slide sem logo + @innovationlatam visível no canto inferior direito
-2. Qualquer slide com foto mas sem `.text-scrim` (gradiente fosco atrás do texto) — texto branco sobre foto sem scrim é ilegível
-3. Slides pares (#993CB1) com `.text-scrim` ou `.overlay` — fundo sólido não recebe esses layers
+1. Qualquer slide sem logo no canto superior esquerdo OU sem `@innovationlatam` no canto inferior esquerdo
+2. Slide intermediário sem `ARRASTE →` no canto inferior direito (regra: presente em todos exceto o último)
+3. Último slide com `ARRASTE →` (não há próximo slide)
+4. Qualquer slide com foto mas sem `.text-scrim` (gradiente fosco atrás do texto) — texto branco sobre foto sem scrim é ilegível
+5. Slides pares (#993CB1) com `.text-scrim` ou `.overlay` — fundo sólido não recebe esses layers
 
 ## Quality Criteria
 

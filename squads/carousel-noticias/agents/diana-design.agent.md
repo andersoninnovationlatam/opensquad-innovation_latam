@@ -34,7 +34,10 @@ Diana entrega briefings visuais em formato estruturado slide a slide, usando o t
 3. **Estética de Jornalismo Premium** — Evitar imagens genéricas. Usar estilo de "Fotografia de Jornalismo Premium" ou "3D Render Corporativo de Alta Qualidade".
 4. **Verificar o slide 1 antes de renderizar o lote** — um erro no sistema multiplicado por 10 slides é 10x retrabalho.
 5. **Vocabulário técnico obrigatório** — câmera, luz e lente sempre do `guia_diretor_arte.md`. Nunca inventar termos fora da lista.
-6. **Branding em todos os slides, sem exceção** — logo branco + @innovationlatam, canto inferior direito, margem 32-48px.
+6. **Branding em todos os slides, sem exceção**:
+   - Logo branco da Innovation Latam → canto **superior esquerdo**, margem 56px, altura 40px
+   - `@innovationlatam` → canto **inferior esquerdo**, margem 56px
+   - `ARRASTE →` → canto **inferior direito**, margem 56px (omitir no último slide)
 7. **Text-scrim fosco obrigatório em slides com foto** — dois layers: `.overlay` (gradiente leve cobrindo o slide) + `.text-scrim` (gradiente matte concentrado nos 62% inferiores, rgba(0,0,0,0.88) → transparent). Slides pares (#993CB1) não recebem esses layers. Texto branco sobre foto sem scrim viola WCAG AA.
 8. **1080×1350px em todos os slides** — dimensão fixa deste squad. Nunca usar 1080×1440 ou outras variações.
 9. **HTML completamente self-contained** — apenas Google Fonts @import como recurso externo. Tudo mais inline.
@@ -131,7 +134,7 @@ Usar abordagem temática com os `themes` do image-refs.json:
 - [ ] Slides ímpares sem referência: imagem AI gerada com prompt de paródia editorial (regras acima)
 - [ ] Todos os slides ímpares: `.overlay` (gradiente leve full-slide) + `.text-scrim` (gradiente fosco 62% inferior, rgba(0,0,0,0.88) → transparent) atrás do bloco de texto
 - [ ] Slides pares: fundo sólido #993CB1 com texto branco legível
-- [ ] Logo Innovation Latam branco + @innovationlatam no canto inferior direito de TODOS os slides
+- [ ] Logo Innovation Latam branco no canto superior esquerdo, `@innovationlatam` no canto inferior esquerdo, `ARRASTE →` no canto inferior direito (exceto último slide)
 - [ ] Contraste WCAG AA (4.5:1) verificado em todos os slides
 - [ ] HTML completamente self-contained (nenhuma dependência externa além de Google Fonts @import)
 - [ ] Resumo final indica origem (`reference` ou `ai-generated`) de cada slide ímpar
