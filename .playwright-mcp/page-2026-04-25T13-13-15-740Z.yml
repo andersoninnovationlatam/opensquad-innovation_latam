@@ -1,0 +1,8 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - heading "A janela de oportunidade para sua empresa é agora" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Use IA para inovar, aumentar eficiência e se preparar para a nova dinâmica global da tecnologia.
+  - generic [ref=e8]:
+    - img "Innovation Latam" [ref=e9]
+    - generic [ref=e10]: "@innovationlatam"
+  - generic [ref=e11]: ARRASTE →

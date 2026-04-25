@@ -79,6 +79,6 @@ Rosa entrega reviews em formato de tabela de pontuação + feedback detalhado po
 
 - **Reads from**: `squads/carousel-noticias/output/carousel-copy.md` (copy), imagens renderizadas em `squads/carousel-noticias/output/slides/`, `pipeline/data/quality-criteria.md`
 - **Writes to**: output inline na conversa (veredicto + feedback)
-- **Triggers**: Step 8 (revisar-carrossel)
-- **Depends on**: copy do Caio Carrossel (Step 4) e slides renderizados da Diana Design (Step 7)
-- **On reject**: pipeline retorna ao Step 4 (criar-copy-carrossel) com feedback incorporado
+- **Triggers**: step de revisar-carrossel (último antes do checkpoint final)
+- **Depends on**: copy do Caio Carrossel (criar-copy-carrossel) e slides renderizados da Diana Design (gerar-e-renderizar-slides)
+- **On reject**: pipeline retorna ao step criar-copy-carrossel com feedback incorporado

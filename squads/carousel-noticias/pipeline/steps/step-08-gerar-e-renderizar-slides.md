@@ -20,27 +20,31 @@ Load these files before executing:
 
 ### Process
 1. Verificar que `squads/carousel-noticias/output/slides/` existe. Verificar que `squads/carousel-noticias/assets/innovation-latam-logo-white.png` existe (ou seguir instrução do briefing para copiá-lo).
-2. Para cada slide ímpar no briefing: chamar `image-ai-generator` com o prompt do briefing (que já incorpora os elementos de paródia definidos pelo Bruno + Diana), mode production, output em `squads/carousel-noticias/output/images/slide-0N-bg.png`.
-   - Os prompts já chegam enriquecidos com identidade visual das marcas — usar exatamente o prompt do briefing, sem simplificar.
-   - Alternativa via script: `node squads/carousel-noticias/scripts/generate-bg-image.mjs <N> squads/carousel-noticias/output` — o script lê automaticamente o `image-refs.json` para enriquecer os prompts.
-3. Criar HTML do slide 1 com o design system do briefing. Renderizar via image-creator (Playwright) em `squads/carousel-noticias/output/slides/slide-01.png`. Inspecionar screenshot.
-4. Se slide 1 aprovado na inspeção visual, criar e renderizar todos os slides restantes.
-5. Slides pares: background #993CB1, texto branco, hierarquia heading/body. **Sem overlay — fundo sólido não precisa de scrim.**
-6. Slides ímpares: background-image com imagem gerada + dois layers de contraste obrigatórios:
+2. **Decidir o background de cada slide ímpar (1, 3, 5, 7) por prioridade:**
+   - **Prioridade 1 — usar imagem do Bruno**: se existir `squads/carousel-noticias/output/images/slide-0N-ref.*` (referência baixada pelo Bruno no Step 4), copiar para `squads/carousel-noticias/output/images/slide-0N-bg.<ext>` e usar como background. Não chamar `image-ai-generator` neste caso.
+   - **Prioridade 2 — gerar via IA**: somente quando o Bruno não retornou imagem para aquele slide (entidade ausente no `=== ENTIDADES ===` do copy ou download falhou). Chamar `image-ai-generator` com o prompt do briefing (mode production) e salvar em `squads/carousel-noticias/output/images/slide-0N-bg.png`.
+     - Os prompts já chegam enriquecidos com identidade visual das marcas — usar exatamente o prompt do briefing, sem simplificar.
+     - Alternativa via script: `node squads/carousel-noticias/scripts/generate-bg-image.mjs <N> squads/carousel-noticias/output`.
+3. Registrar a origem do background de cada slide ímpar no resumo final (`reference` quando vier do Bruno, `ai-generated` quando vier do image-ai-generator).
+4. Criar HTML do slide 1 com o design system do briefing. Renderizar via image-creator (Playwright) em `squads/carousel-noticias/output/slides/slide-01.png`. Inspecionar screenshot.
+5. Se slide 1 aprovado na inspeção visual, criar e renderizar todos os slides restantes.
+6. Slides pares: background #993CB1, texto branco, hierarquia heading/body. **Sem overlay — fundo sólido não precisa de scrim.**
+7. Slides ímpares: background-image com imagem (referência do Bruno OU gerada por IA) + dois layers de contraste obrigatórios:
    - `.overlay` — gradiente sutil cobrindo o slide inteiro (escurece levemente a foto)
    - `.text-scrim` — gradiente fosco matte concentrado atrás do bloco de texto (bottom 60% do slide, rgba(0,0,0,0.85) → transparent), garante contraste WCAG AA com fonte branca
-7. Todo HTML: dimensão exata 1080×1350px, Montserrat @import, logo + @handle no canto inferior direito.
-8. Apresentar todos os slides renderizados para inspeção final.
+8. Todo HTML: dimensão exata 1080×1350px, Montserrat @import, logo + @handle no canto inferior direito.
+9. Apresentar todos os slides renderizados para inspeção final.
 
 ## Output Format
 
 ```
 === PRODUÇÃO VISUAL ===
 
-Imagens AI geradas:
-  slide-01-bg.png ✓
-  slide-03-bg.png ✓
-  [...]
+Backgrounds dos slides ímpares (origem):
+  slide-01-bg.* — reference (Bruno) ✓
+  slide-03-bg.* — reference (Bruno) ✓
+  slide-05-bg.* — ai-generated ✓
+  slide-07-bg.* — ai-generated ✓
 
 Slides renderizados:
   slide-01.png — 1080×1350px ✓
@@ -149,9 +153,11 @@ Rejeitar e redo se:
 
 ## Quality Criteria
 
-- [ ] Imagens AI geradas com mode production para todos os ímpares
+- [ ] Slides ímpares com `slide-0N-ref.*` disponível usam a imagem do Bruno como background (sem regerar via IA)
+- [ ] Slides ímpares sem referência do Bruno têm `slide-0N-bg.png` gerado via image-ai-generator
 - [ ] Slide 1 inspecionado antes do lote
 - [ ] Todos os slides 1080×1350px
 - [ ] Montserrat Bold 700 no cover, Medium 500 nos demais
 - [ ] Branding em todos os slides
 - [ ] HTML completamente self-contained
+- [ ] Resumo final lista origem do background de cada slide ímpar (`reference` ou `ai-generated`)

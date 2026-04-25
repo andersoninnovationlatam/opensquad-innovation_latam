@@ -62,12 +62,12 @@ Revisão única cobrindo copy e visual:
 ## Checklist de Entrega
 
 ### Copy
-- [ ] 6-10 slides com 40-80 palavras cada
+- [ ] 5-8 slides com 40-80 palavras cada (ajuste pela densidade da notícia)
 - [ ] Cover com headline de máximo 20 palavras e alto impacto
 - [ ] Caption com hook em 125 chars + corpo + pergunta/CTA + 5-15 hashtags
 
 ### Visual
-- [ ] Slides ímpares: imagem AI + overlay de contraste
+- [ ] Slides ímpares: imagem do Bruno (`slide-0N-ref.*`) ou, no fallback, AI + overlay de contraste
 - [ ] Slides pares: fundo #993CB1
 - [ ] Montserrat em todos os slides (Bold no cover, Medium nos demais)
 - [ ] Logo + @innovationlatam no canto inferior direito de todos os slides

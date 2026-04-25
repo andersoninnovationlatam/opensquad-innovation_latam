@@ -20,17 +20,20 @@ Load these files before executing:
 
 ### Process
 1. Ler os documentos de memória obrigatórios (`guia_diretor_arte.md` e `doc_posicao_logo_logo_conta.md`) antes de iniciar.
-2. **Ler `image-refs.json`**: verificar quais marcas, empresas e figuras foram pesquisadas pelo Bruno. Para cada entidade, tomar nota da `visual_description`, `brand_colors` e `parody_notes` — esses elementos guiarão os prompts dos slides ímpares.
-3. Documentar o design system completo: dimensão 1080×1350px, Montserrat, paleta, overlay, branding.
-4. Mapear os slides por tipo: ímpares (foto AI com paródia) vs. pares (fundo #993CB1).
-5. **Para cada slide ímpar**: criar prompt de imagem AI em inglês que:
-   - Identifique qual entidade do `image-refs.json` é mais relevante para o texto do slide
-   - Incorpore os elementos visuais reconhecíveis dessa entidade (cores, logo, símbolo) em uma **paródia editorial** — a imagem deve remeter à marca real de forma criativa e humorística
+2. **Listar imagens do Bruno**: `ls squads/carousel-noticias/output/images/slide-*-ref.*` para identificar quais slides ímpares (1, 3, 5, 7) já possuem imagem de referência.
+3. **Ler `image-refs.json`**: para cada entidade, tomar nota da `visual_description`, `brand_colors` e `parody_notes`. Esses dados são usados **apenas no fallback AI** (slides sem referência do Bruno).
+4. Documentar o design system completo: dimensão 1080×1350px, Montserrat, paleta, overlay, branding.
+5. Mapear os slides por tipo:
+   - **Ímpares com referência do Bruno** → estratégia `reference`: anotar entidade + arquivo `slide-0N-ref.*`. **Nenhum prompt AI necessário** — a imagem já está em disco.
+   - **Ímpares sem referência** → estratégia `ai-generated`: gerar prompt de paródia editorial conforme regras de Fotojornalismo Digital.
+   - **Pares** → fundo #993CB1, texto branco.
+6. **Para cada slide ímpar com `ai-generated`**: criar prompt de imagem AI em inglês que:
+   - Use entidade do `image-refs.json` em paródia editorial (logo/cores/símbolo) quando aplicável
    - Adicione especificações técnicas com câmera/luz/lente do vocabulário do guia
-   - Se não houver entidade relevante para o slide, usar abordagem temática baseada nos `themes` do `image-refs.json`
-6. Para cada slide par: especificar fundo #993CB1 e confirmar contraste com texto branco.
-7. Verificar asset do logo: o arquivo `innovation-latam-logo-white.png` precisa estar em `squads/carousel-noticias/assets/`.
-8. Entregar briefing formatado slide a slide.
+   - Se não houver entidade relevante, usar abordagem temática dos `themes`
+7. Para cada slide par: especificar fundo #993CB1 e confirmar contraste com texto branco.
+8. Verificar asset do logo: `innovation-latam-logo-white.png` em `squads/carousel-noticias/assets/`.
+9. Entregar briefing formatado slide a slide, com a estratégia (`reference` ou `ai-generated`) explícita em cada ímpar.
 
 ### Diretrizes de Paródia Editorial (quando image-refs.json contém dados)
 
@@ -62,10 +65,10 @@ Assets:
 === BRIEFING POR SLIDE ===
 
 Slide [N] ([tipo]):
-Tipo de Background: [Foto baseada no texto OU Fundo roxo #993CB1]
-Referência de paródia (se ímpar + image-refs disponível): [entidade usada + parody_notes]
-Prompt de imagem AI (se ímpar): "[descrição em inglês — inclui elementos visuais reconhecíveis da marca + contexto da notícia + estilo jornalístico]"
-Especificações Técnicas (se ímpar):
+Estratégia de Background (se ímpar): reference (Bruno: <entidade>, arquivo slide-0N-ref.<ext>) | ai-generated
+Tipo de Background: [Foto referência do Bruno OU Foto AI baseada no texto OU Fundo roxo #993CB1]
+Prompt de imagem AI (apenas se ai-generated): "[descrição em inglês — paródia editorial + contexto da notícia + estilo jornalístico]"
+Especificações Técnicas (apenas se ai-generated):
   Câmera: [termo do guia]
   Luz: [termo do guia]
   Lente: [focal + abertura]
@@ -115,14 +118,15 @@ Nota: texto branco sobre #993CB1 — contraste 5.3:1, acima do mínimo WCAG AA
 ## Veto Conditions
 
 Rejeitar e redo se:
-1. Qualquer slide ímpar sem prompt de imagem AI em inglês
-2. Qualquer especificação usa termos de câmera/luz/lente fora do `guia_diretor_arte.md`
+1. Slide ímpar marcado como `ai-generated` sem prompt de imagem AI em inglês
+2. Slide ímpar com `slide-0N-ref.*` existente marcado como `ai-generated` (deveria ser `reference`)
+3. Qualquer especificação usa termos de câmera/luz/lente fora do `guia_diretor_arte.md`
 
 ## Quality Criteria
 
-- [ ] `image-refs.json` carregado e consultado antes de criar prompts dos slides ímpares
-- [ ] Slides ímpares com entidade relevante em image-refs: prompt inclui elementos visuais da marca (cores, logo, símbolo) em contexto de paródia editorial
-- [ ] Slides ímpares sem entidade relevante: prompt usa abordagem temática dos `themes`
+- [ ] Listagem de imagens em `output/images/` consultada antes de definir estratégia de cada ímpar
+- [ ] Slides ímpares com `slide-0N-ref.*` marcados como `reference` (sem prompt AI)
+- [ ] Slides ímpares sem referência: prompt em inglês com paródia editorial usando `image-refs.json` ou abordagem temática
 - [ ] Design system documentado antes dos slides
 - [ ] Todos os termos técnicos do guia_diretor_arte (sem invenção)
 - [ ] Branding verificado slide a slide

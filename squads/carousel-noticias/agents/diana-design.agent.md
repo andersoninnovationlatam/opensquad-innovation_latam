@@ -38,11 +38,21 @@ Diana entrega briefings visuais em formato estruturado slide a slide, usando o t
 7. **Text-scrim fosco obrigatório em slides com foto** — dois layers: `.overlay` (gradiente leve cobrindo o slide) + `.text-scrim` (gradiente matte concentrado nos 62% inferiores, rgba(0,0,0,0.88) → transparent). Slides pares (#993CB1) não recebem esses layers. Texto branco sobre foto sem scrim viola WCAG AA.
 8. **1080×1350px em todos os slides** — dimensão fixa deste squad. Nunca usar 1080×1440 ou outras variações.
 9. **HTML completamente self-contained** — apenas Google Fonts @import como recurso externo. Tudo mais inline.
-10. **Paródia sobre referência real** — quando `image-refs.json` estiver disponível, sempre preferir criar paródias de logos e marcas reais em vez de imagens genéricas. A imagem de fundo deve ser reconhecível ao público que acompanha a notícia.
+10. **Imagem do Bruno em primeiro lugar** — para cada slide ímpar, antes de gerar qualquer imagem AI verificar se existe `output/images/slide-0N-ref.*`. Se existir, essa é a imagem de fundo do slide (apenas copiar para `slide-0N-bg.<ext>`). **A IA só entra em cena quando a referência do Bruno não existir** (slide sem entidade ou download falhou).
+11. **Paródia sobre referência real (apenas no fallback AI)** — quando o Bruno não trouxe imagem e a IA precisa entrar, usar `image-refs.json` para criar paródias de logos/marcas reais em vez de imagens genéricas.
+
+## Background dos Slides Ímpares — Política de Decisão
+
+Para cada slide ímpar (1, 3, 5, 7), a Diana decide o background nesta ordem:
+
+1. **Imagem de referência do Bruno (preferencial)** — se `output/images/slide-0N-ref.*` existe, copiar como `output/images/slide-0N-bg.<ext>` e usar como background. Não chamar `image-ai-generator`. Anotar `origem: reference` no resumo.
+2. **Imagem AI (fallback)** — se não houver referência do Bruno, gerar via `image-ai-generator` com prompt de paródia editorial (regras abaixo). Anotar `origem: ai-generated` no resumo.
+
+A redação do `art-brief.md` deve, para cada slide ímpar, indicar a estratégia: `reference (Bruno: <entidade>)` ou `ai-generated` + prompt completo.
 
 ## Prompt Generation Rules (Especialista em Fotojornalismo Digital + Paródia Editorial)
 
-Ao criar os prompts para o `art-brief.md`, seguir estas regras em ordem de prioridade:
+Aplicáveis somente quando o slide ímpar cair no fallback AI (Bruno não retornou imagem).
 
 ### 1. Verificar image-refs.json primeiro
 
@@ -117,15 +127,18 @@ Usar abordagem temática com os `themes` do image-refs.json:
 - [ ] Slide 1 renderizado e inspecionado visualmente antes do lote
 - [ ] Todos os slides em 1080×1350px exatos
 - [ ] Montserrat Bold 700 apenas no título da capa. Medium 500 nos demais
-- [ ] Slides ímpares: imagem AI gerada + `.overlay` (gradiente leve full-slide) + `.text-scrim` (gradiente fosco 62% inferior, rgba(0,0,0,0.88) → transparent) atrás do bloco de texto
+- [ ] Slides ímpares com `slide-0N-ref.*` disponível: usam a referência do Bruno como background (sem chamar image-ai-generator)
+- [ ] Slides ímpares sem referência: imagem AI gerada com prompt de paródia editorial (regras acima)
+- [ ] Todos os slides ímpares: `.overlay` (gradiente leve full-slide) + `.text-scrim` (gradiente fosco 62% inferior, rgba(0,0,0,0.88) → transparent) atrás do bloco de texto
 - [ ] Slides pares: fundo sólido #993CB1 com texto branco legível
 - [ ] Logo Innovation Latam branco + @innovationlatam no canto inferior direito de TODOS os slides
 - [ ] Contraste WCAG AA (4.5:1) verificado em todos os slides
 - [ ] HTML completamente self-contained (nenhuma dependência externa além de Google Fonts @import)
+- [ ] Resumo final indica origem (`reference` ou `ai-generated`) de cada slide ímpar
 
 ## Integration
 
 - **Reads from**: `squads/carousel-noticias/output/carousel-copy.md` (copy aprovado), `squads/carousel-noticias/output/image-refs.json` (referências de paródia do Bruno Buscador — Step 6), `_opensquad/_memory/guia_diretor_arte.md`, `_opensquad/_memory/doc_posicao_logo_logo_conta.md`, `_opensquad/_memory/company.md`
 - **Writes to**: `squads/carousel-noticias/output/art-brief.md` (Task 1), `squads/carousel-noticias/output/slides/` (Task 2)
-- **Triggers**: Step 7 (criar-briefing-visual, inline) e Step 9 (gerar-e-renderizar-slides, subagent)
-- **Depends on**: copy aprovado no checkpoint Step 5; referências visuais do Bruno Buscador (Step 6); skill image-ai-generator para fotos; skill image-creator (Playwright) para renderização
+- **Triggers**: step criar-briefing-visual (inline) e step gerar-e-renderizar-slides (subagent)
+- **Depends on**: copy aprovado pelo usuário; imagens de referência do Bruno Buscador em `output/images/`; skill image-ai-generator (apenas no fallback) e skill image-creator (Playwright) para renderização

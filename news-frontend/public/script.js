@@ -90,6 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
         curiosidade: '🤔 Curiosidade',
         polemica:    '🔥 Polêmica',
         empatia:     '❤️ Empatia',
+        // Aceitar também o valor uppercase normalizado pelo backend
+        EDUCACIONAL: '🎓 Educacional',
+        MEDO:        '⚠️ Medo',
+        ENTUSIASMO:  '🚀 Entusiasmo',
+        CURIOSIDADE: '🤔 Curiosidade',
+        POLEMICA:    '🔥 Polêmica',
+        EMPATIA:     '❤️ Empatia',
     };
 
     // ── View transitions ─────────────────────────────
@@ -116,20 +123,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Progress helpers ─────────────────────────────
 
-    // Mapeia step do pipeline (1–11) para step visual da UI (1–7)
-    // Pipeline:  1-2=input+ângulos | 3=angle | 4-5=copy | 6=Bruno | 7-8=design | 9=render | 10-11=revisão
-    // UI:        1=Pesquisa        | 2=Ângulos| 3=Copy  | 4=Refs  | 5=Design   | 6=Render | 7=Revisão
+    // Mapeia step do pipeline (1–9) para step visual da UI (1–6)
+    // Pipeline: 1=news-input | 2=copy (Caio) | 3=approve-content | 4=Bruno | 5=art-brief | 6=approve-art-brief | 7=render | 8=revisão | 9=final-approval
+    // UI:       1=Análise    | 2=Copy        | 2                 | 3=Refs  | 4=Design    | 4                  | 5=Render | 6=Revisão | 6
     function pipelineToUiStep(pipelineStep) {
-        if (pipelineStep <= 2) return 1;
-        if (pipelineStep === 3) return 2;
-        if (pipelineStep <= 5) return 3;
-        if (pipelineStep === 6) return 4;
-        if (pipelineStep <= 8) return 5;
-        if (pipelineStep === 9) return 6;
-        return 7;
+        if (pipelineStep <= 1) return 1;        // checkpoint-news-input
+        if (pipelineStep <= 3) return 2;        // criar-copy + approve-content
+        if (pipelineStep === 4) return 3;       // pesquisa-imagens (Bruno)
+        if (pipelineStep <= 6) return 4;        // briefing-visual + approve-art-brief
+        if (pipelineStep === 7) return 5;       // render
+        return 6;                                // revisão + final-approval
     }
 
-    const UI_TOTAL = 7;
+    const UI_TOTAL = 6;
 
     function resetProgress() {
         document.querySelectorAll('.step-item').forEach(el => {

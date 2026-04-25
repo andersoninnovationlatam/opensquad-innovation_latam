@@ -1,12 +1,19 @@
 /**
- * Extrai temas, marcas, empresas e figuras públicas do copy do carrossel.
- * Usa OPENROUTER_MODELS_SEARCH (ex: openai/gpt-4o-search-preview) para análise.
+ * Extrai entidades visuais do bloco `=== ENTIDADES ===` do carousel-copy.md.
+ *
+ * Formato esperado em carousel-copy.md (gerado pelo Caio):
+ *
+ *   === ENTIDADES ===
+ *   - Nubank (tipo: empresa) — slide alvo: 1
+ *   - Banco Central (tipo: empresa) — slide alvo: 3
+ *   - Roberto Campos Neto (tipo: pessoa) — slide alvo: 5
+ *   - Brasil (tipo: pais) — slide alvo: 7
+ *
+ * Tipos aceitos: empresa, marca, pessoa, pais (mapeados para company/brand/person/location).
+ * Caso o bloco contenha apenas `- (nenhuma)`, gera topics.json com entities: [].
  *
  * Uso (na raiz do repo):
  *   node squads/carousel-noticias/scripts/extract-topics.mjs <output-dir>
- *
- * Exemplo:
- *   node squads/carousel-noticias/scripts/extract-topics.mjs squads/carousel-noticias/output
  */
 
 import fs from "node:fs";
@@ -16,31 +23,14 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
 
-function loadEnv() {
-  const envPath = path.join(REPO_ROOT, ".env");
-  if (!fs.existsSync(envPath)) return {};
-  return fs
-    .readFileSync(envPath, "utf-8")
-    .split("\n")
-    .filter((l) => l.includes("=") && !l.startsWith("#") && l.trim())
-    .reduce((acc, l) => {
-      const [k, ...v] = l.split("=");
-      acc[k.trim()] = v.join("=").trim().replace(/^['"]|['"]$/g, "");
-      return acc;
-    }, {});
-}
+const TYPE_MAP = {
+  empresa: "company",
+  marca: "brand",
+  pessoa: "person",
+  pais: "location",
+};
 
-const env = loadEnv();
-const API_KEY = process.env.OPENROUTER_API_KEY || env["OPENROUTER_API_KEY"];
-const MODEL =
-  process.env.OPENROUTER_MODELS_SEARCH ||
-  env["OPENROUTER_MODELS_SEARCH"] ||
-  "openai/gpt-4o-search-preview";
-
-if (!API_KEY) {
-  console.error("❌ OPENROUTER_API_KEY não encontrada no .env ou no ambiente.");
-  process.exit(1);
-}
+const VALID_SLIDES = new Set([1, 3, 5, 7]);
 
 const outputDirArg = process.argv[2];
 if (!outputDirArg) {
@@ -60,91 +50,140 @@ if (!fs.existsSync(copyPath)) {
 }
 
 const carouselCopy = fs.readFileSync(copyPath, "utf-8");
-console.log(`\n🔍 Extraindo entidades visuais do copy...`);
-console.log(`📋 Modelo: ${MODEL}`);
-console.log(`📄 Fonte: ${copyPath}\n`);
 
-const userPrompt = `Analise este copy de carrossel para Instagram e extraia todas as entidades que possuem identidade visual reconhecível (marcas, empresas, instituições, figuras públicas, produtos com logo).
+console.log(`\n🔍 Lendo bloco "=== ENTIDADES ===" de ${copyPath}\n`);
 
-COPY DO CARROSSEL:
----
-${carouselCopy}
----
-
-Retorne APENAS um objeto JSON válido, sem markdown, sem explicações, com exatamente esta estrutura:
-{
-  "themes": ["tema1", "tema2"],
-  "companies": ["Empresa1", "Empresa2"],
-  "brands": ["Marca1", "Marca2"],
-  "public_figures": ["Nome Completo1", "Nome Completo2"],
-  "search_queries": [
-    "Empresa1 logo oficial identidade visual",
-    "Marca1 brand identity colors",
-    "Nome Completo1 foto profissional cargo"
-  ]
+function extractEntidadesBlock(text) {
+  const match = text.match(/===\s*ENTIDADES\s*===\s*([\s\S]*?)(?=\n===|$)/i);
+  return match ? match[1].trim() : null;
 }
 
-Regras de extração:
-- themes: temas principais da notícia com representação iconográfica (ex: "taxa de juros", "inteligência artificial", "energia solar")
-- companies: empresas, bancos, startups, órgãos governamentais mencionados explicitamente (ex: "Banco Central", "Nubank", "Apple")
-- brands: produtos, serviços ou submarcas com logo próprio (ex: "Pix", "ChatGPT", "iPhone")
-- public_figures: pessoas mencionadas pelo nome com cargo público ou notoriedade
-- search_queries: uma query em português OU inglês por entidade visual (priorizar empresas e marcas), otimizada para encontrar logo ou imagem oficial
-- Se uma lista estiver vazia, retornar []
-- Não duplicar entidades entre companies e brands`;
+function normalizeAccents(str) {
+  return str
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .trim();
+}
 
-const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-  method: "POST",
-  headers: {
-    Authorization: `Bearer ${API_KEY}`,
-    "Content-Type": "application/json",
-    "HTTP-Referer": "https://innovationlatam.com",
-    "X-Title": "Innovation Latam Topic Extractor",
-  },
-  body: JSON.stringify({
-    model: MODEL,
-    messages: [{ role: "user", content: userPrompt }],
-    temperature: 0.1,
-  }),
+function parseLine(line) {
+  // Remove leading bullet/dash
+  const cleaned = line.replace(/^\s*[-*•]\s*/, "").trim();
+  if (!cleaned) return null;
+
+  // Detecta marcador "(nenhuma)"
+  if (/^\(?\s*nenhuma\s*\)?$/i.test(cleaned)) return { none: true };
+
+  // Padrão: Nome (tipo: TIPO) — slide alvo: N
+  // Aceita travessão "—" ou "-" como separador
+  const re = /^(.+?)\s*\(\s*tipo\s*:\s*([a-zA-Záéíóúâêôãõç]+)\s*\)\s*[—\-–]\s*slide\s*alvo\s*:\s*(\d+)\s*$/i;
+  const m = cleaned.match(re);
+  if (!m) return { invalid: cleaned };
+
+  const rawName = m[1].trim();
+  const rawType = normalizeAccents(m[2]);
+  const slideNumber = parseInt(m[3], 10);
+
+  const mappedType = TYPE_MAP[rawType];
+  if (!mappedType) return { invalid: cleaned, reason: `tipo "${rawType}" inválido (use empresa|marca|pessoa|pais)` };
+  if (!VALID_SLIDES.has(slideNumber)) {
+    return { invalid: cleaned, reason: `slide ${slideNumber} inválido (use 1, 3, 5 ou 7)` };
+  }
+
+  return {
+    entity: { name: rawName, type: mappedType, slide: slideNumber },
+  };
+}
+
+const block = extractEntidadesBlock(carouselCopy);
+if (block === null) {
+  console.error("❌ Bloco '=== ENTIDADES ===' não encontrado em carousel-copy.md.");
+  console.error("O Caio precisa preencher este bloco antes do Bruno executar a busca.");
+  process.exit(1);
+}
+
+const lines = block
+  .split("\n")
+  .map((l) => l.trim())
+  .filter((l) => l.length > 0);
+
+const entities = [];
+const invalids = [];
+let isNone = false;
+
+for (const line of lines) {
+  const parsed = parseLine(line);
+  if (!parsed) continue;
+  if (parsed.none) {
+    isNone = true;
+    break;
+  }
+  if (parsed.invalid) {
+    invalids.push({ line: parsed.invalid, reason: parsed.reason || "formato não reconhecido" });
+    continue;
+  }
+  entities.push(parsed.entity);
+}
+
+if (invalids.length > 0) {
+  console.warn(`⚠️  ${invalids.length} linha(s) ignorada(s) por formato inválido:`);
+  invalids.forEach((it) => console.warn(`   - "${it.line}" (${it.reason})`));
+}
+
+// Garantir unicidade por slide (manter a primeira ocorrência)
+const seenSlides = new Set();
+const uniqueEntities = [];
+for (const ent of entities) {
+  if (seenSlides.has(ent.slide)) {
+    console.warn(`⚠️  Slide ${ent.slide} duplicado — mantendo apenas a primeira entidade.`);
+    continue;
+  }
+  seenSlides.add(ent.slide);
+  uniqueEntities.push(ent);
+}
+
+uniqueEntities.sort((a, b) => a.slide - b.slide);
+
+// Compor estrutura legada (mantém compatibilidade com search-reference-images.mjs)
+const companies = uniqueEntities.filter((e) => e.type === "company").map((e) => e.name);
+const brands = uniqueEntities.filter((e) => e.type === "brand").map((e) => e.name);
+const public_figures = uniqueEntities.filter((e) => e.type === "person").map((e) => e.name);
+const locations = uniqueEntities.filter((e) => e.type === "location").map((e) => e.name);
+
+const search_queries = uniqueEntities.map((e) => {
+  if (e.type === "person") return `${e.name} foto profissional`;
+  if (e.type === "location") return `${e.name} bandeira simbolo nacional`;
+  if (e.type === "brand") return `${e.name} brand identity logo`;
+  return `${e.name} logo oficial`;
 });
 
-if (!response.ok) {
-  const err = await response.text();
-  console.error(`❌ Erro na API [${response.status}]:`, err.slice(0, 400));
-  process.exit(1);
-}
-
-const data = await response.json();
-const rawContent = data?.choices?.[0]?.message?.content || "";
-
-let topics;
-try {
-  const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("JSON não encontrado na resposta");
-  topics = JSON.parse(jsonMatch[0]);
-} catch (e) {
-  console.error("❌ Erro ao parsear JSON da resposta:", e.message);
-  console.error("Resposta bruta recebida:", rawContent.slice(0, 600));
-  process.exit(1);
-}
-
-// Garantir todas as chaves esperadas
-const normalized = {
-  themes: topics.themes || [],
-  companies: topics.companies || [],
-  brands: topics.brands || [],
-  public_figures: topics.public_figures || [],
-  search_queries: topics.search_queries || [],
+const topics = {
+  source: "carousel-copy.md::ENTIDADES",
+  generated_at: new Date().toISOString(),
+  entities: uniqueEntities,
+  companies,
+  brands,
+  public_figures,
+  locations,
+  search_queries,
+  themes: [],
 };
 
 fs.mkdirSync(outputDir, { recursive: true });
 const outputPath = path.join(outputDir, "topics.json");
-fs.writeFileSync(outputPath, JSON.stringify(normalized, null, 2));
+fs.writeFileSync(outputPath, JSON.stringify(topics, null, 2));
 
-console.log(`✅ topics.json salvo: ${outputPath}`);
-console.log(`\n   📌 Temas: ${normalized.themes.length} — ${normalized.themes.join(", ") || "nenhum"}`);
-console.log(`   🏢 Empresas: ${normalized.companies.length} — ${normalized.companies.join(", ") || "nenhuma"}`);
-console.log(`   🏷️  Marcas: ${normalized.brands.length} — ${normalized.brands.join(", ") || "nenhuma"}`);
-console.log(`   👤 Figuras públicas: ${normalized.public_figures.length} — ${normalized.public_figures.join(", ") || "nenhuma"}`);
-console.log(`   🔎 Queries de busca: ${normalized.search_queries.length}`);
-normalized.search_queries.forEach((q) => console.log(`      → ${q}`));
+console.log(`✅ topics.json salvo: ${outputPath}\n`);
+
+if (isNone || uniqueEntities.length === 0) {
+  console.log("ℹ️  Nenhuma entidade declarada pelo Caio.");
+  console.log("   O Bruno encerrará sem downloads e a Diana gerará todos os backgrounds via IA.");
+  process.exit(0);
+}
+
+console.log(`   Entidades mapeadas (${uniqueEntities.length}):`);
+uniqueEntities.forEach((e) => {
+  console.log(`     slide-${String(e.slide).padStart(2, "0")} → ${e.name} (${e.type})`);
+});
+console.log(`\n   Queries geradas:`);
+search_queries.forEach((q) => console.log(`     → ${q}`));

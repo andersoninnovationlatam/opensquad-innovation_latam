@@ -2,18 +2,16 @@
 execution: inline
 agent: caio-carrossel
 format: instagram-carousel
-inputFile: squads/carousel-noticias/output/selected-angle.md
+inputFile: squads/carousel-noticias/output/news-input.md
 outputFile: squads/carousel-noticias/output/carousel-copy.md
 ---
 
-# Step 04: Criar Copy do Carrossel
+# Step: Criar Copy do Carrossel
 
 ## Context Loading
 
 Load these files before executing:
-- `squads/carousel-noticias/output/selected-angle.md` — ângulo selecionado pelo usuário
-- `squads/carousel-noticias/output/news-input.md` — notícia original para garantir alinhamento factual
-- `squads/carousel-noticias/output/angles.md` — contexto dos 5 ângulos gerados
+- `squads/carousel-noticias/output/news-input.md` — notícia e ângulo (frontmatter `angulo:`) fornecidos pelo usuário no checkpoint
 - `pipeline/data/tone-of-voice.md` — 6 tons disponíveis para seleção
 - `pipeline/data/output-examples.md` — exemplos completos de referência
 - `_opensquad/_memory/company.md` — tom de voz e identidade da Innovation Latam
@@ -21,43 +19,55 @@ Load these files before executing:
 ## Instructions
 
 ### Process
-1. Apresentar o tom recomendado para o ângulo selecionado e aguardar confirmação ou escolha alternativa.
-2. Selecionar o formato de carrossel mais adequado (Editorial/Tese, Listicle, Tutorial, Storytelling, Problema-Solução).
-3. Planejar a estrutura de slides (6-10 slides): definir o papel de cada slide antes de escrever.
-4. Escrever slide a slide com headline bold (claim principal) + texto de suporte (40-80 palavras combinados). Cada slide avança a narrativa.
-5. Redigir caption: hook em 125 chars + corpo + fechamento com pergunta ou CTA.
-6. Selecionar 5-15 hashtags relevantes (mix nicho + mid-range + amplas).
-7. Verificar checklist de qualidade. Corrigir qualquer falha antes de entregar.
+1. **Ler o ângulo do frontmatter** de `news-input.md` (campo `angulo:`). Valores válidos: `EDUCACIONAL`, `MEDO`, `ENTUSIASMO`, `CURIOSIDADE`, `POLEMICA`, `EMPATIA`. Se não houver frontmatter ou o valor for inválido, perguntar ao usuário antes de continuar e gravar o ângulo escolhido no frontmatter de `news-input.md`.
+2. Apresentar o tom recomendado para o ângulo lido e aguardar confirmação ou escolha alternativa.
+3. Selecionar o formato de carrossel mais adequado (Editorial/Tese, Listicle, Tutorial, Storytelling, Problema-Solução).
+4. Planejar a estrutura: **mínimo 5, máximo 8 slides**. A quantidade exata é definida pela densidade da notícia — notícia com poucos dados/contexto → 5 slides; notícia rica → até 8 slides. Definir o papel de cada slide antes de escrever.
+5. **Extrair entidades visuais** da notícia: pessoas, empresas, marcas e países mencionados. Essa lista será usada pelo Bruno Buscador para baixar imagens dos slides 1, 3, 5 e 7 (no máximo 4 entidades).
+6. Escrever slide a slide com headline bold + texto de suporte (40-80 palavras combinados). Cada slide avança a narrativa.
+7. Redigir caption: hook em 125 chars + corpo + fechamento com pergunta ou CTA.
+8. Selecionar 5-15 hashtags relevantes (mix nicho + mid-range + amplas).
+9. Verificar checklist de qualidade antes de entregar.
 
 ## Output Format
 
 ```
+=== ANGULO ===
+[ângulo lido do frontmatter de news-input.md]
+
 === FORMATO ===
 [Nome do formato escolhido]
 
 === TOM ===
 [Tom selecionado]
 
+=== ENTIDADES ===
+- [Nome da entidade 1] (tipo: empresa | marca | pessoa | pais) — slide alvo: 1
+- [Nome da entidade 2] (tipo: ...) — slide alvo: 3
+- [Nome da entidade 3] (tipo: ...) — slide alvo: 5
+- [Nome da entidade 4] (tipo: ...) — slide alvo: 7
+
 === SLIDES ===
 
 Slide 1 (Cover):
   Headline: [...]
   Supporting text: [...]
+  Entidade visual: [nome da entidade ou "nenhuma"]
   Background: [foto conceitual / fundo sólido]
 
 Slide 2 ([papel]):
   Headline: [...]
   Supporting text: [...]
   Accent keywords: [...]
-  Background: [foto conceitual / fundo sólido]
+  Background: [fundo sólido]
 
-[...demais slides...]
+[...demais slides — total entre 5 e 8...]
 
 Slide N (CTA):
   Headline: [...]
-  Supporting text: Fonte: [...]
-  CTA: [instrução específica]
-  Background: [foto conceitual / fundo sólido]
+  Supporting text: [opcional]
+  CTA: [instrução específica seguindo @innovationlatam]
+  Background: [fundo sólido]
 
 === CAPTION ===
 [Hook 125 chars]
@@ -70,76 +80,29 @@ Slide N (CTA):
 #hashtag1 #hashtag2 [5-15 total]
 ```
 
-## Output Example
+### Regras do bloco `=== ENTIDADES ===`
 
-```
-=== FORMATO ===
-Editorial / Tese
-
-=== TOM ===
-Urgente
-
-=== SLIDES ===
-
-Slide 1 (Cover):
-  Headline: "O Brasil tem o 2º maior Open Banking do mundo. O que sua empresa vai fazer com isso?"
-  Supporting text: 40 milhões de usuários ativos — Banco Central 2024
-  Background: foto conceitual — vista aérea de centro financeiro urbano, São Paulo
-
-Slide 2 (Contexto):
-  Headline: "Open Banking: o sistema que quebrou o monopólio dos dados financeiros"
-  Supporting text: "Antes, seus dados bancários pertenciam ao banco. Com Open Banking, eles são seus. Você autoriza qualquer empresa a acessá-los — e isso abre espaço para serviços financeiros radicalmente mais inteligentes."
-  Accent keywords: seus dados, qualquer empresa
-  Background: fundo sólido
-
-Slide 3 (Escala):
-  Headline: "40 milhões de usuários em 3 anos. Só o Reino Unido tem mais."
-  Supporting text: "O Brasil saiu do zero para o segundo maior ecossistema de open finance do planeta. Mais de 40 milhões de usuários ativos segundo o Banco Central. Um feito que economias mais antigas ainda não alcançaram."
-  Accent keywords: segundo maior, 40 milhões
-  Background: foto conceitual
-
-Slide 4 (Impacto empresarial):
-  Headline: "Para empresas: acesso a dados que antes eram inacessíveis"
-  Supporting text: "Com autorização do cliente, fintechs, varejistas e seguradoras podem acessar histórico financeiro real. Isso transforma precificação, personalização e aprovação de crédito para quem aprender a usar primeiro."
-  Accent keywords: dados que antes eram inacessíveis, quem aprender a usar primeiro
-  Background: fundo sólido
-
-Slide 5 (Consequência prática):
-  Headline: "Crédito mais barato para quem compartilha dados. Mais caro para quem não compartilha."
-  Supporting text: "A diferença de risco percebido entre um cliente com histórico verificado e um cliente opaco vai crescer. As empresas que aprenderem a trabalhar com esses dados vão ter vantagem competitiva crescente."
-  Accent keywords: vantagem competitiva crescente
-  Background: foto conceitual
-
-Slide 6 (CTA):
-  Headline: "O que você vai fazer com essa informação?"
-  Supporting text: Fonte: Banco Central do Brasil — Relatório Open Finance 2024
-  CTA: "Comenta FINTECH abaixo se você quer entender como o open finance pode mudar sua empresa. Manda para alguém do seu time de inovação."
-  Background: fundo sólido
-
-=== CAPTION ===
-O Brasil tem o 2º maior Open Banking do mundo. 40 milhões de usuários. E a maioria das empresas ainda não entendeu o que isso muda.
-
-Não é só coisa de banco. É sobre quem vai ter vantagem competitiva nos próximos 5 anos.
-
-Explico em 6 slides o tamanho do que está acontecendo e o que muda para o seu negócio.
-
-Comenta FINTECH abaixo se quiser um mapeamento das soluções de open finance disponíveis para empresas como a sua.
-
-=== HASHTAGS ===
-#openbanking #openfinance #fintechbrasil #inovacaofinanceira #bancocentral #IA4FIN #innovationlatam #fintech #inovacao #transformacaodigital
-```
+- Captura nomes próprios da notícia: pessoas, empresas, marcas, países.
+- Máximo 4 entidades — uma por slide ímpar (1, 3, 5, 7). Se a notícia tiver menos de 4 entidades reconhecíveis, listar apenas as existentes (mapeando para os slides ímpares na ordem 1 → 3 → 5 → 7).
+- Se a notícia não citar nenhuma entidade reconhecível, deixar a seção com a linha `- (nenhuma)`.
+- Não inventar entidades. Apenas o que está no texto da notícia.
+- O campo `slide alvo` deve coincidir com o slide do carrossel onde a entidade aparece pela primeira vez.
 
 ## Veto Conditions
 
 Rejeitar e redo se:
 1. Qualquer slide com menos de 30 palavras (sem pedido explícito do usuário)
 2. Qualquer dado ou afirmação não rastreável à notícia original em `news-input.md`
+3. Bloco `=== ENTIDADES ===` ausente ou contendo entidade não citada na notícia
+4. Total de slides fora da faixa 5-8
 
 ## Quality Criteria
 
+- [ ] Ângulo lido do frontmatter de `news-input.md` (sem regerar 5 ângulos)
 - [ ] Tom apresentado e confirmado antes de escrever
-- [ ] 6-10 slides com 40-80 palavras cada
+- [ ] 5-8 slides com 40-80 palavras cada
 - [ ] Cover: máximo 20 palavras, scroll-stop test aprovado internamente
+- [ ] Bloco `=== ENTIDADES ===` preenchido com até 4 entidades reais da notícia
 - [ ] Caption: 125 chars funcionam como hook standalone
-- [ ] Último slide tem CTA + fonte da notícia
+- [ ] Último slide tem CTA pedindo curtir/compartilhar/salvar/seguir @innovationlatam (sem fonte)
 - [ ] 5-15 hashtags mix nicho/mid/amplas

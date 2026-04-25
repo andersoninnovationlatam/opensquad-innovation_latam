@@ -21,7 +21,7 @@
 - Veto: Qualquer slide com menos de 30 palavras (salvo pedido explícito do usuário)
 
 **Checklist:**
-- [ ] 6-10 slides totais
+- [ ] 5-8 slides totais (ajuste pela densidade da notícia)
 - [ ] Cada slide entre 40-80 palavras (headline + suporte)
 - [ ] Nenhum slide repete a mesma ideia do anterior
 - [ ] Sequência narrativa coerente de cover até CTA

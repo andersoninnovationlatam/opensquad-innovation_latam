@@ -74,6 +74,11 @@ function requireAuth(req, res, next) {
     next();
 }
 
+// ── Concurrency limit ─────────────────────────────────────────────────────────
+
+const MAX_CONCURRENT_RUNS = parseInt(process.env.MAX_CONCURRENT_RUNS || '2', 10);
+let activeRuns = 0;
+
 // ── Rate limit (in-memory, resets on restart — fine for single instance) ──
 
 const rateLimitMap = new Map();
@@ -143,25 +148,34 @@ app.post('/api/generate', requireAuth, rateLimit(60_000, 5), async (req, res) =>
     if (!VALID_ANGLES.has(angle)) return res.status(400).json({ error: 'Invalid angle' });
     if (typeof news !== 'string' || news.length > 10_000) return res.status(400).json({ error: 'Invalid news content' });
 
+    if (activeRuns >= MAX_CONCURRENT_RUNS) {
+        return res.status(429).json({ error: 'Servidor ocupado. Tente novamente em alguns instantes.' });
+    }
+
     try {
-        const runId = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+        const runId = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 23)
+            + '-' + crypto.randomBytes(3).toString('hex');
         const squadName = 'carousel-noticias';
         const runDir = path.join(ROOT_DIR, 'squads', squadName, 'output', runId);
 
         await fs.mkdir(runDir, { recursive: true });
-        await fs.writeFile(path.join(runDir, 'news-input.md'), `# News Input\n\n${news}`);
-        await fs.writeFile(path.join(runDir, 'selected-angle.md'), `# Angle Selection\n\n**Selected Angle:** ${angle}`);
+
+        const angleUpper = angle.toUpperCase();
+        const newsInputContent = `---\nangulo: ${angleUpper}\n---\n\n# Notícia\n\n${news}\n`;
+        await fs.writeFile(path.join(runDir, 'news-input.md'), newsInputContent);
 
         const logPath = path.join(runDir, 'runner.log');
         const logFd = openSync(logPath, 'w');
 
-        console.log(`[generate] user=${req.user} runId=${runId}`);
+        console.log(`[generate] user=${req.user} runId=${runId} angulo=${angleUpper} activeRuns=${activeRuns + 1}/${MAX_CONCURRENT_RUNS}`);
+
+        activeRuns++;
 
         const runnerProcess = spawn('node', [
             path.join(ROOT_DIR, 'src/headless-runner.js'),
             '--squad', squadName,
             '--runId', runId,
-            '--startStep', '4'
+            '--startStep', '2'
         ], {
             cwd: ROOT_DIR,
             detached: true,
@@ -171,6 +185,12 @@ app.post('/api/generate', requireAuth, rateLimit(60_000, 5), async (req, res) =>
 
         runnerProcess.on('error', (err) => {
             console.error(`[generate] Failed to spawn runner for runId=${runId}:`, err);
+            activeRuns--;
+        });
+
+        runnerProcess.on('exit', () => {
+            activeRuns = Math.max(0, activeRuns - 1);
+            console.log(`[generate] runner exited runId=${runId} activeRuns=${activeRuns}/${MAX_CONCURRENT_RUNS}`);
         });
 
         runnerProcess.unref();
