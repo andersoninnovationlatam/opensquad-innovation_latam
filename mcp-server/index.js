@@ -72,8 +72,101 @@ if (transport === 'stdio') {
 
     app.get('/health', (req, res) => res.json({ status: 'ok', sessions: sessions.size }));
 
+    // ── REST adapter (Insomnia / curl friendly) ───────────────────────────────
+    const { apiClient, ApiError } = await import('./lib/api-client.js');
+
+    function restAuth(req, res, next) {
+        const token = process.env.REST_TOKEN || process.env.API_TOKEN;
+        if (!token) return next();
+        const auth = req.headers['authorization'] || '';
+        if (auth === `Bearer ${token}`) return next();
+        res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    function restErr(res, err) {
+        const status = err instanceof ApiError ? (err.status || 502) : 500;
+        res.status(status).json({ error: err.message });
+    }
+
+    app.use('/api', restAuth);
+
+    app.get('/api/squads', async (_req, res) => {
+        try { res.json(await apiClient.listSquads()); }
+        catch (err) { restErr(res, err); }
+    });
+
+    app.get('/api/runs', async (req, res) => {
+        try {
+            const { squad, limit } = req.query;
+            res.json(await apiClient.listRuns({ squad, limit: limit ? Number(limit) : undefined }));
+        } catch (err) { restErr(res, err); }
+    });
+
+    app.post('/api/runs', async (req, res) => {
+        try {
+            const { news, angle, squad } = req.body || {};
+            if (!news || !angle) return res.status(400).json({ error: '`news` and `angle` are required' });
+            res.json(await apiClient.generate({ news, angle, squad }));
+        } catch (err) { restErr(res, err); }
+    });
+
+    app.get('/api/runs/:squad/:runId/status', async (req, res) => {
+        try {
+            const { squad, runId } = req.params;
+            res.json(await apiClient.getStatus({ squad, runId }));
+        } catch (err) { restErr(res, err); }
+    });
+
+    app.get('/api/runs/:squad/:runId/output', async (req, res) => {
+        try {
+            const { squad, runId } = req.params;
+            res.json(await apiClient.getOutput({ squad, runId }));
+        } catch (err) { restErr(res, err); }
+    });
+
+    const TERMINAL_STATUSES_REST = new Set(['completed', 'done', 'failed', 'error']);
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    app.post('/api/runs/:squad/:runId/wait', async (req, res) => {
+        try {
+            const { squad, runId } = req.params;
+            const timeoutSeconds = Number(req.body?.timeoutSeconds ?? 600);
+            const pollIntervalSeconds = Number(req.body?.pollIntervalSeconds ?? 5);
+            const deadline = Date.now() + timeoutSeconds * 1000;
+            const startedAt = Date.now();
+            const transitions = [];
+            let lastStep = null, lastStatus = null, lastState = null;
+
+            while (Date.now() < deadline) {
+                let state;
+                try { state = await apiClient.getStatus({ squad, runId }); }
+                catch (err) {
+                    if (err instanceof ApiError && err.status === 404) {
+                        await sleep(pollIntervalSeconds * 1000); continue;
+                    }
+                    throw err;
+                }
+                lastState = state;
+                const status = state?.status || 'unknown';
+                const stepLabel = state?.step?.label || state?.step?.current || null;
+                if (status !== lastStatus || stepLabel !== lastStep) {
+                    transitions.push({ at: new Date().toISOString(), elapsedSeconds: Math.round((Date.now() - startedAt) / 1000), status, step: state?.step || null });
+                    lastStatus = status; lastStep = stepLabel;
+                }
+                if (TERMINAL_STATUSES_REST.has(status)) {
+                    return res.json({ outcome: status, runId, squad, durationSeconds: Math.round((Date.now() - startedAt) / 1000), transitions, finalState: state });
+                }
+                await sleep(pollIntervalSeconds * 1000);
+            }
+
+            res.json({ outcome: 'timeout', runId, squad, durationSeconds: Math.round((Date.now() - startedAt) / 1000), transitions, finalState: lastState });
+        } catch (err) { restErr(res, err); }
+    });
+    // ─────────────────────────────────────────────────────────────────────────
+
     app.listen(port, '0.0.0.0', () => {
         console.error(`[mcp] streamable HTTP listening on :${port}/mcp; tools: ${tools.map(t => t.name).join(', ')}`);
+        console.error(`[rest] REST API available at :${port}/api — use Bearer token from REST_TOKEN or API_TOKEN`);
     });
 } else {
     console.error(`[mcp] FATAL: unsupported MCP_TRANSPORT="${transport}" (use "stdio" or "http")`);
