@@ -402,7 +402,7 @@ function loginHandler(req, res) {
     if (!user || user.passwordHash !== hashPassword(password)) {
         return res.status(401).json({ error: 'Credenciais inválidas' });
     }
-    res.json({ token: generateToken(username) });
+    ok(res, { token: generateToken(username) });
 }
 
 app.post(['/api/login', '/api/v1/login'], loginLimiter, loginHandler);
@@ -436,7 +436,7 @@ async function generateHandler(req, res) {
 
         spawnRunner(runId, squadName, runDir, logFd);
 
-        res.json({ success: true, runId, statusUrl: `/api/v1/status/${squadName}/${runId}` });
+        ok(res, { runId, statusUrl: `/api/v1/status/${squadName}/${runId}` });
     } catch (error) {
         console.error('[generate] error:', error);
         activeProcesses.delete(runId);
