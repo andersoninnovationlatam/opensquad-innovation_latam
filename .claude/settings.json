@@ -77,7 +77,20 @@
       "Bash(node --check /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/mcp-server/lib/tools.js)",
       "Bash(PORT=3099 ~/.nvm/versions/node/v20.20.2/bin/node --env-file=/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/backend-simples/server.js)",
       "Bash(curl -s -o /dev/null -w \"PORT 3099 → %{http_code}\\\\n\" --max-time 1 http://localhost:3099/health)",
-      "Bash(kill 66273)"
+      "Bash(kill 66273)",
+      "Bash(timeout 6 node --env-file=../.env server.js)",
+      "Bash(timeout 6 node server.js)",
+      "Bash(curl -s http://localhost:3001/api-docs/)",
+      "Bash(node --input-type=module --check)",
+      "Bash(PORT=3099 timeout 8 node server.js)",
+      "Bash(curl -s http://localhost:3099/api-docs/swagger.json)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('paths:', list\\(d['paths'].keys\\(\\)\\)\\)\")",
+      "Bash(curl -s http://localhost:3099/api-docs/)",
+      "Bash(curl -si http://localhost:3099/api-docs/)",
+      "Bash(curl -v http://localhost:3099/api-docs)",
+      "Bash(PORT=3098 node server.js)",
+      "Bash(curl -s http://localhost:3098/api-docs/)",
+      "Bash(kill %1)"
     ],
     "additionalDirectories": [
       "/tmp",

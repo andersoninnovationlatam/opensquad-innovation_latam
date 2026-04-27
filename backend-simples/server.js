@@ -9,6 +9,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import crypto from 'node:crypto';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swagger.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, '..');
@@ -364,6 +366,20 @@ const generateLimiter = rateLimit({
 app.get('/health', (req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
 });
+
+// ── Swagger UI ────────────────────────────────────────────────────────
+
+app.get('/api-docs/swagger.json', (req, res) => {
+    res.json(swaggerSpec);
+});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: 'Opensquad API Docs',
+    swaggerOptions: {
+        persistAuthorization: true,
+        tryItOutEnabled: true
+    }
+}));
 
 app.get('/api/v1/health', (req, res) => {
     ok(res, {
