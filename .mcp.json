@@ -3,6 +3,15 @@
     "playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest", "--config", "_opensquad/config/playwright.config.json"]
+    },
+    "opensquad-carousel": {
+      "command": "node",
+      "args": ["mcp-server/index.js"],
+      "env": {
+        "API_URL": "http://localhost:3001",
+        "API_TOKEN": "asajFHusfas776",
+        "MCP_TRANSPORT": "stdio"
+      }
     }
   }
 }

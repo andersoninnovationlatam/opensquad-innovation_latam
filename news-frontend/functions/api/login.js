@@ -14,7 +14,7 @@ export async function onRequestPost(context) {
 
     try {
         const body = await request.json();
-        const response = await fetch(`${apiUrl}/api/login`, {
+        const response = await fetch(`${apiUrl}/api/v1/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)

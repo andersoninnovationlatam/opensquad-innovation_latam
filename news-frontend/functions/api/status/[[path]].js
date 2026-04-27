@@ -13,7 +13,11 @@ export async function onRequestGet(context) {
 
     try {
         const url = new URL(request.url);
-        const response = await fetch(`${apiUrl}${url.pathname}`, {
+        // Rewrite worker path /api/status/... → backend canonical /api/v1/status/...
+        const upstreamPath = url.pathname.startsWith('/api/v1/')
+            ? url.pathname
+            : url.pathname.replace(/^\/api\//, '/api/v1/');
+        const response = await fetch(`${apiUrl}${upstreamPath}`, {
             headers: { 'Authorization': request.headers.get('Authorization') || '' },
         });
         const result = await response.json();
