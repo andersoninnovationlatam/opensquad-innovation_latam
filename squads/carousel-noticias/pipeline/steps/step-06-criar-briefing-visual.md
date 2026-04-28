@@ -11,7 +11,7 @@ outputFile: squads/carousel-noticias/output/art-brief.md
 
 Load these files before executing:
 - `squads/carousel-noticias/output/carousel-copy.md` — copy aprovado dos slides
-- `squads/carousel-noticias/output/image-refs.json` — referências visuais de marcas e empresas coletadas pelo Bruno Buscador (Step 6). Usar para criar prompts de paródia editorial nos slides ímpares.
+- `squads/carousel-noticias/output/images/index.json` — referências visuais de marcas e empresas coletadas pelo Bruno Buscador (Step 4). Usar para criar prompts de paródia editorial nos slides ímpares.
 - `_opensquad/_memory/guia_diretor_arte.md` — vocabulário técnico obrigatório (câmera, luz, lente)
 - `_opensquad/_memory/doc_posicao_logo_logo_conta.md` — regras de posicionamento de branding
 - `_opensquad/_memory/company.md` — identidade visual da Innovation Latam (cores, logo, handle)
@@ -21,21 +21,21 @@ Load these files before executing:
 ### Process
 1. Ler os documentos de memória obrigatórios (`guia_diretor_arte.md` e `doc_posicao_logo_logo_conta.md`) antes de iniciar.
 2. **Listar imagens do Bruno**: `ls squads/carousel-noticias/output/images/slide-*-ref.*` para identificar quais slides ímpares (1, 3, 5, 7) já possuem imagem de referência.
-3. **Ler `image-refs.json`**: para cada entidade, tomar nota da `visual_description`, `brand_colors` e `parody_notes`. Esses dados são usados **apenas no fallback AI** (slides sem referência do Bruno).
+3. **Ler `images/index.json`**: para cada entidade, tomar nota da `visual_description`, `brand_colors` e `parody_notes`. Esses dados são usados **apenas no fallback AI** (slides sem referência do Bruno).
 4. Documentar o design system completo: dimensão 1080×1350px, Montserrat, paleta, overlay, branding.
 5. Mapear os slides por tipo:
    - **Ímpares com referência do Bruno** → estratégia `reference`: anotar entidade + arquivo `slide-0N-ref.*`. **Nenhum prompt AI necessário** — a imagem já está em disco.
    - **Ímpares sem referência** → estratégia `ai-generated`: gerar prompt de paródia editorial conforme regras de Fotojornalismo Digital.
    - **Pares** → fundo #993CB1, texto branco.
 6. **Para cada slide ímpar com `ai-generated`**: criar prompt de imagem AI em inglês que:
-   - Use entidade do `image-refs.json` em paródia editorial (logo/cores/símbolo) quando aplicável
+   - Use entidade do `images/index.json` em paródia editorial (logo/cores/símbolo) quando aplicável
    - Adicione especificações técnicas com câmera/luz/lente do vocabulário do guia
    - Se não houver entidade relevante, usar abordagem temática dos `themes`
 7. Para cada slide par: especificar fundo #993CB1 e confirmar contraste com texto branco.
 8. Verificar asset do logo: `innovation-latam-logo-white.png` em `squads/carousel-noticias/assets/`.
 9. Entregar briefing formatado slide a slide, com a estratégia (`reference` ou `ai-generated`) explícita em cada ímpar.
 
-### Diretrizes de Paródia Editorial (quando image-refs.json contém dados)
+### Diretrizes de Paródia Editorial (quando images/index.json contém dados)
 
 - **Paródia de logo de empresa**: representar o logo/símbolo da empresa em contexto irônico relacionado à notícia. Ex: logo do Nubank sendo "espremido" por pinça de taxas de juros.
 - **Paródia de figura pública**: mostrar a pessoa em cenário que reforce a notícia (mesa de negociação, palanque, sala de servidor).
@@ -126,7 +126,7 @@ Rejeitar e redo se:
 
 - [ ] Listagem de imagens em `output/images/` consultada antes de definir estratégia de cada ímpar
 - [ ] Slides ímpares com `slide-0N-ref.*` marcados como `reference` (sem prompt AI)
-- [ ] Slides ímpares sem referência: prompt em inglês com paródia editorial usando `image-refs.json` ou abordagem temática
+- [ ] Slides ímpares sem referência: prompt em inglês com paródia editorial usando `images/index.json` ou abordagem temática
 - [ ] Design system documentado antes dos slides
 - [ ] Todos os termos técnicos do guia_diretor_arte (sem invenção)
 - [ ] Branding verificado slide a slide

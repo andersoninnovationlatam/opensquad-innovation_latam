@@ -13,7 +13,7 @@ outputFile: squads/carousel-noticias/output/slides/
 Load these files before executing:
 - `squads/carousel-noticias/output/art-brief.md` — briefing visual com design system, especificações de cada slide e prompts de paródia editorial
 - `squads/carousel-noticias/output/carousel-copy.md` — textos dos slides para incluir nos HTMLs
-- `squads/carousel-noticias/output/image-refs.json` — referências visuais das marcas (cores, logos, notas de paródia) para usar como contexto ao gerar imagens via script
+- `squads/carousel-noticias/output/images/index.json` — referências visuais das marcas (cores, logos, notas de paródia) para usar como contexto ao gerar imagens via script
 - `_opensquad/_memory/company.md` — identidade visual (logo path, handle, cores)
 
 ## Instructions

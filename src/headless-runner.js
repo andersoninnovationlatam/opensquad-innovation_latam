@@ -371,7 +371,7 @@ async function run() {
             const stepContent = await fs.readFile(stepFile, 'utf-8');
             const stepMeta = parseYaml(stepContent.match(/^---\n([\s\S]*?)\n---/)[1]);
 
-            let logMessage = `Agente ${stepMeta.agent} processando ${step.name}...`;
+            let logMessage = `Agente ${stepMeta.agent || 'checkpoint'} processando ${step.name}...`;
             console.log(`\n[Step ${step.step}/${pipeline.steps.length}] ${logMessage}`);
 
             state.step.current = step.step;
@@ -412,7 +412,21 @@ async function run() {
                         filePath = filePath.replace('/output/', `/output/${runId}/`);
                     }
 
-                    const fullPath = path.isAbsolute(filePath) ? filePath : path.join(ROOT_DIR, filePath);
+                    // Resolve: absolute → as-is; relative → try ROOT_DIR then squadDir
+                    let fullPath;
+                    if (path.isAbsolute(filePath)) {
+                        fullPath = filePath;
+                    } else {
+                        const fromRoot = path.join(ROOT_DIR, filePath);
+                        const fromSquad = path.join(squadDir, filePath);
+                        try {
+                            await fs.access(fromRoot);
+                            fullPath = fromRoot;
+                        } catch {
+                            fullPath = fromSquad;
+                        }
+                    }
+
                     try {
                         const data = await fs.readFile(fullPath, 'utf-8');
                         contextData += `\nFILE: ${file}\n---\n${data}\n---\n`;

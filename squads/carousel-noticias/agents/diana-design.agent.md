@@ -42,7 +42,7 @@ Diana entrega briefings visuais em formato estruturado slide a slide, usando o t
 8. **1080×1350px em todos os slides** — dimensão fixa deste squad. Nunca usar 1080×1440 ou outras variações.
 9. **HTML completamente self-contained** — apenas Google Fonts @import como recurso externo. Tudo mais inline.
 10. **Imagem do Bruno em primeiro lugar** — para cada slide ímpar, antes de gerar qualquer imagem AI verificar se existe `output/images/slide-0N-ref.*`. Se existir, essa é a imagem de fundo do slide (apenas copiar para `slide-0N-bg.<ext>`). **A IA só entra em cena quando a referência do Bruno não existir** (slide sem entidade ou download falhou).
-11. **Paródia sobre referência real (apenas no fallback AI)** — quando o Bruno não trouxe imagem e a IA precisa entrar, usar `image-refs.json` para criar paródias de logos/marcas reais em vez de imagens genéricas.
+11. **Paródia sobre referência real (apenas no fallback AI)** — quando o Bruno não trouxe imagem e a IA precisa entrar, usar `images/index.json` para criar paródias de logos/marcas reais em vez de imagens genéricas.
 
 ## Background dos Slides Ímpares — Política de Decisão
 
@@ -57,14 +57,14 @@ A redação do `art-brief.md` deve, para cada slide ímpar, indicar a estratégi
 
 Aplicáveis somente quando o slide ímpar cair no fallback AI (Bruno não retornou imagem).
 
-### 1. Verificar image-refs.json primeiro
+### 1. Verificar images/index.json primeiro
 
-Antes de criar qualquer prompt de slide ímpar, ler `squads/carousel-noticias/output/image-refs.json`. Para cada entidade no arquivo:
+Antes de criar qualquer prompt de slide ímpar, ler `squads/carousel-noticias/output/images/index.json`. Para cada entidade no arquivo:
 - Extrair `visual_description`, `brand_colors` e `parody_notes`
 - Mapear quais slides do copy fazem referência àquela entidade
 - Usar esses dados para criar o prompt de paródia do slide correspondente
 
-### 2. Estrutura do Prompt de Paródia (quando image-refs disponível)
+### 2. Estrutura do Prompt de Paródia (quando images/index.json disponível)
 
 ```
 [Parody editorial illustration / Premium 3D render / News magazine cover style]:
@@ -78,7 +78,7 @@ SEO Boost: centered logo/symbol, high brand color visibility, recognizable to [b
 
 ### 3. Quando image-refs não tem entidade relevante para o slide
 
-Usar abordagem temática com os `themes` do image-refs.json:
+Usar abordagem temática com os `themes` do images/index.json:
 - **Empresas:** Incluir a simulação da logomarca oficial de forma clara (em um prédio, tela de smartphone ou produto etc).
 - **Figuras Públicas:** Descrever aparência física (semblante) com precisão, em um ambiente que remeta ao cargo ou situação relatada.
 - **Nações/Geopolítica:** Utilizar a bandeira do país de forma integrada ao cenário.
@@ -141,7 +141,7 @@ Usar abordagem temática com os `themes` do image-refs.json:
 
 ## Integration
 
-- **Reads from**: `squads/carousel-noticias/output/carousel-copy.md` (copy aprovado), `squads/carousel-noticias/output/image-refs.json` (referências de paródia do Bruno Buscador — Step 6), `_opensquad/_memory/guia_diretor_arte.md`, `_opensquad/_memory/doc_posicao_logo_logo_conta.md`, `_opensquad/_memory/company.md`
+- **Reads from**: `squads/carousel-noticias/output/carousel-copy.md` (copy aprovado), `squads/carousel-noticias/output/images/index.json` (referências de paródia do Bruno Buscador — Step 6), `_opensquad/_memory/guia_diretor_arte.md`, `_opensquad/_memory/doc_posicao_logo_logo_conta.md`, `_opensquad/_memory/company.md`
 - **Writes to**: `squads/carousel-noticias/output/art-brief.md` (Task 1), `squads/carousel-noticias/output/slides/` (Task 2)
 - **Triggers**: step criar-briefing-visual (inline) e step gerar-e-renderizar-slides (subagent)
 - **Depends on**: copy aprovado pelo usuário; imagens de referência do Bruno Buscador em `output/images/`; skill image-ai-generator (apenas no fallback) e skill image-creator (Playwright) para renderização
