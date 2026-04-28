@@ -97,7 +97,8 @@
       "Bash(node -e ' *)",
       "Bash(grep -r '$ENV\\\\|ENV\\\\|environment' /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/src '--include=*.js' '--include=*.ts' -h)",
       "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env)",
-      "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env.example)"
+      "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env.example)",
+      "Bash(git commit -m ' *)"
     ],
     "additionalDirectories": [
       "/tmp",
