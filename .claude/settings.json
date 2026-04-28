@@ -94,11 +94,15 @@
       "Bash(curl -s -w \"\\\\n--- HTTP STATUS: %{http_code} ---\" http://localhost:3001/health)",
       "Bash(curl -s -w '\\\\n--- HTTP STATUS: %{http_code} ---' -X POST http://localhost:3001/api/v1/login -H 'Content-Type: application/json' -d '{\"username\":\"anderson.pinto@innovationlatam.com\",\"password\":\"teste\"}')",
       "Bash(curl -s -X POST http://localhost:3001/api/v1/login -H 'Content-Type: application/json' -d '{\"username\":\"anderson.pinto@innovationlatam.com\",\"password\":\"teste\"}')",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(grep -r '$ENV\\\\|ENV\\\\|environment' /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/src '--include=*.js' '--include=*.ts' -h)",
+      "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env)",
+      "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env.example)"
     ],
     "additionalDirectories": [
       "/tmp",
-      "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/squads/carousel-noticias/output/2026-04-24T23-02-57/slides"
+      "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/squads/carousel-noticias/output/2026-04-24T23-02-57/slides",
+      "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/news-frontend/functions/api"
     ]
   }
 }
