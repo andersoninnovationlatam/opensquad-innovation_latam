@@ -289,13 +289,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                         progressResult.classList.remove('hidden');
 
-                        setTimeout(() => {
-                            showResultInPanel(
-                                'success',
-                                '✨ Imagens geradas e enviadas para o Google Drive!',
-                                'https://drive.google.com/drive/folders/1ILMTPcEDbgBaNp8Pn0zCghumX9y-ORMd?usp=sharing'
-                            );
-                        }, 700);
+                        fetch(`/api/v1/drive/carousel-noticias/${runId}`, { headers: authHeaders() })
+                            .then(r => r.json())
+                            .then(data => {
+                                const driveUrl = data?.data?.folderUrl ?? null;
+                                showResultInPanel(
+                                    'success',
+                                    '✨ Imagens geradas e enviadas para o Google Drive!',
+                                    driveUrl
+                                );
+                            })
+                            .catch(() => {
+                                showResultInPanel('success', '✨ Imagens geradas e enviadas para o Google Drive!');
+                            });
                     }, 500);
 
                 } else if (state.status === 'failed') {
