@@ -5,7 +5,9 @@
       "WebFetch(domain:hai.stanford.edu)",
       "WebFetch(domain:www.anthropic.com)",
       "WebFetch(domain:www.logo.wine)",
-      "WebFetch(domain:xlogo.org)"
+      "WebFetch(domain:xlogo.org)",
+      "Bash(python3 -c \"import js2py\")",
+      "Bash(node -e \"const yaml=require\\('js-yaml'\\); console.log\\(yaml.DEFAULT_SCHEMA.toString\\(\\)\\)\")"
     ],
     "additionalDirectories": [
       "/tmp",
