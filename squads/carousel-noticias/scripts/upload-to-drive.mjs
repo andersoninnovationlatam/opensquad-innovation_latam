@@ -210,6 +210,18 @@ const md = `# Upload Google Drive — ${stamp}
 
 writeFileSync(path.join(runRoot, "drive-upload-result.md"), md, "utf8");
 
+const driveResult = {
+  folderId,
+  folderUrl: `https://drive.google.com/drive/folders/${folderId}`,
+  folderName,
+  uploaded,
+  total: files.length,
+  version,
+  uploadedAt: now.toISOString(),
+};
+writeFileSync(path.join(runRoot, "drive-result.json"), JSON.stringify(driveResult, null, 2), "utf8");
+
 console.log(`\n✅ Upload concluído: ${uploaded}/${files.length} slides`);
 console.log(`📄 Resultado salvo: squads/carousel-noticias/output/${runId}/drive-upload-result.md`);
-console.log(JSON.stringify({ folderId, folderName, uploaded, total: files.length, version }, null, 2));
+console.log(`🔗 Drive: https://drive.google.com/drive/folders/${folderId}`);
+console.log(JSON.stringify(driveResult, null, 2));

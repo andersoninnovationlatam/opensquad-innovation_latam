@@ -594,6 +594,23 @@ app.get('/api/v1/output/:squad/:runId', requireAuth, async (req, res) => {
     ok(res, { images, count: images.length });
 });
 
+// ── v1-only: drive upload result ──────────────────────────────────────
+
+app.get('/api/v1/drive/:squad/:runId', requireAuth, async (req, res) => {
+    const { squad, runId } = req.params;
+    if (!SAFE_ID_RE.test(squad) || !SAFE_ID_RE.test(runId)) {
+        return fail(res, 'INVALID_PARAM', 'Invalid squad or runId');
+    }
+
+    const resultPath = path.join(SQUADS_DIR, squad, 'output', runId, 'drive-result.json');
+    try {
+        const raw = await fs.readFile(resultPath, 'utf-8');
+        ok(res, JSON.parse(raw));
+    } catch {
+        fail(res, 'NOT_FOUND', 'Drive upload result not found. Run the upload script first.', 404);
+    }
+});
+
 // ── v1-only: delete run ───────────────────────────────────────────────
 
 app.delete('/api/v1/runs/:squad/:runId', requireAuth, async (req, res) => {
