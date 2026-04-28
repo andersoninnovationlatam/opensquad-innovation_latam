@@ -68,8 +68,5 @@ RUN mkdir -p /app/squads/carousel-noticias/output
 
 # Python script uses only stdlib — no pip install needed
 
-# Expose the port the app runs on
-EXPOSE 3001
-
 # Start the application
 CMD ["node", "backend-simples/server.js"]
