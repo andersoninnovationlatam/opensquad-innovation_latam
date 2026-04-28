@@ -15,7 +15,7 @@ function authHeaders() {
 }
 
 async function attemptLogin(username, password) {
-    const res = await fetch('/api/login', {
+    const res = await fetch('/api/v1/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showProgressView(news, angle);
 
         try {
-            const response = await fetch('/api/generate', {
+            const response = await fetch('/api/v1/generate', {
                 method: 'POST',
                 headers: authHeaders(),
                 body: JSON.stringify({ news, angle })
