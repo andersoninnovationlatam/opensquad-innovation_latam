@@ -98,7 +98,16 @@
       "Bash(grep -r '$ENV\\\\|ENV\\\\|environment' /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/src '--include=*.js' '--include=*.ts' -h)",
       "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env)",
       "Bash(grep -v \"^#\\\\|^$\" /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.env.example)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Read(//home/anderson/.claude/**)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('env', {}\\), indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(open\\('/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.claude/settings.json'\\)\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if k != 'permissions'}, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(open\\('/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/.claude/settings.local.json'\\)\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if k != 'permissions'}, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); envs = d.get\\('env', {}\\); hooks = d.get\\('hooks', {}\\); print\\('ENV:', json.dumps\\(envs, indent=2\\)\\); print\\('HOOKS:', json.dumps\\(hooks, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k,':', json.dumps\\(v, indent=2\\)\\) for k,v in d.items\\(\\) if k not in \\('permissions',\\)]\")",
+      "Bash(read f *)",
+      "Bash(python3 -c ' *)"
     ],
     "additionalDirectories": [
       "/tmp",
