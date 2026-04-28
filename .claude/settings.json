@@ -7,7 +7,8 @@
       "WebFetch(domain:www.logo.wine)",
       "WebFetch(domain:xlogo.org)",
       "Bash(python3 -c \"import js2py\")",
-      "Bash(node -e \"const yaml=require\\('js-yaml'\\); console.log\\(yaml.DEFAULT_SCHEMA.toString\\(\\)\\)\")"
+      "Bash(node -e \"const yaml=require\\('js-yaml'\\); console.log\\(yaml.DEFAULT_SCHEMA.toString\\(\\)\\)\")",
+      "Bash(grep -E \"\\\\.\\(js|ts|tsx\\)$\")"
     ],
     "additionalDirectories": [
       "/tmp",

@@ -1,4 +1,4 @@
-import { promises as fs } from 'node:fs';
+import { promises as fs, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { fileURLToPath } from 'node:url';
@@ -641,8 +641,20 @@ If the instructions ask to save a file, provide the content of that file clearly
                 cwd: ROOT_DIR,
                 stdio: 'inherit'
             });
-            if (uploadResult.status === 0) console.log('✅ Drive upload completed successfully!');
-            else console.error('❌ Drive upload failed.');
+            if (uploadResult.status === 0) {
+                console.log('✅ Drive upload completed successfully!');
+                try {
+                    const driveResult = JSON.parse(readFileSync(path.join(runDir, 'drive-result.json'), 'utf-8'));
+                    state.status = 'uploaded';
+                    state.driveResult = driveResult;
+                    state.updatedAt = new Date().toISOString();
+                    await fs.writeFile(statePath, JSON.stringify(state, null, 2));
+                } catch (e) {
+                    console.error('❌ Failed to read drive-result.json:', e.message);
+                }
+            } else {
+                console.error('❌ Drive upload failed.');
+            }
         } catch (error) {
             console.error('❌ Error triggering Drive upload:', error);
         }

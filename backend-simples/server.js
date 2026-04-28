@@ -436,7 +436,25 @@ async function generateHandler(req, res) {
 
         spawnRunner(runId, squadName, runDir, logFd);
 
-        ok(res, { runId, statusUrl: `/api/v1/status/${squadName}/${runId}` });
+        // Wait for pipeline + drive upload to complete
+        const statePath = path.join(runDir, 'state.json');
+        const deadline = Date.now() + RUN_TIMEOUT_MS;
+        while (Date.now() < deadline) {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            let state;
+            try { state = JSON.parse(await fs.readFile(statePath, 'utf-8')); }
+            catch { continue; }
+
+            if (state.status === 'uploaded') {
+                return res.json(state.driveResult);
+            }
+            if (state.status === 'failed') {
+                return res.status(500).json({ error: state.error || 'Run failed' });
+            }
+        }
+
+        killGroup(runId, 'timeout');
+        return res.status(504).json({ error: 'Timeout waiting for run to complete' });
     } catch (error) {
         console.error('[generate] error:', error);
         activeProcesses.delete(runId);
