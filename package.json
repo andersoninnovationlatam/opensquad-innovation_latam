@@ -44,7 +44,8 @@
     "@inquirer/checkbox": "^5.1.0",
     "@inquirer/input": "^5.0.0",
     "@inquirer/select": "^5.1.0",
-    "googleapis": "^171.4.0"
+    "googleapis": "^171.4.0",
+    "yaml": "^2.8.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

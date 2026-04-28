@@ -1,0 +1,14 @@
+{
+    "name": "news-angle-generator",
+    "version": "1.0.0",
+    "description": "Frontend para gerador de notícias com Cloudflare Workers",
+    "main": "src/index.js",
+    "scripts": {
+        "dev": "wrangler pages dev public",
+        "build": "echo 'No build step needed'",
+        "deploy": "npx wrangler pages deploy public --project-name=opensquad-innovation-latam"
+    },
+    "devDependencies": {
+        "wrangler": "^3.0.0"
+    }
+}

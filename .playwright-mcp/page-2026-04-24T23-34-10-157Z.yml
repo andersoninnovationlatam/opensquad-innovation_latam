@@ -1,0 +1,8 @@
+- generic [active] [ref=e1]:
+  - img [ref=e2]
+  - generic [ref=e4]:
+    - heading "A IA está acelerando como nunca. Você está pronto para surfar essa onda?" [level=1] [ref=e5]
+    - paragraph [ref=e6]: O Relatório AI Index 2026 de Stanford revela avanços que superam a capacidade humana em várias áreas.
+  - generic [ref=e7]:
+    - generic [ref=e8]: "@innovationlatam"
+    - generic [ref=e9]: ARRASTE ->

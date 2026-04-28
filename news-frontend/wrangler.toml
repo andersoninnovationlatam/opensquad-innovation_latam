@@ -1,0 +1,7 @@
+name = "opensquad-innovationlatam"
+pages_build_output_dir = "public"
+compatibility_date = "2024-04-03"
+
+[vars]
+# API_URL será configurada no painel do Cloudflare
+

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Latam | News Generator</title>
+    <meta name="description" content="Adicione notícias e escolha o ângulo perfeito para seus posts com IA.">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="AdsBot-Google" content="noindex">
+    <meta name="Slurp" content="noindex, nofollow">
+    <meta name="Bingbot" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="assets/logo-innovation-latam-rounded.png">
+</head>
+
+<body>
+    <div class="background-glow"></div>
+
+    <!-- ── Login Overlay ── -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-card card-glass">
+            <img src="assets/innovation-latam-logo-white.png" alt="Innovation Latam" class="auth-logo">
+            <p class="auth-subtitle">Acesso Restrito <span style="font-size: 0.6em; opacity: 0.7;">.api</span></p>
+            <form id="loginForm" class="form">
+                <div class="input-group">
+                    <label for="usernameInput">Usuário</label>
+                    <input type="text" id="usernameInput" placeholder="seu usuário" required autocomplete="username">
+                    <span class="input-focus-line"></span>
+                </div>
+                <div class="input-group">
+                    <label for="passwordInput">Senha</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" required autocomplete="current-password">
+                    <span class="input-focus-line"></span>
+                </div>
+                <p id="loginError" class="auth-error hidden">Credenciais inválidas</p>
+                <button type="submit" id="loginBtn" class="btn-primary">
+                    <span>Entrar</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <main class="container" id="appMain" style="display:none">
+        <header class="header">
+            <div class="logo">
+                <img src="assets/innovation-latam-logo-white.png" alt="Innovation Latam" class="logo-brand">
+            </div>
+            <p class="subtitle">Transforme notícias brutas em posts magnéticos</p>
+            <button id="logoutBtn" class="btn-logout">Sair</button>
+        </header>
+
+        <section class="card-glass">
+
+            <!-- ── Form View ── -->
+            <div id="formView" class="form-view">
+                <form id="newsForm" class="form">
+                    <div class="input-group">
+                        <label for="newsInput">Notícia</label>
+                        <textarea id="newsInput" placeholder="Cole aqui o link ou o texto da notícia..."
+                            required></textarea>
+                        <span class="input-focus-line"></span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="angleSelect">Ângulo de Perspectiva</label>
+                        <div class="custom-select-wrapper">
+                            <select id="angleSelect" required>
+                                <option value="" disabled selected>Selecione um ângulo...</option>
+                                <option value="educacional">🎓 Educacional (Ensino e Valor)</option>
+                                <option value="medo">⚠️ Medo (Urgência e Alerta)</option>
+                                <option value="entusiasmo">🚀 Entusiasmo (Oportunidade e Futuro)</option>
+                                <option value="curiosidade">🤔 Curiosidade (Mistério e Descoberta)</option>
+                                <option value="polemica">🔥 Polêmica (Debate e Opinião)</option>
+                                <option value="empatia">❤️ Empatia (Conexão Humana)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <span>Gerar Conteúdo</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- ── Progress View ── -->
+            <div id="progressView" class="progress-view hidden">
+
+                <div class="summary-bar">
+                    <span id="summaryNews" class="summary-news"></span>
+                    <span id="summaryAngle" class="summary-angle"></span>
+                </div>
+
+                <div class="progress-steps">
+                    <div class="step-item pending" data-step="1">
+                        <div class="step-icon">
+                            <span class="step-number">01</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Análise da Notícia</span>
+                            <span class="step-desc">Lendo notícia, ângulo e identificando entidades</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="2">
+                        <div class="step-icon">
+                            <span class="step-number">02</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Criação dos Slides (Copy)</span>
+                            <span class="step-desc">Escrevendo os textos de cada slide</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="3">
+                        <div class="step-icon">
+                            <span class="step-number">03</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Busca de Referências Visuais</span>
+                            <span class="step-desc">Baixando imagens das entidades para os slides ímpares</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="4">
+                        <div class="step-icon">
+                            <span class="step-number">04</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Design dos Slides (HTML)</span>
+                            <span class="step-desc">Gerando o layout visual dos cards</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="5">
+                        <div class="step-icon">
+                            <span class="step-number">05</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Renderização dos Slides (PNG)</span>
+                            <span class="step-desc">Exportando imagens em alta resolução</span>
+                        </div>
+                    </div>
+
+                    <div class="step-item pending" data-step="6">
+                        <div class="step-icon">
+                            <span class="step-number">06</span>
+                            <svg class="step-spinner" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" stroke-dasharray="28 56"/></svg>
+                            <svg class="step-check" viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="step-error-icon" viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="step-info">
+                            <span class="step-label">Revisão de Qualidade</span>
+                            <span class="step-desc">Validando e aprovando o conteúdo final</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="progressResult" class="progress-result hidden"></div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="version-footer" id="appFooter" style="display:none">v0.0.8</footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

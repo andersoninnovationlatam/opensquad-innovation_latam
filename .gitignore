@@ -1,7 +1,9 @@
 node_modules/
 .env
+.claude/settings.local.json
 *.log
-squads/*/
+squads/*/output/
+squads/*/_investigations/
 _opensquad/_memory/company.md
 _opensquad/_memory/preferences.md
 _opensquad/_browser_profile/
