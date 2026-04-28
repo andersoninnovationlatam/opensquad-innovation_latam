@@ -10,7 +10,8 @@
     "additionalDirectories": [
       "/tmp",
       "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/squads/carousel-noticias/output/2026-04-24T23-02-57/slides",
-      "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/news-frontend/functions/api"
+      "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/news-frontend/functions/api",
+      "/home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/docs/plans"
     ]
   }
 }
