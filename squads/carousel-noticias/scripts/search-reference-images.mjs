@@ -135,14 +135,26 @@ function googleImagesUrl(query) {
   return `https://images.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
 }
 
-function getQuery(entityName, entityType) {
-  const match = (topics.search_queries || []).find((q) =>
+function getQueries(entityName, entityType) {
+  // Usar lista multi-fallback do topics.json v2 se disponível
+  const v2 = topics.search_queries_v2 && topics.search_queries_v2[entityName];
+  if (v2 && v2.length > 0) return v2;
+
+  // Fallback: query legada ou construída
+  const legacy = (topics.search_queries || []).find((q) =>
     q.toLowerCase().includes(entityName.toLowerCase())
   );
-  if (match) return match;
-  if (entityType === "person") return `${entityName} foto`;
-  if (entityType === "location") return `${entityName} tecnologia inteligência artificial`;
-  return `${entityName} logo`;
+  if (legacy) return [legacy];
+
+  if (entityType === "person") return [`${entityName} photo`, `${entityName} foto`];
+  if (entityType === "location") return [`${entityName} flag`, `${entityName} bandeira`];
+  if (entityType === "brand") return [`${entityName} logo`, `${entityName}`];
+  const shortName = entityName.split(/\s+/).slice(0, 3).join(" ");
+  return [`${entityName} logo`, `${shortName} logo`, shortName];
+}
+
+function getQuery(entityName, entityType) {
+  return getQueries(entityName, entityType)[0];
 }
 
 async function downloadImage(imageUrl, entityName) {
@@ -183,74 +195,98 @@ async function downloadImage(imageUrl, entityName) {
   }
 }
 
-async function findImageUrl(entity) {
-  const query = getQuery(entity.name, entity.type);
-  const googleUrl = googleImagesUrl(query);
-
-  try {
-    const serpParams = {
-      api_key: SERPAPI_KEY,
-      engine: "google_images",
-      q: query,
-      google_domain: "google.com.br",
-      gl: "us",
-      hl: "pt-br",
-      safe: "off",
-      licenses: "fc",
-      num: "10",
-    };
-    // logos e marcas não são fotos — remover filtro image_type para companies/brands
-    if (entity.type === "person" || entity.type === "location") {
-      serpParams.image_type = "photo";
-    }
-    const params = new URLSearchParams(serpParams);
-
-    const response = await fetch(`https://serpapi.com/search?${params}`);
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const results = data?.images_results || [];
-
-    const isClean = (url) =>
-      url &&
-      !url.includes("watermark") &&
-      !url.includes("getty") &&
-      !url.includes("shutterstock") &&
-      !url.includes("alamy") &&
-      !url.includes("dreamstime") &&
-      !url.includes("istockphoto");
-
-    // Para logos/empresas: priorizar PNG (fundo transparente)
-    // Para fotos/locais: priorizar JPG/WEBP de alta resolução
-    const isPng = (url) => url.toLowerCase().endsWith(".png") || url.toLowerCase().endsWith(".webp");
-    const isJpg = (url) => url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".jpeg");
-
-    const cleanResults = results.filter((r) => isClean(r.original || ""));
-
-    let chosen;
-    if (entity.type === "company" || entity.type === "brand") {
-      chosen =
-        cleanResults.find((r) => isPng(r.original || "")) ||
-        cleanResults.find((r) => isJpg(r.original || "")) ||
-        cleanResults[0];
-    } else {
-      chosen =
-        cleanResults.find((r) => isJpg(r.original || "") || isPng(r.original || "")) ||
-        cleanResults[0];
-    }
-
-    if (!chosen) chosen = results.find((r) => r.original);
-
-    if (!chosen) return null;
-
-    return {
-      entity: entity.name,
-      image_url: chosen.original,
-      google_images_url: googleUrl,
-    };
-  } catch {
-    return null;
+async function searchWithQuery(query, entityType) {
+  const serpParams = {
+    api_key: SERPAPI_KEY,
+    engine: "google_images",
+    q: query,
+    google_domain: "google.com.br",
+    gl: "us",
+    hl: "pt-br",
+    safe: "off",
+    num: "10",
+  };
+  // Fotos reais apenas para pessoas e localidades
+  if (entityType === "person" || entityType === "location") {
+    serpParams.image_type = "photo";
   }
+
+  const response = await fetch(`https://serpapi.com/search?${new URLSearchParams(serpParams)}`);
+  if (!response.ok) return [];
+
+  const data = await response.json();
+  return data?.images_results || [];
+}
+
+function pickBestResult(results, entityType) {
+  const isClean = (url) =>
+    url &&
+    !url.includes("watermark") &&
+    !url.includes("getty") &&
+    !url.includes("shutterstock") &&
+    !url.includes("alamy") &&
+    !url.includes("dreamstime") &&
+    !url.includes("istockphoto");
+
+  const isPng = (url) => /\.(png|webp)(\?|$)/i.test(url);
+  const isJpg = (url) => /\.(jpg|jpeg)(\?|$)/i.test(url);
+  const hasImage = (r) => !!(r.original || r.thumbnail);
+
+  const clean = results.filter((r) => isClean(r.original || ""));
+  const pool = clean.length > 0 ? clean : results;
+
+  if (entityType === "company" || entityType === "brand") {
+    return (
+      pool.find((r) => isPng(r.original || "")) ||
+      pool.find((r) => isJpg(r.original || "")) ||
+      pool.find((r) => hasImage(r)) ||
+      results.find((r) => hasImage(r))
+    );
+  }
+  return (
+    pool.find((r) => isJpg(r.original || "") || isPng(r.original || "")) ||
+    pool.find((r) => hasImage(r)) ||
+    results.find((r) => hasImage(r))
+  );
+}
+
+// Tenta baixar uma imagem para a entidade, percorrendo queries e múltiplos resultados
+async function findAndDownloadImage(entity, destFilename) {
+  const queries = getQueries(entity.name, entity.type);
+  const googleUrl = googleImagesUrl(queries[0]);
+
+  for (let qi = 0; qi < queries.length; qi++) {
+    const q = queries[qi];
+    if (qi > 0) {
+      console.log(`     🔄 Fallback query ${qi}: "${q}"`);
+      await new Promise((r) => setTimeout(r, 400));
+    } else {
+      console.log(`     Query: "${q}"`);
+    }
+
+    let results = [];
+    try {
+      results = await searchWithQuery(q, entity.type);
+    } catch {
+      continue;
+    }
+
+    const candidates = results
+      .map((r) => r.original || r.thumbnail)
+      .filter(Boolean)
+      .slice(0, 8); // tentar até 8 URLs por query
+
+    for (const url of candidates) {
+      console.log(`     ↳ ${url.slice(0, 90)}`);
+      const downloaded = await downloadImage(url, destFilename);
+      if (downloaded) {
+        console.log(`     ✅ ${downloaded.filename} (${downloaded.sizeKB}KB) [query ${qi}]`);
+        return { downloaded, query_used: q, google_images_url: googleUrl };
+      }
+    }
+  }
+
+  return { downloaded: null, google_images_url: googleUrl };
 }
 
 const downloadedImages = [];
@@ -262,32 +298,21 @@ for (let i = 0; i < entities.length; i++) {
   const slideLabel = String(slideNumber).padStart(2, "0");
   console.log(`\n  🔎 [slide-${slideLabel}] [${entity.type}] "${entity.name}"`);
 
-  const result = await findImageUrl(entity);
-  const imageUrl = result?.image_url;
-  const googleUrl = result?.google_images_url || googleImagesUrl(getQuery(entity.name, entity.type));
+  const { downloaded, google_images_url } = await findAndDownloadImage(entity, `slide-${slideLabel}-ref`);
 
-  if (imageUrl) {
-    console.log(`     Baixando: ${imageUrl}`);
-    const downloaded = await downloadImage(imageUrl, `slide-${slideLabel}-ref`);
-    if (downloaded) {
-      console.log(`     ✅ ${downloaded.filename} (${downloaded.sizeKB}KB)`);
-      downloadedImages.push({
-        entity: entity.name,
-        type: entity.type,
-        slide: slideNumber,
-        file: downloaded.relativePath,
-        source_url: imageUrl,
-        size_kb: downloaded.sizeKB,
-      });
-    } else {
-      console.warn(`     ⚠️  Download falhou — use Google Images manualmente:`);
-      console.warn(`     🔗 ${googleUrl}`);
-      failedEntities.push({ entity: entity.name, type: entity.type, slide: slideNumber, google_images_url: googleUrl });
-    }
+  if (downloaded) {
+    downloadedImages.push({
+      entity: entity.name,
+      type: entity.type,
+      slide: slideNumber,
+      file: downloaded.relativePath,
+      source_url: downloaded.localPath,
+      size_kb: downloaded.sizeKB,
+    });
   } else {
-    console.warn(`     ⚠️  URL não encontrada via API — use Google Images:`);
-    console.warn(`     🔗 ${googleUrl}`);
-    failedEntities.push({ entity: entity.name, type: entity.type, slide: slideNumber, google_images_url: googleUrl });
+    console.warn(`     ⚠️  Todas as tentativas falharam — use Google Images manualmente:`);
+    console.warn(`     🔗 ${google_images_url}`);
+    failedEntities.push({ entity: entity.name, type: entity.type, slide: slideNumber, google_images_url });
   }
 
   if (i < entities.length - 1) {

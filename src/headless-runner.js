@@ -699,54 +699,48 @@ If the instructions ask to save a file, provide the content of that file clearly
                 const brunoIndex = await readBrunoIndex(imagesDir);
                 const brunoBySlide = new Map(brunoIndex.images.map((img) => [img.slide, img]));
 
-                // 4. Resolve background per odd slide: Bruno's reference > AI generation
+                // 4. Resolve background per odd slide: always generate via AI (Bruno ref as visual input)
+                const REQUIRED_SLIDES = new Set([1, 3, 5, 7]);
                 const backgroundOrigins = []; // {slide, origin: 'reference'|'ai-generated', file, type}
                 for (const slide of slides) {
                     if (slide.number % 2 === 0) continue;
                     const slideLabel = String(slide.number).padStart(2, '0');
 
                     const ref = await findBrunoReference(imagesDir, slide.number);
-                    if (ref) {
-                        const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg${ref.ext}`);
-                        await fs.copyFile(ref.path, bgPath);
-                        const entityType = brunoBySlide.get(slide.number)?.type || 'photo';
-                        backgroundOrigins.push({ slide: slide.number, origin: 'reference', file: bgPath, type: entityType });
-                        console.log(`📷 Slide ${slide.number}: usando referência do Bruno (${entityType})`);
+                    const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
+                    const imageModel = env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image';
+                    const refPaths = ref ? [ref.path] : [];
+
+                    // Resolve prompt: use art-brief bgPrompt or fallback to headline for required slides
+                    const effectivePrompt = slide.bgPrompt ||
+                        (REQUIRED_SLIDES.has(slide.number)
+                            ? `Editorial social media background for news: "${slide.headline || slide.body || 'business news'}". Modern, cinematic, professional.`
+                            : null);
+
+                    if (!effectivePrompt) {
+                        console.warn(`⚠️ Slide ${slide.number}: sem prompt e sem headline — slide ficará sem background.`);
                         continue;
                     }
 
-                    if (slide.bgPrompt) {
-                        console.log(`🎨 Slide ${slide.number}: gerando imagem AI (fallback)...`);
-                        const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
-                        const imageModel = env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image';
-
-                        // Collect all Bruno reference images available as visual inspiration
-                        const refPaths = [];
-                        for (const ext of ['.webp', '.png', '.jpg', '.jpeg']) {
-                            for (let s = 1; s <= 9; s += 2) {
-                                const label = String(s).padStart(2, '0');
-                                const candidate = path.join(imagesDir, `slide-${label}-ref${ext}`);
-                                try { await fs.access(candidate); refPaths.push(candidate); } catch {}
-                            }
-                        }
-                        if (refPaths.length > 0)
-                            console.log(`   Using ${refPaths.length} Bruno reference(s) as visual inspiration`);
-
-                        try {
-                            const { cost } = await generateImageAI(slide.bgPrompt, bgPath, imageModel, apiKey, refPaths);
-                            backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
-                            console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
-                            if (cost) {
-                                if (cost.total_cost_usd != null) accumulatedCost.total_cost_usd += cost.total_cost_usd;
-                                if (cost.prompt_tokens != null) accumulatedCost.prompt_tokens += cost.prompt_tokens;
-                                if (cost.completion_tokens != null) accumulatedCost.completion_tokens += cost.completion_tokens;
-                                generationLog.push({ ...cost, type: 'image' });
-                            }
-                        } catch (err) {
-                            console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number}: ${err.message}`);
-                        }
+                    if (ref) {
+                        const entityType = brunoBySlide.get(slide.number)?.type || 'photo';
+                        console.log(`🎨 Slide ${slide.number}: gerando imagem AI com referência do Bruno (${entityType})...`);
                     } else {
-                        console.warn(`⚠️ Slide ${slide.number}: sem referência do Bruno e sem prompt AI no art-brief — slide ficará sem background.`);
+                        console.log(`🎨 Slide ${slide.number}: gerando imagem AI (sem referência)...`);
+                    }
+
+                    try {
+                        const { cost } = await generateImageAI(effectivePrompt, bgPath, imageModel, apiKey, refPaths);
+                        backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
+                        console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
+                        if (cost) {
+                            if (cost.total_cost_usd != null) accumulatedCost.total_cost_usd += cost.total_cost_usd;
+                            if (cost.prompt_tokens != null) accumulatedCost.prompt_tokens += cost.prompt_tokens;
+                            if (cost.completion_tokens != null) accumulatedCost.completion_tokens += cost.completion_tokens;
+                            generationLog.push({ ...cost, type: 'image' });
+                        }
+                    } catch (err) {
+                        console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number}: ${err.message}`);
                     }
                 }
 

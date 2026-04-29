@@ -45,7 +45,13 @@
       "Bash(node src/render-slides.js squads/carousel-noticias/output/test-slide1/slides/v1)",
       "Bash(node --check /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/src/headless-runner.js)",
       "Bash(command -v fnm n)",
-      "WebFetch(domain:openrouter.ai)"
+      "WebFetch(domain:openrouter.ai)",
+      "Bash(node squads/carousel-noticias/scripts/extract-topics.mjs squads/carousel-noticias/output/2026-04-29T15-15-52-495-b2fa32)",
+      "Bash(node -e ' *)",
+      "Bash(node squads/carousel-noticias/scripts/search-reference-images.mjs squads/carousel-noticias/output/2026-04-29T15-15-52-495-b2fa32)",
+      "Bash(node squads/carousel-noticias/scripts/extract-topics.mjs squads/carousel-noticias/output/2026-04-29T16-47-12-071-7b5cb2)",
+      "Bash(node squads/carousel-noticias/scripts/search-reference-images.mjs squads/carousel-noticias/output/2026-04-29T16-47-12-071-7b5cb2)",
+      "Bash(xdg-open /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/squads/carousel-noticias/output/2026-04-29T16-47-12-071-7b5cb2/images/slide-01-bg-test.png)"
     ],
     "additionalDirectories": [
       "/tmp",

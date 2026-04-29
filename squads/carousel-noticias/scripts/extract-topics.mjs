@@ -115,8 +115,13 @@ for (const line of lines) {
   const parsed = parseLine(line);
   if (!parsed) continue;
   if (parsed.none) {
-    isNone = true;
-    break;
+    // "(nenhuma)" só significa "sem entidades" se for a ÚNICA linha do bloco.
+    // Se já temos entidades coletadas, é apenas um placeholder de slot vazio — ignorar.
+    if (entities.length === 0) {
+      isNone = true;
+      break;
+    }
+    continue;
   }
   if (parsed.invalid) {
     invalids.push({ line: parsed.invalid, reason: parsed.reason || "formato não reconhecido" });
@@ -150,12 +155,73 @@ const brands = uniqueEntities.filter((e) => e.type === "brand").map((e) => e.nam
 const public_figures = uniqueEntities.filter((e) => e.type === "person").map((e) => e.name);
 const locations = uniqueEntities.filter((e) => e.type === "location").map((e) => e.name);
 
-const search_queries = uniqueEntities.map((e) => {
-  if (e.type === "person") return `${e.name} foto profissional`;
-  if (e.type === "location") return `${e.name} bandeira simbolo nacional`;
-  if (e.type === "brand") return `${e.name} brand identity logo`;
-  return `${e.name} logo oficial`;
+// Extrair palavras-chave do contexto da notícia para enriquecer as queries
+const newsInputPath = path.join(outputDir, "news-input.md");
+let newsContext = "";
+if (fs.existsSync(newsInputPath)) {
+  const newsText = fs.readFileSync(newsInputPath, "utf-8");
+  // Remover frontmatter e pegar o primeiro parágrafo substantivo
+  const withoutFrontmatter = newsText.replace(/^---[\s\S]*?---\s*/m, "").trim();
+  // Pular linhas de heading (# ## ###) e pegar o primeiro parágrafo de texto real
+  const paragraphs = withoutFrontmatter.split(/\n\n+/).map((p) => p.trim());
+  const firstPara = paragraphs.find((p) => p.length > 50 && !p.startsWith("#")) || "";
+  // Extrair até 6 palavras-chave relevantes (substantivos longos, evitar artigos/preposições)
+  const stopWords = new Set([
+    "de","do","da","dos","das","em","no","na","nos","nas","para","com","por","uma","um",
+    "que","se","e","o","a","os","as","ao","aos","é","foi","são","ser","está","tem",
+    "the","of","in","for","and","to","a","an","is","was","are","be","has","have",
+  ]);
+  const keywords = firstPara
+    .replace(/[^\wÀ-ú\s]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 4 && !stopWords.has(w.toLowerCase()))
+    .slice(0, 6)
+    .join(" ");
+  newsContext = keywords;
+}
+
+// Gera múltiplas queries por entidade (da mais específica para a mais genérica)
+// Cada entidade recebe um array de queries; o script de busca tenta na ordem
+const search_queries_v2 = uniqueEntities.map((e) => {
+  const ctx = newsContext;
+  if (e.type === "person") {
+    return [
+      `"${e.name}" foto`,
+      `"${e.name}"`,
+      `${e.name} foto portrait`,
+      `${e.name}`,
+    ];
+  }
+  if (e.type === "location") {
+    return [
+      `${e.name} bandeira oficial`,
+      `${e.name} flag`,
+      `${e.name} país`,
+      `${e.name}`,
+    ];
+  }
+  if (e.type === "brand") {
+    return [
+      `${e.name} logo PNG`,
+      `${e.name} logo`,
+      `${e.name} marca`,
+      `${e.name}`,
+    ];
+  }
+  // company — instituto, governo, corporação, etc.
+  const shortName = e.name.split(/\s+/).slice(0, 3).join(" ");
+  const queries = [
+    `"${e.name}" logo`,
+    `${e.name} logo PNG`,
+    `${shortName} logo`,
+  ];
+  if (ctx) queries.push(`${shortName} ${ctx}`.trim());
+  queries.push(shortName);
+  return queries;
 });
+
+// search_queries legado (primeira query de cada entidade, para compatibilidade)
+const search_queries = search_queries_v2.map((qs) => qs[0]);
 
 const topics = {
   source: "carousel-copy.md::ENTIDADES",
@@ -166,6 +232,7 @@ const topics = {
   public_figures,
   locations,
   search_queries,
+  search_queries_v2: Object.fromEntries(uniqueEntities.map((e, i) => [e.name, search_queries_v2[i]])),
   themes: [],
 };
 
@@ -185,5 +252,8 @@ console.log(`   Entidades mapeadas (${uniqueEntities.length}):`);
 uniqueEntities.forEach((e) => {
   console.log(`     slide-${String(e.slide).padStart(2, "0")} → ${e.name} (${e.type})`);
 });
-console.log(`\n   Queries geradas:`);
-search_queries.forEach((q) => console.log(`     → ${q}`));
+console.log(`\n   Queries geradas (multi-fallback):`);
+uniqueEntities.forEach((e, i) => {
+  console.log(`     ${e.name}:`);
+  search_queries_v2[i].forEach((q) => console.log(`       → ${q}`));
+});
