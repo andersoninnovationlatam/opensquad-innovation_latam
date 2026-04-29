@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('costTotal').textContent = '—';
     }
 
-    function populateCostCard(usage) {
+    function populateCostCard(usage, generationLog) {
         if (!usage) return;
         if (usage.prompt_tokens != null)
             document.getElementById('costPrompt').textContent = usage.prompt_tokens.toLocaleString('pt-BR');
@@ -156,6 +156,25 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('costCompletion').textContent = usage.completion_tokens.toLocaleString('pt-BR');
         if (usage.total_cost_usd != null)
             document.getElementById('costTotal').textContent = `$${usage.total_cost_usd.toFixed(5)}`;
+
+        // Browser console: detailed cost per model
+        if (generationLog?.length) {
+            console.group('💰 OpenRouter — Custos por geração');
+            for (const g of generationLog) {
+                const label = g.type === 'image' ? '🖼  Imagem' : '📝 Conteúdo';
+                console.groupCollapsed(`${label} — ${g.model}`);
+                console.log('ID:              ', g.id);
+                console.log('Custo (USD):     ', g.cost_usd != null ? `$${g.cost_usd.toFixed(6)}` : 'n/a');
+                console.log('Tokens entrada:  ', g.prompt_tokens ?? 'n/a');
+                console.log('Tokens saída:    ', g.completion_tokens ?? 'n/a');
+                console.groupEnd();
+            }
+            console.log('─────────────────────────────────────');
+            console.log('Total (USD):     ', usage.total_cost_usd != null ? `$${usage.total_cost_usd.toFixed(6)}` : 'n/a');
+            console.log('Total tokens in: ', usage.prompt_tokens ?? 'n/a');
+            console.log('Total tokens out:', usage.completion_tokens ?? 'n/a');
+            console.groupEnd();
+        }
     }
 
     function setStepState(stepNumber, state) {
@@ -290,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (state.status === 'completed') {
                     clearInterval(pollInterval);
                     markAllDone(total);
-                    populateCostCard(state.usage);
+                    populateCostCard(state.usage, state.generationLog);
 
                     // aguarda o tick do step 6 animar antes de mostrar o painel
                     setTimeout(() => {

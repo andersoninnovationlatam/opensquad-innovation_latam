@@ -75,7 +75,6 @@ async function callOpenRouter(prompt, model, apiKey) {
                     prompt_tokens: d.tokens_prompt ?? null,
                     completion_tokens: d.tokens_completion ?? null,
                 };
-                console.log(`💰 Cost: $${cost.total_cost_usd} | tokens in: ${cost.prompt_tokens} out: ${cost.completion_tokens}`);
                 break;
             } catch (err) {
                 console.warn(`⚠️ Could not fetch generation cost: ${err.message}`);
@@ -85,6 +84,86 @@ async function callOpenRouter(prompt, model, apiKey) {
     }
 
     return { content: data.choices[0].message.content, cost, generationId };
+}
+
+// ── Image Generation (Node.js native, replaces generate.py) ──────────────────
+async function generateImageAI(prompt, outputPath, imageModel, apiKey) {
+    console.log(`🎨 Generating image via ${imageModel}...`);
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://github.com/renatoasse/opensquad',
+            'X-Title': 'OpenSquad Headless Runner'
+        },
+        body: JSON.stringify({
+            model: imageModel,
+            messages: [{ role: 'user', content: `Generate an image: ${prompt}. Only output the image, no text.` }]
+        })
+    });
+
+    if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`OpenRouter image API error: ${err}`);
+    }
+
+    const data = await response.json();
+    const generationId = data.id;
+
+    // Extract base64 image from response
+    const msg = data.choices?.[0]?.message;
+    const images = msg?.images || [];
+    let imgBase64 = null;
+
+    if (images.length > 0) {
+        const url = images[0]?.image_url?.url || '';
+        imgBase64 = url.startsWith('data:') ? url.split(',')[1] : url;
+    } else if (typeof msg?.content === 'string' && msg.content.startsWith('data:image')) {
+        imgBase64 = msg.content.includes(',') ? msg.content.split(',')[1] : msg.content;
+    }
+
+    if (!imgBase64) throw new Error(`No image returned by model ${imageModel}`);
+
+    await fs.mkdir(path.dirname(outputPath), { recursive: true });
+    await fs.writeFile(outputPath, Buffer.from(imgBase64, 'base64'));
+    const stat = await fs.stat(outputPath);
+    console.log(`  OK: ${path.basename(outputPath)} (${Math.round(stat.size / 1024)} KB)`);
+
+    // Fetch cost
+    let cost = null;
+    const delays = [2000, 3000, 5000];
+    for (const delay of delays) {
+        await new Promise(r => setTimeout(r, delay));
+        try {
+            const costRes = await fetch(`https://openrouter.ai/api/v1/generation?id=${generationId}`, {
+                headers: { 'Authorization': `Bearer ${apiKey}` }
+            });
+            const costData = await costRes.json();
+            if (!costRes.ok) {
+                console.warn(`⚠️ Image cost HTTP ${costRes.status}: ${JSON.stringify(costData)}`);
+                continue;
+            }
+            const d = costData.data;
+            if (d?.total_cost == null && d?.tokens_prompt == null) {
+                console.warn(`⚠️ Image cost not ready yet (id=${generationId}), retrying...`);
+                continue;
+            }
+            cost = {
+                id: generationId,
+                model: d.model || imageModel,
+                total_cost_usd: d.total_cost ?? null,
+                prompt_tokens: d.tokens_prompt ?? null,
+                completion_tokens: d.tokens_completion ?? null,
+            };
+            break;
+        } catch (err) {
+            console.warn(`⚠️ Could not fetch image cost: ${err.message}`);
+        }
+    }
+    if (!cost) console.warn(`⚠️ Image cost unavailable after retries (id=${generationId})`);
+
+    return { cost };
 }
 
 // ── Bruno: Image Research (script-based, not LLM) ─────────────────────────────
@@ -587,26 +666,19 @@ If the instructions ask to save a file, provide the content of that file clearly
                     if (slide.bgPrompt) {
                         console.log(`🎨 Slide ${slide.number}: gerando imagem AI (fallback)...`);
                         const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
-                        const genScript = path.join(ROOT_DIR, 'skills', 'image-ai-generator', 'scripts', 'generate.py');
-                        const imgResult = spawnSync('python3', [
-                            genScript,
-                            '--prompt', slide.bgPrompt,
-                            '--output', bgPath,
-                            '--mode', 'production'
-                        ], {
-                            env: {
-                                ...process.env,
-                                OPENROUTER_API_KEY: apiKey,
-                                OPENROUTER_MODELS_IMAGE: env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image',
-                                OPENSQUAD_RUN_DIR: runDir
-                            },
-                            stdio: 'inherit'
-                        });
-                        if (imgResult.status === 0) {
+                        const imageModel = env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image';
+                        try {
+                            const { cost } = await generateImageAI(slide.bgPrompt, bgPath, imageModel, apiKey);
                             backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
                             console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
-                        } else {
-                            console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number} (exit ${imgResult.status})`);
+                            if (cost) {
+                                if (cost.total_cost_usd != null) accumulatedCost.total_cost_usd += cost.total_cost_usd;
+                                if (cost.prompt_tokens != null) accumulatedCost.prompt_tokens += cost.prompt_tokens;
+                                if (cost.completion_tokens != null) accumulatedCost.completion_tokens += cost.completion_tokens;
+                                generationLog.push({ ...cost, type: 'image' });
+                            }
+                        } catch (err) {
+                            console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number}: ${err.message}`);
                         }
                     } else {
                         console.warn(`⚠️ Slide ${slide.number}: sem referência do Bruno e sem prompt AI no art-brief — slide ficará sem background.`);
@@ -667,74 +739,9 @@ If the instructions ask to save a file, provide the content of that file clearly
             console.log(`✓ Step ${step.step} completed`);
         }
 
-        // Fetch cost for AI-generated images (ids written by generate.py)
-        const imageCostFile = path.join(runDir, 'image-cost.json');
-        try {
-            const ids = JSON.parse(await fs.readFile(imageCostFile, 'utf-8'));
-            const delays = [2000, 3000, 5000];
-            for (const genId of ids) {
-                let fetched = false;
-                for (const delay of delays) {
-                    await new Promise(r => setTimeout(r, delay));
-                    try {
-                        const res = await fetch(`https://openrouter.ai/api/v1/generation?id=${genId}`, {
-                            headers: { 'Authorization': `Bearer ${apiKey}` }
-                        });
-                        const costData = await res.json();
-                        if (!res.ok) {
-                            console.warn(`⚠️ Image cost HTTP ${res.status} for ${genId}: ${JSON.stringify(costData)}`);
-                            continue;
-                        }
-                        const d = costData.data;
-                        if (d?.total_cost == null && d?.tokens_prompt == null) {
-                            console.warn(`⚠️ Image cost not ready yet (id=${genId}), retrying...`);
-                            continue;
-                        }
-                        if (d.total_cost != null) accumulatedCost.total_cost_usd += d.total_cost;
-                        if (d.tokens_prompt != null) accumulatedCost.prompt_tokens += d.tokens_prompt;
-                        if (d.tokens_completion != null) accumulatedCost.completion_tokens += d.tokens_completion;
-                        generationLog.push({
-                            id: genId,
-                            type: 'image',
-                            model: d.model || env.OPENROUTER_MODELS_IMAGE || 'unknown',
-                            cost_usd: d.total_cost,
-                            prompt_tokens: d.tokens_prompt,
-                            completion_tokens: d.tokens_completion,
-                        });
-                        fetched = true;
-                        break;
-                    } catch (err) {
-                        console.warn(`⚠️ Could not fetch image cost for ${genId}: ${err.message}`);
-                    }
-                }
-                if (!fetched) console.warn(`⚠️ Image cost unavailable after retries (id=${genId})`);
-            }
-        } catch {
-            // image-cost.json não existe = nenhuma imagem AI foi gerada, normal
-        }
-
-        // ── Cost Summary ──────────────────────────────────────────────────────────
-        console.log('\n┌─────────────────────────────────────────────────────────┐');
-        console.log(  '│                  💰 COST SUMMARY                        │');
-        console.log(  '├─────────────────────────────────────────────────────────┤');
-        for (const g of generationLog) {
-            const tag   = g.type === 'image' ? '🖼  image  ' : '📝 content';
-            const cost  = g.cost_usd != null ? `$${g.cost_usd.toFixed(6)}` : '       n/a';
-            const tokIn = g.prompt_tokens != null ? String(g.prompt_tokens).padStart(6) : '   n/a';
-            const tokOut = g.completion_tokens != null ? String(g.completion_tokens).padStart(6) : '   n/a';
-            console.log(`│ ${tag} | cost: ${cost} | in: ${tokIn} | out: ${tokOut} │`);
-            console.log(`│   id: ${g.id}  │`);
-            console.log(`│   model: ${g.model}`);
-            console.log(  '├─────────────────────────────────────────────────────────┤');
-        }
-        const totalCost = accumulatedCost.total_cost_usd.toFixed(6);
-        const totalIn   = String(accumulatedCost.prompt_tokens).padStart(6);
-        const totalOut  = String(accumulatedCost.completion_tokens).padStart(6);
-        console.log(`│ TOTAL              | cost: $${totalCost} | in: ${totalIn} | out: ${totalOut} │`);
-        console.log(  '└─────────────────────────────────────────────────────────┘');
-
         state.status = 'completed';
         state.usage = accumulatedCost;
+        state.generationLog = generationLog;
         state.updatedAt = new Date().toISOString();
         await fs.writeFile(statePath, JSON.stringify(state, null, 2));
 
