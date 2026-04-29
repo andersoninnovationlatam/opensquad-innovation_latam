@@ -441,6 +441,24 @@ select option {
 .cost-row.cost-total {
     padding-top: 0.625rem;
     border-top: 1px solid var(--border-subtle);
+    margin-top: 0.25rem;
+}
+
+.cost-model-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 0.25rem;
+}
+
+.cost-model-name {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-main);
+    word-break: break-all;
+    margin-bottom: 0.15rem;
 }
 
 .cost-label {

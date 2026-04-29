@@ -157,23 +157,39 @@ document.addEventListener('DOMContentLoaded', () => {
         if (usage.total_cost_usd != null)
             document.getElementById('costTotal').textContent = `$${usage.total_cost_usd.toFixed(5)}`;
 
-        // Browser console: detailed cost per model
-        if (generationLog?.length) {
-            console.group('💰 OpenRouter — Custos por geração');
+        // Per-model breakdown in the UI (grouped by model name)
+        const modelsEl = document.getElementById('costModels');
+        if (modelsEl && generationLog?.length) {
+            const grouped = {};
             for (const g of generationLog) {
-                const label = g.type === 'image' ? '🖼  Imagem' : '📝 Conteúdo';
-                console.groupCollapsed(`${label} — ${g.model}`);
-                console.log('ID:              ', g.id);
-                console.log('Custo (USD):     ', g.cost_usd != null ? `$${g.cost_usd.toFixed(6)}` : 'n/a');
-                console.log('Tokens entrada:  ', g.prompt_tokens ?? 'n/a');
-                console.log('Tokens saída:    ', g.completion_tokens ?? 'n/a');
-                console.groupEnd();
+                const key = g.model ?? 'unknown';
+                if (!grouped[key]) grouped[key] = { type: g.type, cost_usd: 0, prompt_tokens: 0, completion_tokens: 0 };
+                grouped[key].cost_usd += g.cost_usd ?? 0;
+                grouped[key].prompt_tokens += g.prompt_tokens ?? 0;
+                grouped[key].completion_tokens += g.completion_tokens ?? 0;
             }
-            console.log('─────────────────────────────────────');
-            console.log('Total (USD):     ', usage.total_cost_usd != null ? `$${usage.total_cost_usd.toFixed(6)}` : 'n/a');
-            console.log('Total tokens in: ', usage.prompt_tokens ?? 'n/a');
-            console.log('Total tokens out:', usage.completion_tokens ?? 'n/a');
-            console.groupEnd();
+            modelsEl.innerHTML = Object.entries(grouped).map(([model, g]) => {
+                const icon = g.type === 'image' ? '🖼' : '📝';
+                const cost = `$${g.cost_usd.toFixed(6)}`;
+                const tokIn = g.prompt_tokens.toLocaleString('pt-BR');
+                const tokOut = g.completion_tokens.toLocaleString('pt-BR');
+                return `
+                <div class="cost-model-block">
+                    <div class="cost-model-name">${icon} ${model}</div>
+                    <div class="cost-row">
+                        <span class="cost-label">Tokens entrada</span>
+                        <span class="cost-value">${tokIn}</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Tokens saída</span>
+                        <span class="cost-value">${tokOut}</span>
+                    </div>
+                    <div class="cost-row">
+                        <span class="cost-label">Custo</span>
+                        <span class="cost-value">${cost}</span>
+                    </div>
+                </div>`;
+            }).join('');
         }
     }
 

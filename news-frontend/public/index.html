@@ -181,6 +181,11 @@
                 <aside class="cost-card" id="costCard">
                     <h3 class="cost-title">Custos da Geração</h3>
                     <div class="cost-body">
+                        <div id="costModels"></div>
+                        <div class="cost-row cost-total">
+                            <span class="cost-label">Custo total</span>
+                            <span class="cost-value" id="costTotal">—</span>
+                        </div>
                         <div class="cost-row">
                             <span class="cost-label">Tokens de entrada</span>
                             <span class="cost-value" id="costPrompt">—</span>
@@ -188,10 +193,6 @@
                         <div class="cost-row">
                             <span class="cost-label">Tokens de saída</span>
                             <span class="cost-value" id="costCompletion">—</span>
-                        </div>
-                        <div class="cost-row cost-total">
-                            <span class="cost-label">Custo total</span>
-                            <span class="cost-value" id="costTotal">—</span>
                         </div>
                     </div>
                     <p class="cost-note" id="costNote">
