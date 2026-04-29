@@ -652,25 +652,26 @@ If the instructions ask to save a file, provide the content of that file clearly
                         continue;
                     }
 
-                    if (slide.bgPrompt) {
-                        console.log(`🎨 Slide ${slide.number}: gerando imagem AI (fallback)...`);
-                        const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
-                        const imageModel = env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image';
-                        try {
-                            const { cost } = await generateImageAI(slide.bgPrompt, bgPath, imageModel, apiKey);
-                            backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
-                            console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
-                            if (cost) {
-                                if (cost.total_cost_usd != null) accumulatedCost.total_cost_usd += cost.total_cost_usd;
-                                if (cost.prompt_tokens != null) accumulatedCost.prompt_tokens += cost.prompt_tokens;
-                                if (cost.completion_tokens != null) accumulatedCost.completion_tokens += cost.completion_tokens;
-                                generationLog.push({ ...cost, type: 'image' });
-                            }
-                        } catch (err) {
-                            console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number}: ${err.message}`);
+                    const effectivePrompt = slide.bgPrompt ||
+                        `Premium editorial photo illustration, professional news magazine style, concept: "${slide.headline || 'technology innovation'}", cinematic lighting, 8k, clean composition, no text, no watermarks`;
+                    if (!slide.bgPrompt) {
+                        console.warn(`⚠️ Slide ${slide.number}: sem prompt no art-brief — usando prompt genérico baseado no headline.`);
+                    }
+                    console.log(`🎨 Slide ${slide.number}: gerando imagem AI (fallback)...`);
+                    const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
+                    const imageModel = env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image';
+                    try {
+                        const { cost } = await generateImageAI(effectivePrompt, bgPath, imageModel, apiKey);
+                        backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
+                        console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
+                        if (cost) {
+                            if (cost.total_cost_usd != null) accumulatedCost.total_cost_usd += cost.total_cost_usd;
+                            if (cost.prompt_tokens != null) accumulatedCost.prompt_tokens += cost.prompt_tokens;
+                            if (cost.completion_tokens != null) accumulatedCost.completion_tokens += cost.completion_tokens;
+                            generationLog.push({ ...cost, type: 'image' });
                         }
-                    } else {
-                        console.warn(`⚠️ Slide ${slide.number}: sem referência do Bruno e sem prompt AI no art-brief — slide ficará sem background.`);
+                    } catch (err) {
+                        console.error(`❌ Falha ao gerar imagem AI para slide ${slide.number}: ${err.message}`);
                     }
                 }
 
