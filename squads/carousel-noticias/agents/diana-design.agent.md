@@ -49,7 +49,7 @@ Diana entrega briefings visuais em formato estruturado slide a slide, usando o t
 Para cada slide ímpar (1, 3, 5, 7), a Diana decide o background nesta ordem:
 
 1. **Imagem de referência do Bruno (preferencial)** — se `output/images/slide-0N-ref.*` existe, copiar como `output/images/slide-0N-bg.<ext>` e usar como background. Não chamar `image-ai-generator`. Anotar `origem: reference` no resumo.
-2. **Imagem AI (fallback)** — se não houver referência do Bruno, gerar via `image-ai-generator` com prompt de paródia editorial (regras abaixo). Anotar `origem: ai-generated` no resumo.
+2. **Imagem AI (fallback)** — se não houver referência do Bruno, gerar via `image-ai-generator` com prompt de paródia editorial (regras abaixo). O runner enviará automaticamente todas as imagens `slide-0N-ref.*` disponíveis como referências visuais multimodais ao modelo de imagem — elas servem como inspiração criativa, não são copiadas. O prompt deve descrever o conceito visual: cenário, personagens, ação, estilo, iluminação, tom emocional e composição. Anotar `origem: ai-generated` no resumo.
 
 A redação do `art-brief.md` deve, para cada slide ímpar, indicar a estratégia: `reference (Bruno: <entidade>)` ou `ai-generated` + prompt completo.
 
@@ -89,6 +89,9 @@ Usar abordagem temática com os `themes` do image-refs.json:
 - NUNCA gerar imagens genéricas se houver uma marca ou pessoa específica no texto ou em image-refs
 - O output deve ser apenas o prompt em inglês, sem comentários
 - Incluir sempre as brand_colors da entidade no prompt para garantir reconhecibilidade
+- NUNCA descrever fundo preto ou neutro — o modelo deve gerar cenas ricas e contextuais
+- O prompt deve cobrir: cenário, personagens/elementos, ação, estilo visual, iluminação, tom emocional, composição, nível de realismo
+- A cor #993CB1 (roxo Innovation Latam) pode aparecer como acento de luz, reflexo ou elemento de destaque na cena
 
 ## Voice Guidance
 

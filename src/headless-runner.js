@@ -87,8 +87,60 @@ async function callOpenRouter(prompt, model, apiKey) {
 }
 
 // ── Image Generation (Node.js native, replaces generate.py) ──────────────────
-async function generateImageAI(prompt, outputPath, imageModel, apiKey) {
+async function generateImageAI(prompt, outputPath, imageModel, apiKey, refImagePaths = []) {
     console.log(`🎨 Generating image via ${imageModel}...`);
+
+    // Build multimodal content: reference images + creative prompt
+    let content;
+    if (refImagePaths.length > 0) {
+        const imageParts = [];
+        for (const refPath of refImagePaths) {
+            try {
+                const raw = await fs.readFile(refPath);
+                const ext = path.extname(refPath).toLowerCase();
+                const mimeMap = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' };
+                const mime = mimeMap[ext] || 'image/jpeg';
+                imageParts.push({ type: 'image_url', image_url: { url: `data:${mime};base64,${raw.toString('base64')}` } });
+            } catch {
+                console.warn(`⚠️ Could not read reference image: ${refPath}`);
+            }
+        }
+
+        const creativePrompt = `You are a creative image generator for social media.
+
+Your task is to create a NEW image based on:
+1. A visual concept already defined
+2. The reference image(s) above (which must NOT be copied literally)
+
+Rules:
+- Do NOT copy the reference images
+- Do NOT paste logos directly
+- Use the references only as visual inspiration
+- Create a unique, coherent and creative scene
+- Keep consistency with the provided concept
+- Modern, eye-catching visual style, social media editorial quality
+- Background must NOT be solid black — use rich, contextual environments
+- Brand color accent: #993CB1 (Innovation Latam purple) can be used as lighting, reflections or accents
+
+[VISUAL CONCEPT]
+${prompt}
+
+Output: only the image, no text overlays, no watermarks.`;
+
+        content = [...imageParts, { type: 'text', text: creativePrompt }];
+    } else {
+        content = `You are a creative image generator for social media.
+
+Create a NEW image for the following visual concept. Style: modern editorial, social media quality, eye-catching.
+Background must NOT be solid black — use rich, contextual environments.
+Brand color accent available: #993CB1 (Innovation Latam purple).
+
+[VISUAL CONCEPT]
+${prompt}
+
+Output: only the image, no text overlays, no watermarks.`;
+    }
+
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -99,7 +151,7 @@ async function generateImageAI(prompt, outputPath, imageModel, apiKey) {
         },
         body: JSON.stringify({
             model: imageModel,
-            messages: [{ role: 'user', content: `Generate an image: ${prompt}. Only output the image, no text.` }]
+            messages: [{ role: 'user', content }]
         })
     });
 
@@ -667,8 +719,21 @@ If the instructions ask to save a file, provide the content of that file clearly
                         console.log(`🎨 Slide ${slide.number}: gerando imagem AI (fallback)...`);
                         const bgPath = path.join(imagesDir, `slide-${slideLabel}-bg.png`);
                         const imageModel = env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image';
+
+                        // Collect all Bruno reference images available as visual inspiration
+                        const refPaths = [];
+                        for (const ext of ['.webp', '.png', '.jpg', '.jpeg']) {
+                            for (let s = 1; s <= 9; s += 2) {
+                                const label = String(s).padStart(2, '0');
+                                const candidate = path.join(imagesDir, `slide-${label}-ref${ext}`);
+                                try { await fs.access(candidate); refPaths.push(candidate); } catch {}
+                            }
+                        }
+                        if (refPaths.length > 0)
+                            console.log(`   Using ${refPaths.length} Bruno reference(s) as visual inspiration`);
+
                         try {
-                            const { cost } = await generateImageAI(slide.bgPrompt, bgPath, imageModel, apiKey);
+                            const { cost } = await generateImageAI(slide.bgPrompt, bgPath, imageModel, apiKey, refPaths);
                             backgroundOrigins.push({ slide: slide.number, origin: 'ai-generated', file: bgPath, type: 'photo' });
                             console.log(`✅ slide-${slideLabel}-bg.png gerado via AI`);
                             if (cost) {

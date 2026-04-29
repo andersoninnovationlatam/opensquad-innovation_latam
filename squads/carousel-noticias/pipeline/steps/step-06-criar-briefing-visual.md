@@ -31,6 +31,7 @@ Load these files before executing:
    - Use entidade do `image-refs.json` em paródia editorial (logo/cores/símbolo) quando aplicável
    - Adicione especificações técnicas com câmera/luz/lente do vocabulário do guia
    - Se não houver entidade relevante, usar abordagem temática dos `themes`
+   - O runner passará automaticamente todas as imagens `slide-0N-ref.*` do Bruno como referências visuais multimodais para o modelo de imagem. O prompt deve descrever o CONCEITO visual desejado — não precisa redescrever o que já está nas referências. O modelo usará as referências como inspiração, não como cópia.
 7. Para cada slide par: especificar fundo #993CB1 e confirmar contraste com texto branco.
 8. Verificar asset do logo: `innovation-latam-logo-white.png` em `squads/carousel-noticias/assets/`.
 9. Entregar briefing formatado slide a slide, com a estratégia (`reference` ou `ai-generated`) explícita em cada ímpar.
@@ -67,7 +68,7 @@ Assets:
 Slide [N] ([tipo]):
 Estratégia de Background (se ímpar): reference (Bruno: <entidade>, arquivo slide-0N-ref.<ext>) | ai-generated
 Tipo de Background: [Foto referência do Bruno OU Foto AI baseada no texto OU Fundo roxo #993CB1]
-Prompt de imagem AI (apenas se ai-generated): "[descrição em inglês — paródia editorial + contexto da notícia + estilo jornalístico]"
+Prompt de imagem AI (apenas se ai-generated): "[descrição do CONCEITO visual em inglês — paródia editorial + contexto da notícia + estilo jornalístico + tom emocional + composição desejada. As referências visuais do Bruno serão enviadas automaticamente ao modelo como inspiração multimodal.]"
 Especificações Técnicas (apenas se ai-generated):
   Câmera: [termo do guia]
   Luz: [termo do guia]
