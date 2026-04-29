@@ -298,17 +298,15 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
     }
 
     // Odd slides: image bg + .overlay + .text-scrim
-    // For company/brand logos (typically transparent PNGs): centered <img> on dark bg
-    // For photos (person/location/AI-generated): full-bleed background-image
+    // All Bruno images (logos, photos, AI-generated) are used as background-image.
+    // Logos use background-size: contain to preserve quality without cropping.
+    // Photos use background-size: cover for full-bleed.
     const isLogo = bgEntityType === 'company' || bgEntityType === 'brand';
     const bgUrl = `file://${bgPath}`;
 
-    const bgLayer = isLogo
-        ? `<img class="bg-logo" src="${bgUrl}" alt="" />`
-        : '';
-    const bgStyle = isLogo
-        ? `background-color: #0a0a0a;`
-        : `background-color: #0a0a0a; background-image: url('${bgUrl}'); background-size: cover; background-position: center;`;
+    const bgLayer = '';
+    const bgSize = isLogo ? 'contain' : 'cover';
+    const bgStyle = `background-color: #0a0a0a; background-image: url('${bgUrl}'); background-size: ${bgSize}; background-position: center; background-repeat: no-repeat;`;
 
     return `<!DOCTYPE html>
 <html lang="pt-br">
@@ -322,15 +320,6 @@ function buildSlideHtml({ slide, isOdd, isLast, bgPath, bgEntityType, logoPath }
       font-family: 'Montserrat', sans-serif;
       position: relative;
       ${bgStyle}
-    }
-    .bg-logo {
-      position: absolute;
-      top: 18%; left: 50%;
-      transform: translateX(-50%);
-      width: 70%;
-      height: auto;
-      filter: invert(1) brightness(1.05);
-      z-index: 1;
     }
     .overlay {
       position: absolute; inset: 0;

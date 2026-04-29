@@ -143,9 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         progressResult.className = 'progress-result hidden';
         progressResult.innerHTML = '';
-        document.getElementById('costPrompt').textContent = '—';
-        document.getElementById('costCompletion').textContent = '—';
-        document.getElementById('costTotal').textContent = '—';
+        const elPrompt = document.getElementById('costPrompt');
+        const elCompletion = document.getElementById('costCompletion');
+        const elTotal = document.getElementById('costTotal');
+        if (elPrompt) elPrompt.textContent = '—';
+        if (elCompletion) elCompletion.textContent = '—';
+        if (elTotal) elTotal.textContent = '—';
     }
 
     function populateCostCard(usage, generationLog) {
