@@ -106,6 +106,22 @@ def generate_image(prompt, output_path, mode, api_key, reference_image=None):
         print(f"  Request error: {e}", file=sys.stderr)
         return False
 
+    # Write generation id to image-cost.json so the Node runner can fetch the cost
+    generation_id = data.get("id")
+    run_dir = os.environ.get("OPENSQUAD_RUN_DIR")
+    if generation_id and run_dir:
+        cost_file = os.path.join(run_dir, "image-cost.json")
+        existing = []
+        if os.path.exists(cost_file):
+            try:
+                with open(cost_file, "r") as f:
+                    existing = json.load(f)
+            except Exception:
+                existing = []
+        existing.append(generation_id)
+        with open(cost_file, "w") as f:
+            json.dump(existing, f)
+
     images = data.get("choices", [{}])[0].get("message", {}).get("images", [])
     if not images:
         # Some models return image in content as base64

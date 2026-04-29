@@ -48,7 +48,43 @@ async function callOpenRouter(prompt, model, apiKey) {
     }
 
     const data = await response.json();
-    return data.choices[0].message.content;
+    const generationId = data.id;
+
+    // Fetch cost data from OpenRouter generation endpoint (with retry)
+    let cost = null;
+    if (generationId && apiKey) {
+        const delays = [2000, 3000, 5000]; // retry up to 3x
+        for (const delay of delays) {
+            await new Promise(r => setTimeout(r, delay));
+            try {
+                const costRes = await fetch(`https://openrouter.ai/api/v1/generation?id=${generationId}`, {
+                    headers: { 'Authorization': `Bearer ${apiKey}` }
+                });
+                const costData = await costRes.json();
+                if (!costRes.ok) {
+                    console.warn(`⚠️ Generation cost fetch HTTP ${costRes.status}: ${JSON.stringify(costData)}`);
+                    continue;
+                }
+                const d = costData.data;
+                if (d?.total_cost == null && d?.tokens_prompt == null) {
+                    console.warn(`⚠️ Generation cost not ready yet (id=${generationId}), retrying...`);
+                    continue;
+                }
+                cost = {
+                    total_cost_usd: d.total_cost ?? null,
+                    prompt_tokens: d.tokens_prompt ?? null,
+                    completion_tokens: d.tokens_completion ?? null,
+                };
+                console.log(`💰 Cost: $${cost.total_cost_usd} | tokens in: ${cost.prompt_tokens} out: ${cost.completion_tokens}`);
+                break;
+            } catch (err) {
+                console.warn(`⚠️ Could not fetch generation cost: ${err.message}`);
+            }
+        }
+        if (!cost) console.warn(`⚠️ Generation cost unavailable after retries (id=${generationId})`);
+    }
+
+    return { content: data.choices[0].message.content, cost, generationId };
 }
 
 // ── Bruno: Image Research (script-based, not LLM) ─────────────────────────────
@@ -361,6 +397,9 @@ async function run() {
         updatedAt: new Date().toISOString()
     };
 
+    const accumulatedCost = { total_cost_usd: 0, prompt_tokens: 0, completion_tokens: 0 };
+    const generationLog = []; // { id, type, model, cost_usd, prompt_tokens, completion_tokens }
+
     // Write initial state immediately
     await fs.writeFile(statePath, JSON.stringify(state, null, 2));
 
@@ -434,7 +473,21 @@ Please perform the task described in the STEP INSTRUCTIONS.
 If the instructions ask to save a file, provide the content of that file clearly.
 `;
 
-                const output = await callOpenRouter(prompt, contentModel, apiKey);
+                const { content: output, cost, generationId: llmGenId } = await callOpenRouter(prompt, contentModel, apiKey);
+
+                if (cost) {
+                    if (cost.total_cost_usd != null) accumulatedCost.total_cost_usd += cost.total_cost_usd;
+                    if (cost.prompt_tokens != null) accumulatedCost.prompt_tokens += cost.prompt_tokens;
+                    if (cost.completion_tokens != null) accumulatedCost.completion_tokens += cost.completion_tokens;
+                    generationLog.push({
+                        id: llmGenId,
+                        type: 'content',
+                        model: contentModel,
+                        cost_usd: cost.total_cost_usd,
+                        prompt_tokens: cost.prompt_tokens,
+                        completion_tokens: cost.completion_tokens,
+                    });
+                }
 
                 // Save output if specified
                 if (stepMeta.outputFile) {
@@ -544,7 +597,8 @@ If the instructions ask to save a file, provide the content of that file clearly
                             env: {
                                 ...process.env,
                                 OPENROUTER_API_KEY: apiKey,
-                                OPENROUTER_MODELS_IMAGE: env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image'
+                                OPENROUTER_MODELS_IMAGE: env.OPENROUTER_MODELS_IMAGE || 'google/gemini-2.5-flash-image',
+                                OPENSQUAD_RUN_DIR: runDir
                             },
                             stdio: 'inherit'
                         });
@@ -613,7 +667,74 @@ If the instructions ask to save a file, provide the content of that file clearly
             console.log(`✓ Step ${step.step} completed`);
         }
 
+        // Fetch cost for AI-generated images (ids written by generate.py)
+        const imageCostFile = path.join(runDir, 'image-cost.json');
+        try {
+            const ids = JSON.parse(await fs.readFile(imageCostFile, 'utf-8'));
+            const delays = [2000, 3000, 5000];
+            for (const genId of ids) {
+                let fetched = false;
+                for (const delay of delays) {
+                    await new Promise(r => setTimeout(r, delay));
+                    try {
+                        const res = await fetch(`https://openrouter.ai/api/v1/generation?id=${genId}`, {
+                            headers: { 'Authorization': `Bearer ${apiKey}` }
+                        });
+                        const costData = await res.json();
+                        if (!res.ok) {
+                            console.warn(`⚠️ Image cost HTTP ${res.status} for ${genId}: ${JSON.stringify(costData)}`);
+                            continue;
+                        }
+                        const d = costData.data;
+                        if (d?.total_cost == null && d?.tokens_prompt == null) {
+                            console.warn(`⚠️ Image cost not ready yet (id=${genId}), retrying...`);
+                            continue;
+                        }
+                        if (d.total_cost != null) accumulatedCost.total_cost_usd += d.total_cost;
+                        if (d.tokens_prompt != null) accumulatedCost.prompt_tokens += d.tokens_prompt;
+                        if (d.tokens_completion != null) accumulatedCost.completion_tokens += d.tokens_completion;
+                        generationLog.push({
+                            id: genId,
+                            type: 'image',
+                            model: d.model || env.OPENROUTER_MODELS_IMAGE || 'unknown',
+                            cost_usd: d.total_cost,
+                            prompt_tokens: d.tokens_prompt,
+                            completion_tokens: d.tokens_completion,
+                        });
+                        fetched = true;
+                        break;
+                    } catch (err) {
+                        console.warn(`⚠️ Could not fetch image cost for ${genId}: ${err.message}`);
+                    }
+                }
+                if (!fetched) console.warn(`⚠️ Image cost unavailable after retries (id=${genId})`);
+            }
+        } catch {
+            // image-cost.json não existe = nenhuma imagem AI foi gerada, normal
+        }
+
+        // ── Cost Summary ──────────────────────────────────────────────────────────
+        console.log('\n┌─────────────────────────────────────────────────────────┐');
+        console.log(  '│                  💰 COST SUMMARY                        │');
+        console.log(  '├─────────────────────────────────────────────────────────┤');
+        for (const g of generationLog) {
+            const tag   = g.type === 'image' ? '🖼  image  ' : '📝 content';
+            const cost  = g.cost_usd != null ? `$${g.cost_usd.toFixed(6)}` : '       n/a';
+            const tokIn = g.prompt_tokens != null ? String(g.prompt_tokens).padStart(6) : '   n/a';
+            const tokOut = g.completion_tokens != null ? String(g.completion_tokens).padStart(6) : '   n/a';
+            console.log(`│ ${tag} | cost: ${cost} | in: ${tokIn} | out: ${tokOut} │`);
+            console.log(`│   id: ${g.id}  │`);
+            console.log(`│   model: ${g.model}`);
+            console.log(  '├─────────────────────────────────────────────────────────┤');
+        }
+        const totalCost = accumulatedCost.total_cost_usd.toFixed(6);
+        const totalIn   = String(accumulatedCost.prompt_tokens).padStart(6);
+        const totalOut  = String(accumulatedCost.completion_tokens).padStart(6);
+        console.log(`│ TOTAL              | cost: $${totalCost} | in: ${totalIn} | out: ${totalOut} │`);
+        console.log(  '└─────────────────────────────────────────────────────────┘');
+
         state.status = 'completed';
+        state.usage = accumulatedCost;
         state.updatedAt = new Date().toISOString();
         await fs.writeFile(statePath, JSON.stringify(state, null, 2));
 

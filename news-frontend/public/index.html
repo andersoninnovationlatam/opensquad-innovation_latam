@@ -97,6 +97,7 @@
                     <span id="summaryAngle" class="summary-angle"></span>
                 </div>
 
+                <div class="progress-layout">
                 <div class="progress-steps">
                     <div class="step-item pending" data-step="1">
                         <div class="step-icon">
@@ -175,6 +176,29 @@
                             <span class="step-desc">Validando e aprovando o conteúdo final</span>
                         </div>
                     </div>
+                </div>
+
+                <aside class="cost-card" id="costCard">
+                    <h3 class="cost-title">Custos da Geração</h3>
+                    <div class="cost-body">
+                        <div class="cost-row">
+                            <span class="cost-label">Tokens de entrada</span>
+                            <span class="cost-value" id="costPrompt">—</span>
+                        </div>
+                        <div class="cost-row">
+                            <span class="cost-label">Tokens de saída</span>
+                            <span class="cost-value" id="costCompletion">—</span>
+                        </div>
+                        <div class="cost-row cost-total">
+                            <span class="cost-label">Custo total</span>
+                            <span class="cost-value" id="costTotal">—</span>
+                        </div>
+                    </div>
+                    <p class="cost-note" id="costNote">
+                        Valores em USD. Preços variam por modelo.
+                        <a class="cost-link" href="https://openrouter.ai/activity?api_key_id=16645846" target="_blank" rel="noopener">Ver Atividade →</a>
+                    </p>
+                </aside>
                 </div>
 
                 <div id="progressResult" class="progress-result hidden"></div>

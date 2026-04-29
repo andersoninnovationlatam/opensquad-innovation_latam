@@ -143,6 +143,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         progressResult.className = 'progress-result hidden';
         progressResult.innerHTML = '';
+        document.getElementById('costPrompt').textContent = '—';
+        document.getElementById('costCompletion').textContent = '—';
+        document.getElementById('costTotal').textContent = '—';
+    }
+
+    function populateCostCard(usage) {
+        if (!usage) return;
+        if (usage.prompt_tokens != null)
+            document.getElementById('costPrompt').textContent = usage.prompt_tokens.toLocaleString('pt-BR');
+        if (usage.completion_tokens != null)
+            document.getElementById('costCompletion').textContent = usage.completion_tokens.toLocaleString('pt-BR');
+        if (usage.total_cost_usd != null)
+            document.getElementById('costTotal').textContent = `$${usage.total_cost_usd.toFixed(5)}`;
     }
 
     function setStepState(stepNumber, state) {
@@ -277,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (state.status === 'completed') {
                     clearInterval(pollInterval);
                     markAllDone(total);
+                    populateCostCard(state.usage);
 
                     // aguarda o tick do step 6 animar antes de mostrar o painel
                     setTimeout(() => {
