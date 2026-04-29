@@ -8,7 +8,8 @@
       "WebFetch(domain:xlogo.org)",
       "Bash(python3 -c \"import js2py\")",
       "Bash(node -e \"const yaml=require\\('js-yaml'\\); console.log\\(yaml.DEFAULT_SCHEMA.toString\\(\\)\\)\")",
-      "Bash(grep -E \"\\\\.\\(js|ts|tsx\\)$\")"
+      "Bash(grep -E \"\\\\.\\(js|ts|tsx\\)$\")",
+      "Bash(grep -E \"\\\\.\\(js|ts|py\\)$\")"
     ],
     "additionalDirectories": [
       "/tmp",
