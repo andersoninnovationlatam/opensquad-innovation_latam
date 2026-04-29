@@ -106,21 +106,21 @@ async function generateImageAI(prompt, outputPath, imageModel, apiKey, refImageP
             }
         }
 
-        const creativePrompt = `You are a creative image generator for social media.
+        const creativePrompt = `You are a photo-realistic image composer for social media editorial content.
 
-Your task is to create a NEW image based on:
-1. A visual concept already defined
-2. The reference image(s) above (which must NOT be copied literally)
+You will receive one or more reference images and a visual concept. Your job is to:
+1. Identify the main subject from the reference (logo, person, brand, location)
+2. Read the visual concept carefully and derive a fitting real-world environment FROM the content itself — the setting must make sense for the story being told
+3. Compose the subject naturally inside that environment
 
-Rules:
-- Do NOT copy the reference images
-- Do NOT paste logos directly
-- Use the references only as visual inspiration
-- Create a unique, coherent and creative scene
-- Keep consistency with the provided concept
-- Modern, eye-catching visual style, social media editorial quality
-- Background must NOT be solid black — use rich, contextual environments
-- Brand color accent: #993CB1 (Innovation Latam purple) can be used as lighting, reflections or accents
+STRICT RULES — follow exactly:
+- The environment must come from the content context, NOT from a generic template
+- Use ONLY real objects and places that exist in the physical world
+- FORBIDDEN: floating screens, holographic displays, transparent monitors, glowing orbs, abstract particles, sci-fi interfaces, neon grids, futuristic HUDs, digital overlays, virtual reality elements
+- The result must look like a professional photograph or high-quality editorial photo, NOT a 3D render or digital art
+- Keep the reference subject (logo/person/brand) clearly visible and recognizable
+- Lighting must be natural or studio-quality — no artificial glowing effects
+- Brand color accent #993CB1 (Innovation Latam purple) may appear as a physical detail (painted surface, printed material, fabric) only if it fits naturally — never as glow or light effect
 
 [VISUAL CONCEPT]
 ${prompt}
@@ -129,11 +129,16 @@ Output: only the image, no text overlays, no watermarks.`;
 
         content = [...imageParts, { type: 'text', text: creativePrompt }];
     } else {
-        content = `You are a creative image generator for social media.
+        content = `You are a photo-realistic image composer for social media editorial content.
 
-Create a NEW image for the following visual concept. Style: modern editorial, social media quality, eye-catching.
-Background must NOT be solid black — use rich, contextual environments.
-Brand color accent available: #993CB1 (Innovation Latam purple).
+Read the visual concept carefully and derive a fitting real-world environment FROM the content itself — the setting must make sense for the story being told. Do NOT default to generic environments like offices or conference rooms unless the concept specifically calls for it.
+
+STRICT RULES:
+- Use ONLY real objects and environments that exist in the physical world
+- FORBIDDEN: floating screens, holographic displays, transparent monitors, glowing orbs, abstract particles, sci-fi interfaces, neon grids, futuristic HUDs
+- The result must look like a professional photograph, NOT a 3D render or digital art
+- Lighting must be natural or studio-quality
+- Brand color accent #993CB1 may appear as a physical detail only if it fits naturally
 
 [VISUAL CONCEPT]
 ${prompt}
