@@ -42,10 +42,10 @@ Load these files before executing:
 [Tom selecionado]
 
 === ENTIDADES ===
-- [Nome da entidade 1] (tipo: empresa | marca | pessoa | pais) — slide alvo: 1
-- [Nome da entidade 2] (tipo: ...) — slide alvo: 3
-- [Nome da entidade 3] (tipo: ...) — slide alvo: 5
-- [Nome da entidade 4] (tipo: ...) — slide alvo: 7
+- [Nome da entidade 1] (tipo: empresa | marca | pessoa | pais) — slide alvo: 1 — query: "[busca precisa em inglês]"
+- [Nome da entidade 2] (tipo: ...) — slide alvo: 3 — query: "[busca precisa em inglês]"
+- [Nome da entidade 3] (tipo: ...) — slide alvo: 5 — query: "[busca precisa em inglês]"
+- [Nome da entidade 4] (tipo: ...) — slide alvo: 7 — query: "[busca precisa em inglês]"
 
 === SLIDES ===
 
@@ -90,26 +90,41 @@ Slide N (CTA):
 
 #### Formato literal — siga ESTA sintaxe sem variação
 
-O parser que extrai esse bloco (`squads/carousel-noticias/scripts/extract-topics.mjs`) só reconhece linhas neste formato exato:
+O parser que extrai esse bloco (`squads/carousel-noticias/scripts/extract-topics.mjs`) reconhece linhas neste formato:
 
 ```
-- <Nome> (tipo: <empresa|marca|pessoa|pais>) — slide alvo: <1|3|5|7>
+- <Nome> (tipo: <empresa|marca|pessoa|pais>) — slide alvo: <1|3|5|7> — query: "<busca precisa>"
 ```
+
+O campo `query:` é **obrigatório**. Ele instrui o Bruno a buscar exatamente a imagem certa — sem ele, o Bruno usa uma busca genérica que pode retornar imagens irrelevantes.
 
 Regras invioláveis:
 - A linha começa com `- ` (hífen + espaço).
 - O tipo é UMA das 4 palavras: `empresa`, `marca`, `pessoa`, `pais` (sem acento, sem maiúsculas).
-- O separador entre o tipo e o slide é o travessão `—` (U+2014). Hífen comum também é aceito.
+- O separador entre os campos é o travessão `—` (U+2014). Hífen comum também é aceito.
 - O slide alvo é exatamente um dos números: `1`, `3`, `5` ou `7`.
-- Sem nenhum outro texto na linha (sem comentário, sem aspas, sem itálico).
+- O campo `query:` deve conter uma frase em **inglês**, precisa e profissional, entre aspas duplas.
+- Sem nenhum outro texto na linha fora desses campos.
+
+#### Como escrever uma boa query
+
+A query deve descrever **o que a imagem deve mostrar**, não apenas o nome da entidade. Pense no que um fotógrafo profissional ou banco de imagens entregaria.
+
+| Tipo | Entidade | Query ruim | Query boa |
+|------|----------|------------|-----------|
+| empresa | OpenAI | `"OpenAI logo"` | `"OpenAI official logo transparent PNG"` |
+| empresa | Banco de Dados | `"Banco de Dados logo"` | `"database server infrastructure technology professional"` |
+| pessoa | Sam Altman | `"Sam Altman foto"` | `"Sam Altman CEO portrait professional"` |
+| pais | Brasil | `"Brasil bandeira"` | `"Brazil national flag"` |
+| marca | iPhone 16 | `"iPhone 16 logo"` | `"iPhone 16 product official Apple"` |
 
 Exemplo correto:
 ```
 === ENTIDADES ===
-- Nubank (tipo: empresa) — slide alvo: 1
-- Banco Central (tipo: empresa) — slide alvo: 3
-- Roberto Campos Neto (tipo: pessoa) — slide alvo: 5
-- Brasil (tipo: pais) — slide alvo: 7
+- Nubank (tipo: empresa) — slide alvo: 1 — query: "Nubank official logo transparent PNG"
+- Banco Central do Brasil (tipo: empresa) — slide alvo: 3 — query: "Banco Central Brasil official logo"
+- Roberto Campos Neto (tipo: pessoa) — slide alvo: 5 — query: "Roberto Campos Neto portrait professional"
+- Brasil (tipo: pais) — slide alvo: 7 — query: "Brazil national flag"
 ```
 
 Linhas fora desse padrão são ignoradas pelo parser e a busca de imagens correspondente não acontece.
@@ -128,7 +143,7 @@ Rejeitar e redo se:
 - [ ] Tom apresentado e confirmado antes de escrever
 - [ ] 5-8 slides com 40-80 palavras cada
 - [ ] Cover: máximo 20 palavras, scroll-stop test aprovado internamente
-- [ ] Bloco `=== ENTIDADES ===` preenchido com até 4 entidades reais da notícia
+- [ ] Bloco `=== ENTIDADES ===` preenchido com até 4 entidades reais da notícia, cada uma com campo `query:` preciso em inglês
 - [ ] Caption: 125 chars funcionam como hook standalone
 - [ ] Último slide tem CTA pedindo curtir/compartilhar/salvar/seguir @innovationlatam (sem fonte)
 - [ ] 5-15 hashtags mix nicho/mid/amplas

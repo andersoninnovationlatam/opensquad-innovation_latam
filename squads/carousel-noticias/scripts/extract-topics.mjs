@@ -74,15 +74,16 @@ function parseLine(line) {
   // Detecta marcador "(nenhuma)"
   if (/^\(?\s*nenhuma\s*\)?$/i.test(cleaned)) return { none: true };
 
-  // Padrão: Nome (tipo: TIPO) — slide alvo: N
-  // Aceita travessão "—" ou "-" como separador
-  const re = /^(.+?)\s*\(\s*tipo\s*:\s*([a-zA-Záéíóúâêôãõç]+)\s*\)\s*[—\-–]\s*slide\s*alvo\s*:\s*(\d+)\s*$/i;
+  // Padrão: Nome (tipo: TIPO) — slide alvo: N [— query: "texto preciso"]
+  // O campo query é opcional e permite ao Caio especificar uma busca exata
+  const re = /^(.+?)\s*\(\s*tipo\s*:\s*([a-zA-Záéíóúâêôãõç]+)\s*\)\s*[—\-–]\s*slide\s*alvo\s*:\s*(\d+)(?:\s*[—\-–]\s*query\s*:\s*"([^"]+)")?\s*$/i;
   const m = cleaned.match(re);
   if (!m) return { invalid: cleaned };
 
   const rawName = m[1].trim();
   const rawType = normalizeAccents(m[2]);
   const slideNumber = parseInt(m[3], 10);
+  const customQuery = m[4] ? m[4].trim() : null;
 
   const mappedType = TYPE_MAP[rawType];
   if (!mappedType) return { invalid: cleaned, reason: `tipo "${rawType}" inválido (use empresa|marca|pessoa|pais)` };
@@ -91,7 +92,7 @@ function parseLine(line) {
   }
 
   return {
-    entity: { name: rawName, type: mappedType, slide: slideNumber },
+    entity: { name: rawName, type: mappedType, slide: slideNumber, query: customQuery },
   };
 }
 
@@ -151,10 +152,12 @@ const public_figures = uniqueEntities.filter((e) => e.type === "person").map((e)
 const locations = uniqueEntities.filter((e) => e.type === "location").map((e) => e.name);
 
 const search_queries = uniqueEntities.map((e) => {
-  if (e.type === "person") return `${e.name} foto profissional`;
-  if (e.type === "location") return `${e.name} bandeira simbolo nacional`;
-  if (e.type === "brand") return `${e.name} brand identity logo`;
-  return `${e.name} logo oficial`;
+  // Custom query from Caio takes priority — most precise
+  if (e.query) return e.query;
+  if (e.type === "person") return `${e.name} portrait professional photo`;
+  if (e.type === "location") return `${e.name} national flag symbol`;
+  if (e.type === "brand") return `${e.name} official brand logo transparent`;
+  return `${e.name} official logo transparent PNG`;
 });
 
 const topics = {

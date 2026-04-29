@@ -65,7 +65,7 @@ let entities = [];
 if (Array.isArray(topics.entities) && topics.entities.length > 0) {
   entities = topics.entities
     .filter((e) => e && e.name && VALID_SLIDES.includes(e.slide))
-    .map((e) => ({ name: e.name, type: e.type || "company", slide: e.slide }));
+    .map((e) => ({ name: e.name, type: e.type || "company", slide: e.slide, query: e.query || null }));
 } else {
   const legacy = [
     ...(topics.companies || []).map((name) => ({ name, type: "company" })),
@@ -135,14 +135,20 @@ function googleImagesUrl(query) {
   return `https://images.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
 }
 
-function getQuery(entityName, entityType) {
+function getQuery(entity) {
+  const entityName = entity.name;
+  const entityType = entity.type;
+  // Custom query authored by Caio — most precise, use directly
+  if (entity.query) return entity.query;
+  // Match against generated search_queries list
   const match = (topics.search_queries || []).find((q) =>
     q.toLowerCase().includes(entityName.toLowerCase())
   );
   if (match) return match;
-  if (entityType === "person") return `${entityName} foto`;
-  if (entityType === "location") return `${entityName} tecnologia inteligência artificial`;
-  return `${entityName} logo`;
+  if (entityType === "person") return `${entityName} portrait professional photo`;
+  if (entityType === "location") return `${entityName} national flag symbol`;
+  if (entityType === "brand") return `${entityName} official brand logo transparent`;
+  return `${entityName} official logo transparent PNG`;
 }
 
 async function downloadImage(imageUrl, entityName) {
@@ -184,7 +190,7 @@ async function downloadImage(imageUrl, entityName) {
 }
 
 async function findImageUrl(entity) {
-  const query = getQuery(entity.name, entity.type);
+  const query = getQuery(entity);
   const googleUrl = googleImagesUrl(query);
 
   try {
@@ -264,7 +270,7 @@ for (let i = 0; i < entities.length; i++) {
 
   const result = await findImageUrl(entity);
   const imageUrl = result?.image_url;
-  const googleUrl = result?.google_images_url || googleImagesUrl(getQuery(entity.name, entity.type));
+  const googleUrl = result?.google_images_url || googleImagesUrl(getQuery(entity));
 
   if (imageUrl) {
     console.log(`     Baixando: ${imageUrl}`);

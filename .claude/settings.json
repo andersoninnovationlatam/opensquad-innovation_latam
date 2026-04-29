@@ -45,7 +45,9 @@
       "Bash(node src/render-slides.js squads/carousel-noticias/output/test-slide1/slides/v1)",
       "Bash(node --check /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/src/headless-runner.js)",
       "Bash(command -v fnm n)",
-      "WebFetch(domain:openrouter.ai)"
+      "WebFetch(domain:openrouter.ai)",
+      "Bash(node --input-type=module)",
+      "Bash(node /home/anderson/Documentos/InnovationLatam/Integracoes/opensquad-innovation_latam/squads/carousel-noticias/scripts/extract-topics.mjs)"
     ],
     "additionalDirectories": [
       "/tmp",
